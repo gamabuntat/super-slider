@@ -1,10 +1,10 @@
-function hallo(message: string) {
-    console.log(`its message: ${message}`);
-    return message;
+function foo(a: number) {
+    const b = a + 10;
+    console.log(a);
+    return b;
 }
 
-hallo('hallo');
-hallo('hallo');
-hallo('hallo');
+let a = 10;
+a = 11;
 
-console.log($('#foo')[0])
+foo(a + 10);

@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = {
     mode: 'development',
@@ -16,7 +17,9 @@ module.exports = {
         rules: [
             {
                 test: /\.tsx?$/,
-                use: 'ts-loader',
+                use: [
+                    {loader: 'ts-loader', options: {transpileOnly: true}}
+                ],
                 exclude: /node_modules/,
             },
         ],
@@ -26,6 +29,11 @@ module.exports = {
             $: 'jquery',
             jQuery: 'jquery'
         }),
+        new ForkTsCheckerWebpackPlugin({
+            eslint: {
+                files: './src/**/*.{ts,tsx,js,jsx}'
+            }
+        })
     ]
 };
 
