@@ -8,5 +8,10 @@ module.exports = {
         'plugin:@typescript-eslint/recommended'
     ],
     rules: {
+        'prefer-arrow-callback': 'warn',
+        'arrow-parens': 'error',
+        'max-len': 'error',
+        'semi': 'warn',
+        'no-new-wrappers': 'error',
     }
 };

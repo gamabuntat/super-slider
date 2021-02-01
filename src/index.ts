@@ -1,10 +1,13 @@
-function foo(a: number) {
-    const b = a + 10;
-    console.log(a);
-    return b;
+interface JQuery {
+    myPlugin: () => JQuery
 }
 
-let a = 10;
-a = 11;
+(function ($) {
+    $.fn.myPlugin = function() {
+        console.log('this is fn');
+        return this;
+    };
+})(jQuery);
 
-foo(a + 10);
+console.log($('#slider1').myPlugin()[0]);
+
