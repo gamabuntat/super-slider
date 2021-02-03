@@ -6,7 +6,7 @@ module.exports = {
   devtool: 'inline-source-map',
   entry: {
     index: './src/index.ts',
-    MVPClasses: './src/MVPClasses.ts',
+    eventEmitter: './src/eventEmitter.js.ts',
   },
   output: {
     filename: '[name].js',

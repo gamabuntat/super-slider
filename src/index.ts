@@ -1,6 +1,4 @@
-interface JQuery {
-  slider: (o: Options | string, ...args: string[]) => JQuery
-}
+import EventEmitter from 'EventEmitter';
 
 interface Options {
   max?: number
@@ -8,20 +6,22 @@ interface Options {
 }
 
 interface Storage {
-  [id: string]: JQuery
+  [id: string]: EventEmitter
 }
 
 (function ($) {
   const storage: Storage = {} as Storage;
   (function () {
-    $.fn.slider = function (): JQuery {
+    $.fn.slider = function (o: Options = {}): JQuery {
+      if (typeof o !== 'string') {
+        console.log(o);
+      }
       const sliderID = this.attr('id') ?? '';
       if (sliderID !== '') {
-        storage[sliderID] = this;
+        storage[sliderID] = new EventEmitter();
       }
       console.log(storage);
       return this;
     };
   })();
 })(jQuery);
-

@@ -2,7 +2,7 @@ interface StorageForEvents {
   [evt: string]: Array<(...arg: Array<string | number>) => void>
 }
 
-export class EventEmitter {
+export default class EventEmitter {
   protected _events: StorageForEvents = {};
   on(evt: string, listener: () => void): EventEmitter {
     (this._events[evt] || (this._events[evt] = [])).push(listener);
