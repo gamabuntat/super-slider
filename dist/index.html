@@ -1,13 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title></title>
-    <script defer src="bundle.js"></script>
+  <meta charset="UTF-8">
+  <title>jquery slider</title>
+  <link rel="stylesheet" href="slider.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="slider.js"></script>
+  <script>
+    $(function () {
+      $('#slider1').slider();
+      $('#slider1').slider();
+      $('#slider2').slider();
+    });
+  </script>
 </head>
 <body>
-    <div id="slider1">1</div>
-    <div id="slider2">2</div>
-    <div id="slider3">3</div>
+  <div id="slider1">1</div>
+  <div id="slider2">2</div>
+  <div id="slider3">3</div>
+  <div id="slider4">4</div>
 </body>
 </html>
