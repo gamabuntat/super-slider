@@ -25,7 +25,16 @@ interface Storage {
         };
 
         Object.values(components)
-          .forEach((elem) => elem && this.append(elem));
+          .reduce((place, e) => {
+            if (place && e) {
+              place.insertAdjacentElement('beforeend', e);
+            }
+            if (place === components.container) {
+              return place;
+            }
+            return e;
+          }, this[0]);
+
         storage[this.attr('id') ?? ''] = new Model(o);
         // const id = this.attr('id') ?? '';
         // storage[id] = new Model();
