@@ -1,27 +1,44 @@
-import EventEmitter from 'EventEmitter';
+import Model from './Model';
 
-interface Options {
+export interface Options {
+  x?: number
   max?: number
   min?: number
+  vertical?: boolean
 }
 
 interface Storage {
-  [id: string]: EventEmitter
+  [id: string]: Model
 }
 
 (function ($) {
   const storage: Storage = {} as Storage;
   (function () {
-    $.fn.slider = function (o: Options = {}): JQuery {
-      if (typeof o !== 'string') {
-        console.log(o);
+    $.fn.slider = function (o: Options | string = {}, ...args): JQuery {
+      if (typeof o == 'object') {
+        const components = {
+          container: createComponent('div', 'ui-slider__container'),
+          scale: createComponent('div', 'ui-slider__scale'),
+          startButton: createComponent('button', 'ui-slider__button_start'),
+          endButton: o?.vertical === true
+            && createComponent('button', 'ui-slider__button_end'),
+        };
+
+        Object.values(components)
+          .forEach((elem) => elem && this.append(elem));
+        storage[this.attr('id') ?? ''] = new Model(o);
+        // const id = this.attr('id') ?? '';
+        // storage[id] = new Model();
+      } else {
+        console.log('no options :(', args);
       }
-      const sliderID = this.attr('id') ?? '';
-      if (sliderID !== '') {
-        storage[sliderID] = new EventEmitter();
-      }
-      console.log(storage);
       return this;
     };
   })();
 })(jQuery);
+
+function createComponent(elem: string, elemClass: string) {
+  const component = document.createElement(elem);
+  component.classList.add(elemClass);
+  return component;
+}
