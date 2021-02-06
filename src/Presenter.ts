@@ -7,6 +7,11 @@ export default class Presenter {
     private scale: ScaleView,
     private button: ButtonView,
   ) {
+    model.on('changeX', (
+      x: number, 
+      scaleX: number, 
+      btnWidth: number,
+    ) => this.callMoveButton(x, scaleX, btnWidth));
     scale.on('clickOnScale', (e: MouseEvent) => this.setNewX(e));
   }
 
@@ -16,6 +21,10 @@ export default class Presenter {
 
   setNewX(e: MouseEvent): void {
     this.model.setX(e);
+  }
+
+  callMoveButton(x: number, scaleX: number, btnWidth: number): void {
+    this.button.moveButton(x, scaleX, btnWidth);
   }
 
   init(): Presenter {

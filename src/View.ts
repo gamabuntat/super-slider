@@ -27,8 +27,8 @@ export class ButtonView extends View {
     super(button);
   }
 
-  moveButton(coord: number) {
-    this.component.style.left = 
+  moveButton(x: number, scaleX: number, btnWidth: number): void {
+    this.component.style.left = x - scaleX - btnWidth / 2 + 'px';
   }
 }
 
