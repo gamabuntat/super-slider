@@ -1,10 +1,11 @@
 import Model from './Model';
-import {ScaleView} from './View';
+import {ScaleView, ButtonView} from './View';
 
 export default class Presenter {
   constructor(
     private model: Model,
     private scale: ScaleView,
+    private button: ButtonView,
   ) {
     scale.on('clickOnScale', (e: MouseEvent) => this.setNewX(e));
   }
@@ -15,5 +16,13 @@ export default class Presenter {
 
   setNewX(e: MouseEvent): void {
     this.model.setX(e);
+  }
+
+  init(): Presenter {
+    this.model.keepElementRect(
+      this.scale.init(),
+      this.button.init(),
+    );
+    return this;
   }
 }

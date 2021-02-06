@@ -6,17 +6,29 @@ class View extends EventEmitter {
     super();
     this.component = component;
   }
-}
 
-export class ScaleView extends View {
-  constructor(component: HTMLElement) {
-    super(component);
-    this.component.addEventListener(
-      'click', 
-      (e) => this.emit('clickOnScale', e)
-    )
+  init() {
+    return this.component.getBoundingClientRect();
   }
 }
 
-class ButtonView extends View {}
+export class ScaleView extends View {
+  constructor(scale: HTMLElement) {
+    super(scale);
+    this.component.addEventListener(
+      'pointerdown', 
+      (e) => this.emit('clickOnScale', e)
+    );
+  }
+}
+
+export class ButtonView extends View {
+  constructor(button: HTMLElement) {
+    super(button);
+  }
+
+  moveButton(coord: number) {
+    this.component.style.left = 
+  }
+}
 

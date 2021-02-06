@@ -1,5 +1,5 @@
 import Model from './Model';
-import {ScaleView} from './View';
+import {ScaleView, ButtonView} from './View';
 import Presenter from './Presenter';
 
 interface Storage {
@@ -31,8 +31,9 @@ export interface Options {
         }, this[0]);
         storage[this.attr('id') ?? ''] = new Presenter(
           new Model(o),
-          new ScaleView(components[1])
-        );
+          new ScaleView(components[1]),
+          new ButtonView(components[2]),
+        ).init();
       } else {
         console.log('no options :(', args, storage);
       }
