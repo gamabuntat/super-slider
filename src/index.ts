@@ -1,14 +1,14 @@
 import Model from './Model';
+import {ScaleView} from './View';
+import Presenter from './Presenter';
 
 interface Storage {
-  [id: string]: Model
+  [id: string]: Presenter
 }
 
 export interface Options {
   x?: number
-  max?: number
-  min?: number
-  vertical?: boolean
+  interval?: boolean
 }
 
 (function ($) {
@@ -20,17 +20,21 @@ export interface Options {
           ['div', 'ui-slider__container'],
           ['div', 'ui-slider__scale'],
           ['button', 'ui-slider__button_start'],
-          ['button', 'ui-slider__button_end'],
+          (o?.interval == true 
+            && ['button', 'ui-slider__button_end']),
         ]
-          .map((args) => createComponent(args));
-        const [container, scale, startButton, endButton] = components;
+          .filter((args) => args)
+          .map((args) => createComponent(args as string[]));
         components.reduce((place, e) => {
           place.append(e);
-          return place === container ? place : e;
+          return components[0];
         }, this[0]);
-
+        storage[this.attr('id') ?? ''] = new Presenter(
+          new Model(o),
+          new ScaleView(components[1])
+        );
       } else {
-        console.log('no options :(', args);
+        console.log('no options :(', args, storage);
       }
       return this;
     };

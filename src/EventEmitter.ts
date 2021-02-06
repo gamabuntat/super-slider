@@ -1,14 +1,14 @@
 interface StorageForEvents {
-  [evt: string]: Array<(...arg: Array<string | number>) => void>
+  [evt: string]: Array<(e: MouseEvent) => void>
 }
 
 export default class EventEmitter {
-  protected _events: StorageForEvents = {};
-  on(evt: string, listener: () => void): EventEmitter {
-    (this._events[evt] || (this._events[evt] = [])).push(listener);
+  protected events: StorageForEvents = {};
+  on(evt: string, listener: (e: MouseEvent) => void): EventEmitter {
+    (this.events[evt] || (this.events[evt] = [])).push(listener);
     return this;
   }
-  emit(evt: string, ...arg: Array<string | number>): void {
-    (this._events[evt] || []).slice().forEach((lsn) => lsn(...arg));
+  emit(evt: string, e: MouseEvent): void {
+    (this.events[evt] || []).slice().forEach((lsn) => lsn(e));
   }
 }

@@ -2,13 +2,14 @@ import {Options} from './index';
 import EventEmitter from './EventEmitter';
 
 export default class Model extends EventEmitter {
-  options: Options;
-  constructor(o: Options) {
+  x: number;
+  constructor({ x = 0 }: Options) {
     super();
-    this.options = o;
+    this.x = x;
   }
 
-  setX(x: number): void {
-    this.options.x = x;
+  setX(e: MouseEvent): void {
+    this.x = e.clientX;
+    console.log(this.x);
   }
 }
