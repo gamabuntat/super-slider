@@ -1,3 +1,4 @@
+import {he, hx} from './EventEmitter';
 import Model from './Model';
 import {ScaleView, ButtonView} from './View';
 
@@ -7,24 +8,19 @@ export default class Presenter {
     private scale: ScaleView,
     private button: ButtonView,
   ) {
-    model.on('changeX', (
-      x: number, 
-      scaleX: number, 
-      btnWidth: number,
-    ) => this.callMoveButton(x, scaleX, btnWidth));
-    scale.on('clickOnScale', (e: MouseEvent) => this.setNewX(e));
+    model.on('changeX', (x) => {
+      this.callMoveButton(x as hx);
+    });
+    scale.on('clickOnScale', (e) => this.setNewX(e as he));
+    button.on('clickOnButton', (e) => this.setNewX(e as he));
   }
 
-  readModel(): void {
-    console.log(this.model);
+  setNewX(e: he): void {
+    this.model.setX(e.e);
   }
 
-  setNewX(e: MouseEvent): void {
-    this.model.setX(e);
-  }
-
-  callMoveButton(x: number, scaleX: number, btnWidth: number): void {
-    this.button.moveButton(x, scaleX, btnWidth);
+  callMoveButton({x, scaleX, btnW}: hx): void {
+    this.button.moveButton(x, scaleX, btnW);
   }
 
   init(): Presenter {

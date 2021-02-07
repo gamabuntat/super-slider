@@ -1,4 +1,4 @@
-import EventEmitter from './EventEmitter';
+import {EventEmitter} from './EventEmitter';
 
 class View extends EventEmitter {
   component: HTMLElement
@@ -17,7 +17,7 @@ export class ScaleView extends View {
     super(scale);
     this.component.addEventListener(
       'pointerdown', 
-      (e) => this.emit('clickOnScale', e)
+      (e) => this.emit('clickOnScale', {e})
     );
   }
 }
@@ -25,10 +25,25 @@ export class ScaleView extends View {
 export class ButtonView extends View {
   constructor(button: HTMLElement) {
     super(button);
+    this.component.addEventListener(
+      'pointerdown',
+      (e) => {
+        this.component.setPointerCapture(e.pointerId);
+        this.addListener();
+      }
+    );
   }
 
   moveButton(x: number, scaleX: number, btnWidth: number): void {
     this.component.style.left = x - scaleX - btnWidth / 2 + 'px';
+  }
+
+  addListener(): void {
+    this.component.addEventListener('pointermove', (e) => this.genEvent(e));
+  }
+
+  genEvent(e: PointerEvent): void {
+    this.emit('movePointer', {e});
   }
 }
 

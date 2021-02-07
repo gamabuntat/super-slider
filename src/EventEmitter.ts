@@ -2,19 +2,28 @@ interface StorageForEvents {
   [evt: string]: Handler[]
 }
 
-interface Handler {
-  <T>(...args: T[]): void
+export interface hx {
+  x: number
+  scaleX: number
+  btnW: number
 }
 
-export default class EventEmitter {
+export interface he {
+  e: PointerEvent
+}
+
+type Handler = (o: hx | he) => void
+
+export class EventEmitter {
   protected events: StorageForEvents = {};
   on(evt: string, listener: Handler): EventEmitter {
     (this.events[evt] || (this.events[evt] = [])).push(listener);
     return this;
   }
-  emit<T>(evt: string, ...args: T[]): void {
+
+  emit(evt: string, args: hx | he): void {
     (this.events[evt] || [])
       .slice()
-      .forEach((lsn: Handler) => lsn(...args));
+      .forEach((lsn: Handler) => lsn(args));
   }
 }

@@ -1,5 +1,5 @@
 import {Options} from './index';
-import EventEmitter from './EventEmitter';
+import {EventEmitter} from './EventEmitter';
 
 export default class Model extends EventEmitter {
   x: number;
@@ -10,7 +10,7 @@ export default class Model extends EventEmitter {
     this.x = x;
   }
 
-  setX(e: MouseEvent): void {
+  setX(e: PointerEvent): void {
     this.x = e.clientX;
     console.log(this.x);
   }

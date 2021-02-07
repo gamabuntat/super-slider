@@ -15,6 +15,10 @@ export interface Options {
   const storage: Storage = {} as Storage;
   (function () {
     $.fn.slider = function (o: Options | string = {}, ...args): JQuery {
+      const id = this.attr('id');
+      if (!id) {
+        return this;
+      }
       if (typeof o == 'object') {
         const components = [
           ['div', 'ui-slider__container'],
@@ -29,7 +33,7 @@ export interface Options {
           place.append(e);
           return components[0];
         }, this[0]);
-        storage[this.attr('id') ?? ''] = new Presenter(
+        storage[id] = new Presenter(
           new Model(o),
           new ScaleView(components[1]),
           new ButtonView(components[2]),
