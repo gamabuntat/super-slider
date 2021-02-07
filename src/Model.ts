@@ -3,20 +3,23 @@ import {EventEmitter} from './EventEmitter';
 
 export default class Model extends EventEmitter {
   x: number;
-  scaleRect?: DOMRect;
-  buttonRect?: DOMRect;
+  scaleX: number;
+  btnW: number;
   constructor({ x = 0 }: Options) {
     super();
     this.x = x;
+    this.scaleX = 0;
+    this.btnW = 0;
   }
 
   setX(e: PointerEvent): void {
     this.x = e.clientX;
-    console.log(this.x);
+    const {x, scaleX, btnW} = this;
+    this.emit('changeX', {x, scaleX, btnW});
   }
 
   keepElementRect(scale: DOMRect, button: DOMRect): void {
-    this.scaleRect = scale;
-    this.buttonRect = button;
-  }
+    this.scaleX = scale.x;
+    this.btnW = button.width;
+  }   
 }

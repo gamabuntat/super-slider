@@ -12,7 +12,7 @@ export default class Presenter {
       this.callMoveButton(x as hx);
     });
     scale.on('clickOnScale', (e) => this.setNewX(e as he));
-    button.on('clickOnButton', (e) => this.setNewX(e as he));
+    button.on('movePointer', (e) => this.setNewX(e as he));
   }
 
   setNewX(e: he): void {
