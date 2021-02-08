@@ -1,22 +1,6 @@
-import {EventEmitter} from './EventEmitter';
+import View from './View';
 
-class View extends EventEmitter {
-  constructor(protected component: HTMLElement) {
-    super();
-  }
-}
-
-class ScaleView extends View {
-  constructor(scale: HTMLElement) {
-    super(scale);
-    this.component.addEventListener(
-      'pointerdown', 
-      (e) => this.emit('clickOnScale', e)
-    );
-  }
-}
-
-class ButtonView extends View {
+export default class ButtonView extends View {
   isTriggerd: boolean
   constructor(button: HTMLElement) {
     super(button);
@@ -24,6 +8,7 @@ class ButtonView extends View {
     this.component.addEventListener(
       'pointerdown',
       (e) => {
+        console.log(e.pointerId);
         this.toggleTrigger();
         this.component.setPointerCapture(e.pointerId);
         this.emit('pointerPressed', e);
@@ -35,12 +20,8 @@ class ButtonView extends View {
     );
     this.component.addEventListener(
       'pointermove',
-      (e) => this.isTriggerd && this.emit('pointerMoved', e),
+      (e) => View.isTriggerd && this.emit('pointerMoved', e),
     );
-  }
-
-  toggleTrigger(): void {
-    this.isTriggerd = this.isTriggerd ? false : true;
   }
 
   moveButton(
@@ -58,4 +39,3 @@ class ButtonView extends View {
   }
 }
 
-export {ScaleView, ButtonView};

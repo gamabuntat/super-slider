@@ -1,5 +1,6 @@
 import Model from './Model';
-import {ScaleView, ButtonView} from './View';
+import ScaleView from './View/ScaleView';
+import ButtonView from './View/ButtonView';
 import Presenter from './Presenter';
 
 interface Storage {
