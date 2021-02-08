@@ -34,10 +34,10 @@ export interface Options {
           return components[0];
         }, this[0]);
         storage[id] = new Presenter(
-          new Model(o),
+          new Model(components[1], components[2], o),
           new ScaleView(components[1]),
           new ButtonView(components[2]),
-        ).init();
+        );
       } else {
         console.log('no options :(', args, storage);
       }

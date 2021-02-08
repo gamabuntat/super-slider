@@ -6,25 +6,35 @@ export default class Model extends EventEmitter {
   scaleX: number;
   scaleW: number;
   btnW: number;
-  constructor({ x = 0 }: Options) {
+  shiftX: number;
+  constructor(
+    private scale: HTMLElement,
+    private button: HTMLElement,
+    { x = 0 }: Options
+  ) {
     super();
     this.x = x;
-    this.scaleX = 0;
-    this.scaleW = 0;
-    this.btnW = 0;
+    this.scaleX = this.scale.getBoundingClientRect().x;
+    this.scaleW = this.scale.getBoundingClientRect().width;
+    this.btnW = this.button.getBoundingClientRect().width;
+    this.shiftX = 0;
+  }
+
+  setShiftX(e: PointerEvent): void {
+    this.shiftX = e.clientX - this.button.getBoundingClientRect().x;
   }
 
   setX(e: PointerEvent): void {
     this.x = e.clientX;
-    const {x, scaleX, scaleW, btnW} = this;
-    this.emit('changeX', {x, scaleX, scaleW, btnW});
+    this.updateElementsSizes();
+    const {x, scaleX, scaleW, shiftX, btnW} = this;
+    this.emit('changeX', {x, scaleX, scaleW, shiftX, btnW});
   }
 
-  updateElementsSizes(scale: DOMRect, button?: DOMRect): void {
-    this.scaleX = scale.x;
-    this.scaleW = scale.width;
-    if (button) {
-      this.btnW = button.width;
-    }
+  updateElementsSizes(): void {
+    this.scaleX = this.scale.getBoundingClientRect().x;
+    this.scaleW = this.scale.getBoundingClientRect().width;
+    this.btnW === 0 
+      && (this.btnW = this.button.getBoundingClientRect().width);
   }   
 }

@@ -1,4 +1,4 @@
-import {he, hx} from './EventEmitter';
+import {hx} from './EventEmitter';
 import Model from './Model';
 import {ScaleView, ButtonView} from './View';
 
@@ -8,31 +8,21 @@ export default class Presenter {
     private scale: ScaleView,
     private button: ButtonView,
   ) {
-    model.on('changeX', (x) => {
-      this.callMoveButton(x as hx);
-    });
-    scale.on('clickOnScale', (e) => this.setNewX(e as he));
-    button.on('movePointer', () => this.updateSizes())
-      .on('movePointer', (e) => this.setNewX(e as he));
+    this.model.on('changeX', (x) => this.callMoveButton(x as hx));
+    this.scale.on('clickOnScale', (e) => this.setX(e as PointerEvent));
+    this.button.on('pointerPressed', (e) => this.setShiftX(e as PointerEvent))
+      .on('pointerMoved', (e) => this.setX(e as PointerEvent));
   }
 
-  updateSizes(): void {
-    this.model.updateElementsSizes(this.scale.init());
+  setShiftX(e: PointerEvent): void {
+    this.model.setShiftX(e);
   }
 
-  setNewX(e: he): void {
-    this.model.setX(e.e);
+  setX(e: PointerEvent): void {
+    this.model.setX(e);
   }
 
-  callMoveButton({x, scaleX, scaleW, btnW}: hx): void {
-    this.button.moveButton(x, scaleX, scaleW, btnW);
-  }
-
-  init(): Presenter {
-    this.model.updateElementsSizes(
-      this.scale.init(),
-      this.button.init(),
-    );
-    return this;
+  callMoveButton({x, scaleX, scaleW, shiftX, btnW}: hx): void {
+    this.button.moveButton(x, scaleX, scaleW, shiftX, btnW);
   }
 }

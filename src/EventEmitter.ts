@@ -6,14 +6,11 @@ interface hx {
   x: number
   scaleX: number
   scaleW: number
+  shiftX: number
   btnW: number
 }
 
-interface he {
-  e: PointerEvent
-}
-
-type Handler = (o: hx | he | void) => void
+type Handler = (o: hx | PointerEvent | void) => void
 
 class EventEmitter {
   protected events: StorageForEvents = {};
@@ -22,11 +19,11 @@ class EventEmitter {
     return this;
   }
 
-  emit(evt: string, args: hx | he): void {
+  emit(evt: string, args?: hx | PointerEvent): void {
     (this.events[evt] || [])
       .slice()
       .forEach((lsn: Handler) => lsn(args));
   }
 }
 
-export {hx, he, EventEmitter};
+export {hx, EventEmitter};
