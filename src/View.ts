@@ -12,7 +12,7 @@ class View extends EventEmitter {
   }
 }
 
-export class ScaleView extends View {
+class ScaleView extends View {
   constructor(scale: HTMLElement) {
     super(scale);
     this.component.addEventListener(
@@ -22,28 +22,44 @@ export class ScaleView extends View {
   }
 }
 
-export class ButtonView extends View {
+class ButtonView extends View {
+  isTriggerd: boolean
   constructor(button: HTMLElement) {
     super(button);
+    this.isTriggerd = false;
     this.component.addEventListener(
       'pointerdown',
       (e) => {
+        this.isTriggerd = true;
         this.component.setPointerCapture(e.pointerId);
-        this.addListener();
       }
+    );
+    this.component.addEventListener(
+      'pointerup',
+      () => this.isTriggerd = false,
+    );
+    this.component.addEventListener(
+      'pointermove',
+      (e) => this.genEvent(e),
     );
   }
 
-  moveButton(x: number, scaleX: number, btnWidth: number): void {
-    this.component.style.left = x - scaleX - btnWidth / 2 + 'px';
-  }
-
-  addListener(): void {
-    this.component.addEventListener('pointermove', (e) => this.genEvent(e));
+  moveButton(
+    x: number,
+    scaleX: number,
+    scaleW: number,
+    btnW: number,
+  ): void {
+    const btnPosition = Math.min(
+      scaleW - btnW,
+      Math.max((x - scaleX - btnW/ 2), 0)
+    );
+    this.component.style.left = `${btnPosition}px`;
   }
 
   genEvent(e: PointerEvent): void {
-    this.emit('movePointer', {e});
+    this.isTriggerd && this.emit('movePointer', {e});
   }
 }
 
+export {ScaleView, ButtonView};

@@ -25,7 +25,8 @@
   background-color: lightpink;
   border: none;
   border-radius: 50%;
-  cursor: pointer
+  cursor: pointer;
+  touch-action: none;
 }
 
 .ui-slider__button_start {

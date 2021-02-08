@@ -12,19 +12,24 @@ export default class Presenter {
       this.callMoveButton(x as hx);
     });
     scale.on('clickOnScale', (e) => this.setNewX(e as he));
-    button.on('movePointer', (e) => this.setNewX(e as he));
+    button.on('movePointer', () => this.updateSizes())
+      .on('movePointer', (e) => this.setNewX(e as he));
+  }
+
+  updateSizes(): void {
+    this.model.updateElementsSizes(this.scale.init());
   }
 
   setNewX(e: he): void {
     this.model.setX(e.e);
   }
 
-  callMoveButton({x, scaleX, btnW}: hx): void {
-    this.button.moveButton(x, scaleX, btnW);
+  callMoveButton({x, scaleX, scaleW, btnW}: hx): void {
+    this.button.moveButton(x, scaleX, scaleW, btnW);
   }
 
   init(): Presenter {
-    this.model.keepElementRect(
+    this.model.updateElementsSizes(
       this.scale.init(),
       this.button.init(),
     );

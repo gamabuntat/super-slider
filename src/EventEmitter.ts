@@ -2,19 +2,20 @@ interface StorageForEvents {
   [evt: string]: Handler[]
 }
 
-export interface hx {
+interface hx {
   x: number
   scaleX: number
+  scaleW: number
   btnW: number
 }
 
-export interface he {
+interface he {
   e: PointerEvent
 }
 
-type Handler = (o: hx | he) => void
+type Handler = (o: hx | he | void) => void
 
-export class EventEmitter {
+class EventEmitter {
   protected events: StorageForEvents = {};
   on(evt: string, listener: Handler): EventEmitter {
     (this.events[evt] || (this.events[evt] = [])).push(listener);
@@ -27,3 +28,5 @@ export class EventEmitter {
       .forEach((lsn: Handler) => lsn(args));
   }
 }
+
+export {hx, he, EventEmitter};
