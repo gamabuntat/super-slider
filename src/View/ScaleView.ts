@@ -7,16 +7,11 @@ export default class ScaleView extends View {
     this.component.addEventListener(
       'pointerdown', 
       (e) => {
-        console.log(e.pointerId);
         this.toggleTrigger();
         this.emit('clickOnScale', e);
       }
     );
-    this.ResizeObserve = new ResizeObserver(() => {
-      setTimeout(() => {
-        console.log(this.component.getBoundingClientRect().width);
-      }, 1000);
-    });
+    this.ResizeObserve = new ResizeObserver(() => {console.log('hi');});
     this.ResizeObserve.observe(this.component);
   }
 }

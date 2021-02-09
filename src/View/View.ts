@@ -10,5 +10,9 @@ export default class View extends EventEmitter {
     View.isTriggerd = View.isTriggerd ? false : true;
     console.log(View.isTriggerd);
   }
+
+  getRect(): DOMRect {
+    return this.component.getBoundingClientRect();
+  }
 }
 

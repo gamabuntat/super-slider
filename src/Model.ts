@@ -1,37 +1,44 @@
-import ComponentModel from './ComponentModel';
 import {Options} from './index';
 import EventEmitter from './EventEmitter';
 
 export default class Model extends EventEmitter {
-  ComponentModel: ComponentModel
-  x: number;
-  shiftX: number;
+  private scaleW: number
+  private scaleX: number
+  private btnW: number
+  private x: number
+  private shiftX: number
   constructor(
     scale: HTMLElement,
     button: HTMLElement,
     { x = 0 }: Options
   ) {
     super();
-    this.ComponentModel = new ComponentModel(scale, button);
+    this.scaleW = scale.getBoundingClientRect().width;
+    this.scaleX = scale.getBoundingClientRect().x;
+    this.btnW = button.getBoundingClientRect().width;
     this.x = x;
     this.shiftX = 0;
   }
 
-  setShiftX(e: PointerEvent): void {
-    this.shiftX = e.clientX - this.ComponentModel.getButtonRect().x;
+  setShiftX(e: PointerEvent, btnRect: DOMRect): void {
+    this.shiftX = e.x - btnRect.x;
   }
 
   setX(e: PointerEvent): void {
-    this.x = e.clientX;
+    this.x = e.x;
     this.emit(
       'changeX', 
       [
         this.x,
-        this.ComponentModel.getScaleRect().x,
-        this.ComponentModel.getScaleRect().width,
+        this.scaleX,
+        this.scaleW,
         this.shiftX,
-        this.ComponentModel.getButtonRect().width, 
+        this.btnW,
       ]
     );
+  }
+
+  updateScaleWidth(scaleRect: DOMRect): void {
+    this.scaleW = scaleRect.width;
   }
 }

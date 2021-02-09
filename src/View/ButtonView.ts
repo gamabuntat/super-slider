@@ -1,17 +1,14 @@
 import View from './View';
 
 export default class ButtonView extends View {
-  isTriggerd: boolean
   constructor(button: HTMLElement) {
     super(button);
-    this.isTriggerd = false;
     this.component.addEventListener(
       'pointerdown',
       (e) => {
-        console.log(e.pointerId);
         this.toggleTrigger();
         this.component.setPointerCapture(e.pointerId);
-        this.emit('pointerPressed', e);
+        this.emit('pointerPressed', [e, this.getRect()]);
       }
     );
     this.component.addEventListener(

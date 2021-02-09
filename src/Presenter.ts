@@ -10,7 +10,9 @@ export default class Presenter {
   ) {
     this.model.on('changeX', (x) => this.callMoveButton(x as number[]));
     this.scale.on('clickOnScale', (e) => this.setX(e as PointerEvent));
-    this.button.on('pointerPressed', (e) => this.setShiftX(e as PointerEvent))
+    this.button.on('pointerPressed', (args) => (
+      this.setShiftX(args as [PointerEvent, DOMRect])
+    ))
       .on('pointerMoved', (e) => this.setX(e as PointerEvent));
   }
 
@@ -18,8 +20,8 @@ export default class Presenter {
     this.button.moveButton(x, scaleX, scaleW, shiftX, btnW);
   }
 
-  setShiftX(e: PointerEvent): void {
-    this.model.setShiftX(e);
+  setShiftX([e, btnRect]: [PointerEvent, DOMRect]): void {
+    this.model.setShiftX(e, btnRect);
   }
 
   setX(e: PointerEvent): void {
