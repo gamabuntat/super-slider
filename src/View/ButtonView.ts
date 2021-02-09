@@ -7,7 +7,7 @@ export default class ButtonView extends View {
       'pointerdown',
       (e) => {
         this.toggleTrigger();
-        this.component.setPointerCapture(e.pointerId);
+        this.fixPointer(e);
         this.emit('pointerPressed', [e, this.getRect()]);
       }
     );
@@ -19,6 +19,11 @@ export default class ButtonView extends View {
       'pointermove',
       (e) => View.isTriggerd && this.emit('pointerMoved', e),
     );
+  }
+
+  fixPointer(e: PointerEvent): void {
+    console.log(e.pointerId);
+    this.component.setPointerCapture(e.pointerId);
   }
 
   moveButton(

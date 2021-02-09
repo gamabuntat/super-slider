@@ -17,7 +17,11 @@ export default class Model extends EventEmitter {
     this.scaleX = scale.getBoundingClientRect().x;
     this.btnW = button.getBoundingClientRect().width;
     this.x = x;
-    this.shiftX = 0;
+    this.shiftX = this.btnW / 2;
+  }
+
+  setDefaultShiftX(): void {
+    this.shiftX = this.btnW / 2;
   }
 
   setShiftX(e: PointerEvent, btnRect: DOMRect): void {
@@ -38,7 +42,8 @@ export default class Model extends EventEmitter {
     );
   }
 
-  updateScaleWidth(scaleRect: DOMRect): void {
+  updateScaleSizes(scaleRect: DOMRect): void {
     this.scaleW = scaleRect.width;
+    this.scaleX = scaleRect.x;
   }
 }
