@@ -22,6 +22,7 @@
   "homepage": "https://github.com/gamabuntat/metalamp-4-step#readme",
   "devDependencies": {
     "@types/jquery": "^3.5.5",
+    "@types/resize-observer-browser": "^0.1.5",
     "@typescript-eslint/eslint-plugin": "^4.14.1",
     "@typescript-eslint/parser": "^4.14.1",
     "eslint": "^7.19.0",
