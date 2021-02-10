@@ -10,31 +10,31 @@ export default class Presenter {
   ) {
     this.model.on('changeX', (x) => this.callMoveButton(x as number[]));
     this.scale
-      .on('clickOnScale', (e) => this.fixPointer(e as PointerEvent))
+      .on('clickOnScale', (e) => this.fixPointer(e as PointerEvent[]))
       .on('clickOnScale', () => this.setDefaultShiftX())
-      .on('clickOnScale', (e) => this.setX(e as PointerEvent))
-      .on('resizeElem', (rect) => this.updateScaleSizes(rect as DOMRect));
+      .on('clickOnScale', (e) => this.setX(e as PointerEvent[]))
+      .on('resizeElem', (rect) => this.updateScaleSizes(rect as DOMRect[]));
     this.button
-      // .on('pointerPressed', (e) => this.fixPointer(e as PointerEvent))
+      .on('pointerPressed', (e) => this.fixPointer(e as PointerEvent[]))
       .on('pointerPressed', (eventAndRect) => (
         this.setShiftX(eventAndRect as [PointerEvent, DOMRect])
       ))
-      .on('pointerMoved', (e) => this.setX(e as PointerEvent));
+      .on('pointerMoved', (e) => this.setX(e as PointerEvent[]));
   }
 
   callMoveButton([x, scaleX, scaleW, shiftX, btnW]: number[]): void {
     this.button.moveButton(x, scaleX, scaleW, shiftX, btnW);
   }
 
-  fixPointer(e: PointerEvent): void {
+  fixPointer([e]: PointerEvent[]): void {
     this.button.fixPointer(e);
   }
 
-  setX(e: PointerEvent): void {
+  setX([e]: PointerEvent[]): void {
     this.model.setX(e);
   }
 
-  updateScaleSizes(rect: DOMRect): void {
+  updateScaleSizes([rect]: DOMRect[]): void {
     this.model.updateScaleSizes(rect);
   }
 

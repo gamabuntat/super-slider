@@ -10,6 +10,6 @@ export default class ScaleView extends View {
         this.emit('clickOnScale', e);
       }
     );
-  }
+  } 
 }
 

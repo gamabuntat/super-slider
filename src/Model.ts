@@ -1,5 +1,5 @@
 import {Options} from './index';
-import EventEmitter from './EventEmitter';
+import {EventEmitter} from './EventEmitter';
 
 export default class Model extends EventEmitter {
   private scaleW: number
@@ -32,13 +32,11 @@ export default class Model extends EventEmitter {
     this.x = e.x;
     this.emit(
       'changeX', 
-      [
-        this.x,
-        this.scaleX,
-        this.scaleW,
-        this.shiftX,
-        this.btnW,
-      ]
+      this.x,
+      this.scaleX,
+      this.scaleW,
+      this.shiftX,
+      this.btnW,
     );
   }
 
