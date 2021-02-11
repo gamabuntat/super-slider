@@ -2,16 +2,8 @@ interface StorageForEvents {
   [evt: string]: Handler[]
 }
 
-// type Handler = (
-//   o: number[] 
-//   | PointerEvent 
-//   | [PointerEvent, DOMRect] 
-//   | DOMRect
-//   | void
-// ) => void
-
 type Handler = (args: AA[]) => void
-type AA = PointerEvent | DOMRect | number
+type AA = PointerEvent | DOMRect | number | string
 
 class EventEmitter {
   protected events: StorageForEvents = {};
@@ -23,7 +15,6 @@ class EventEmitter {
 
   emit(
     evt: string, 
-    // args?: number[] | PointerEvent | [PointerEvent, DOMRect] | DOMRect
     ...args: AA[]
   ): void {
     (this.events[evt] || [])

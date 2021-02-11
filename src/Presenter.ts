@@ -2,6 +2,8 @@ import Model from './Model';
 import ScaleView from './View/ScaleView';
 import ButtonView from './View/ButtonView';
 
+type btn = 'button' | 'buttonE'
+
 export default class Presenter {
   constructor(
     private model: Model,
@@ -9,15 +11,19 @@ export default class Presenter {
     private button: ButtonView,
     private buttonE: ButtonView | false,
   ) {
-    this.model.on('changeX', (x) => this.callMoveButton(x as number[]));
+    this.model
+      .on('changeX', (x) => this.callMoveButton(x as number[]))
+      .on('setActiveButton', (btnAndPointerID) => (
+        this.fixPointer(btnAndPointerID as [btn, number])
+      ));
     this.scale
-      .on('clickOnScale', (e) => this.fixPointer(e as PointerEvent[]))
+      // .on('clickOnScale', (e) => this.fixPointer(e as PointerEvent[]))
       .on('clickOnScale', () => this.setDefaultShiftX())
       .on('clickOnScale', (e) => this.setX(e as PointerEvent[]))
       .on('resizeElem', (rect) => this.updateScaleSizes(rect as DOMRect[]));
     [this.button, this.buttonE].forEach((b) => {
       b && b
-        .on('pointerPressed', (e) => this.fixPointer(e as PointerEvent[]))
+        .on('pointerPressed', (e) => this.determineButton(e as PointerEvent[]))
         .on('pointerPressed', (eventAndRect) => (
           this.setShiftX(eventAndRect as [PointerEvent, DOMRect])
         ))
@@ -29,8 +35,13 @@ export default class Presenter {
     this.button.moveButton(x, scaleX, scaleW, shiftX, btnW);
   }
 
-  fixPointer([e]: PointerEvent[]): void {
-    this.button.fixPointer(e);
+  fixPointer([btn, pointerId]: [btn, number]): void {
+    const activeButton = this[btn];
+    activeButton && activeButton.fixPointer(pointerId);
+  }
+
+  determineButton([e]: PointerEvent[]): void {
+    this.model.determineButton(e);
   }
 
   setDefaultShiftX(): void {

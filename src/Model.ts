@@ -25,6 +25,11 @@ export default class Model extends EventEmitter {
     this.activeButton = 'button';
   }
 
+  determineButton(e: PointerEvent): void {
+    this.activeButton = e.target === this.button ? 'button' : 'buttonE';
+    this.emit('setActiveButton', this.activeButton, e.pointerId);
+  }
+
   setDefaultShiftX(): void {
     this.shiftX = this.btnW / 2;
   }

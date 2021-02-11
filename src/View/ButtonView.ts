@@ -20,9 +20,8 @@ export default class ButtonView extends View {
     );
   }
 
-  fixPointer(e: PointerEvent): void {
-    console.log(e.pointerId);
-    this.component.setPointerCapture(e.pointerId);
+  fixPointer(pointerId: number): void {
+    this.component.setPointerCapture(pointerId);
   }
 
   moveButton(
