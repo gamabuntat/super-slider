@@ -1,25 +1,28 @@
-import {Options} from './index';
 import {EventEmitter} from './EventEmitter';
 
 export default class Model extends EventEmitter {
   private scaleW: number
   private scaleX: number
   private btnW: number
-  private x: number
   private shiftX: number
+  private x: number
+  private xe: number
   private relativelyX: number
+  private activeButton: string
   constructor(
-    scale: HTMLElement,
-    button: HTMLElement,
-    { x = 0 }: Options
+    private scale: HTMLElement,
+    private button: HTMLElement,
+    private buttonE: HTMLElement | false,
   ) {
     super();
     this.scaleW = scale.getBoundingClientRect().width;
     this.scaleX = scale.getBoundingClientRect().x;
     this.btnW = button.getBoundingClientRect().width;
-    this.x = x;
     this.shiftX = this.btnW / 2;
+    this.x = 0;
+    this.xe = this.scaleW;
     this.relativelyX = (this.x - this.scaleX) / this.scaleW;
+    this.activeButton = 'button';
   }
 
   setDefaultShiftX(): void {
@@ -37,6 +40,7 @@ export default class Model extends EventEmitter {
       this.x = e.x;
       this.setRelativelyX();
     }
+    console.log(this.x);
     this.emit(
       'changeX', 
       this.x,

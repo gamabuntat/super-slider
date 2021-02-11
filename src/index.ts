@@ -8,7 +8,6 @@ interface Storage {
 }
 
 export interface Options {
-  x?: number
   interval?: boolean
 }
 
@@ -21,12 +20,12 @@ export interface Options {
         return this;
       }
       if (typeof o == 'object') {
+        const isInterval = o?.interval === true;
         const components = [
           ['div', 'ui-slider__container'],
           ['div', 'ui-slider__scale'],
           ['button', 'ui-slider__button_start'],
-          (o?.interval == true 
-            && ['button', 'ui-slider__button_end']),
+          isInterval && ['button', 'ui-slider__button_end'],
         ]
           .filter((args) => args)
           .map((args) => createComponent(args as string[]));
@@ -35,9 +34,14 @@ export interface Options {
           return components[0];
         }, this[0]);
         storage[id] = new Presenter(
-          new Model(components[1], components[2], o),
+          new Model(
+            components[1],
+            components[2],
+            isInterval && components[3]
+          ),
           new ScaleView(components[1]),
           new ButtonView(components[2]),
+          isInterval && new ButtonView(components[3]),
         );
       } else {
         console.log('no options :(', args, storage);

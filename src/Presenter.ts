@@ -7,6 +7,7 @@ export default class Presenter {
     private model: Model,
     private scale: ScaleView,
     private button: ButtonView,
+    private buttonE: ButtonView | false,
   ) {
     this.model.on('changeX', (x) => this.callMoveButton(x as number[]));
     this.scale
@@ -14,12 +15,14 @@ export default class Presenter {
       .on('clickOnScale', () => this.setDefaultShiftX())
       .on('clickOnScale', (e) => this.setX(e as PointerEvent[]))
       .on('resizeElem', (rect) => this.updateScaleSizes(rect as DOMRect[]));
-    this.button
-      .on('pointerPressed', (e) => this.fixPointer(e as PointerEvent[]))
-      .on('pointerPressed', (eventAndRect) => (
-        this.setShiftX(eventAndRect as [PointerEvent, DOMRect])
-      ))
-      .on('pointerMoved', (e) => this.setX(e as PointerEvent[]));
+    [this.button, this.buttonE].forEach((b) => {
+      b && b
+        .on('pointerPressed', (e) => this.fixPointer(e as PointerEvent[]))
+        .on('pointerPressed', (eventAndRect) => (
+          this.setShiftX(eventAndRect as [PointerEvent, DOMRect])
+        ))
+        .on('pointerMoved', (e) => this.setX(e as PointerEvent[]));
+    });
   }
 
   callMoveButton([x, scaleX, scaleW, shiftX, btnW]: number[]): void {
@@ -30,20 +33,20 @@ export default class Presenter {
     this.button.fixPointer(e);
   }
 
-  setX([e]: PointerEvent[]): void {
-    this.model.setX(e);
-  }
-
-  updateScaleSizes([rect]: DOMRect[]): void {
-    this.model.updateScaleSizes(rect);
-  }
-
   setDefaultShiftX(): void {
     this.model.setDefaultShiftX();
   }
 
   setShiftX([e, btnRect]: [PointerEvent, DOMRect]): void {
     this.model.setShiftX(e, btnRect);
+  }
+
+  setX([e]: PointerEvent[]): void {
+    this.model.setX(e);
+  }
+
+  updateScaleSizes([rect]: DOMRect[]): void {
+    this.model.updateScaleSizes(rect);
   }
 }
 
