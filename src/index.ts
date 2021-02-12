@@ -43,6 +43,11 @@ export interface Options {
           new ButtonView(components[2]),
           isInterval && new ButtonView(components[3]),
         );
+        function createComponent([elem, elemClass]: string[]) {
+          const component = document.createElement(elem);
+          component.classList.add(elemClass);
+          return component;
+        }
       } else {
         console.log('no options :(', args, storage);
       }
@@ -50,9 +55,3 @@ export interface Options {
     };
   })();
 })(jQuery);
-
-function createComponent([elem, elemClass]: string[]) {
-  const component = document.createElement(elem);
-  component.classList.add(elemClass);
-  return component;
-}

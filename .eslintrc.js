@@ -13,6 +13,6 @@ module.exports = {
     'max-len': 'error',
     'semi': 'warn',
     'no-new-wrappers': 'error',
-    "indent": ["error", 2],
+    'indent': ["error", 2],
   }
 };

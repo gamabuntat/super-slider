@@ -24,8 +24,8 @@ export default class Presenter {
     [this.button, this.buttonE].forEach((b) => {
       b && b
         .on('pointerPressed', (e) => this.determineButton(e as PointerEvent[]))
-        .on('pointerPressed', (eventAndRect) => (
-          this.setShiftX(eventAndRect as [PointerEvent, DOMRect])
+        .on('pointerPressed', (e) => (
+          this.setShiftX(e as PointerEvent[])
         ))
         .on('pointerMoved', (e) => this.setX(e as PointerEvent[]));
     });
@@ -36,8 +36,8 @@ export default class Presenter {
   }
 
   fixPointer([btn, pointerId]: [btn, number]): void {
-    const activeButton = this[btn];
-    activeButton && activeButton.fixPointer(pointerId);
+    const activeButton = this[btn] || this.button;
+    activeButton.fixPointer(pointerId);
   }
 
   determineButton([e]: PointerEvent[]): void {
@@ -48,8 +48,8 @@ export default class Presenter {
     this.model.setDefaultShiftX();
   }
 
-  setShiftX([e, btnRect]: [PointerEvent, DOMRect]): void {
-    this.model.setShiftX(e, btnRect);
+  setShiftX([e]: PointerEvent[]): void {
+    this.model.setShiftX(e);
   }
 
   setX([e]: PointerEvent[]): void {

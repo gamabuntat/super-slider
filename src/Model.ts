@@ -6,9 +6,8 @@ export default class Model extends EventEmitter {
   private btnW: number
   private shiftX: number
   private x: number
-  private xe: number
   private relativelyX: number
-  private activeButton: string
+  private activeButton: 'button' | 'buttonE'
   constructor(
     private scale: HTMLElement,
     private button: HTMLElement,
@@ -20,7 +19,6 @@ export default class Model extends EventEmitter {
     this.btnW = button.getBoundingClientRect().width;
     this.shiftX = this.btnW / 2;
     this.x = 0;
-    this.xe = this.scaleW;
     this.relativelyX = (this.x - this.scaleX) / this.scaleW;
     this.activeButton = 'button';
   }
@@ -34,8 +32,10 @@ export default class Model extends EventEmitter {
     this.shiftX = this.btnW / 2;
   }
 
-  setShiftX(e: PointerEvent, btnRect: DOMRect): void {
-    this.shiftX = e.x - btnRect.x;
+  setShiftX(e: PointerEvent): void {
+    this.shiftX = (
+      e.x - this[this.activeButton && 'button'].getBoundingClientRect().x
+    );
   }
 
   setX(e: PointerEvent | number): void {
@@ -47,7 +47,7 @@ export default class Model extends EventEmitter {
     }
     console.log(this.x);
     this.emit(
-      'changeX', 
+      'changeX',
       this.x,
       this.scaleX,
       this.scaleW,
@@ -66,4 +66,3 @@ export default class Model extends EventEmitter {
     this.setX(this.relativelyX * this.scaleW + this.scaleX);
   }
 }
-
