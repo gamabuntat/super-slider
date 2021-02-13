@@ -3,6 +3,7 @@ import ScaleView from './View/ScaleView';
 import ButtonView from './View/ButtonView';
 
 type btn = 'button' | 'buttonE'
+type typeMoveButton = [btn, number, number, number, number, number]
 
 export default class Presenter {
   constructor(
@@ -12,7 +13,7 @@ export default class Presenter {
     private buttonE: ButtonView | false,
   ) {
     this.model
-      .on('changeX', (x) => this.callMoveButton(x as number[]))
+      .on('changeX', (x) => this.callMoveButton(x as typeMoveButton))
       .on('setActiveButton', (btnAndPointerID) => (
         this.fixPointer(btnAndPointerID as [btn, number])
       ));
@@ -20,7 +21,7 @@ export default class Presenter {
       // .on('clickOnScale', (e) => this.fixPointer(e as PointerEvent[]))
       .on('clickOnScale', () => this.setDefaultShiftX())
       .on('clickOnScale', (e) => this.setX(e as PointerEvent[]))
-      .on('resizeElem', (rect) => this.updateScaleSizes(rect as DOMRect[]));
+      .on('resizeElem', () => this.updateScaleSizes());
     [this.button, this.buttonE].forEach((b) => {
       b && b
         .on('pointerPressed', (e) => this.determineButton(e as PointerEvent[]))
@@ -31,13 +32,18 @@ export default class Presenter {
     });
   }
 
-  callMoveButton([x, scaleX, scaleW, shiftX, btnW]: number[]): void {
-    this.button.moveButton(x, scaleX, scaleW, shiftX, btnW);
+  callMoveButton(
+    [btn, x, scaleX, scaleW, shiftX, btnW]: typeMoveButton
+  ): void {
+    this.selectActiveButton(btn).moveButton(x, scaleX, scaleW, shiftX, btnW);
   }
 
   fixPointer([btn, pointerId]: [btn, number]): void {
-    const activeButton = this[btn] || this.button;
-    activeButton.fixPointer(pointerId);
+    this.selectActiveButton(btn).fixPointer(pointerId);
+  }
+
+  selectActiveButton(btn: btn): ButtonView {
+    return this[btn] || this.button;
   }
 
   determineButton([e]: PointerEvent[]): void {
@@ -56,8 +62,8 @@ export default class Presenter {
     this.model.setX(e);
   }
 
-  updateScaleSizes([rect]: DOMRect[]): void {
-    this.model.updateScaleSizes(rect);
+  updateScaleSizes(): void {
+    this.model.updateScaleSizes();
   }
 }
 

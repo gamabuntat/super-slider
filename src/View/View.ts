@@ -6,7 +6,7 @@ export default class View extends EventEmitter {
   constructor(protected component: HTMLElement) {
     super();
     this.resizeObserver = new ResizeObserver(() => {
-      this.emit('resizeElem', this.getRect());
+      this.emit('resizeElem');
     });
     this.resizeObserver.observe(this.component);
   }

@@ -1,12 +1,15 @@
 import {EventEmitter} from './EventEmitter';
 
+type relativeX = 'buttonRelativelyX' | 'buttonERelativelyX';
+
 export default class Model extends EventEmitter {
   private scaleW: number
   private scaleX: number
   private btnW: number
   private shiftX: number
   private x: number
-  private relativelyX: number
+  private buttonRelativelyX: number
+  private buttonERelativelyX: number
   private activeButton: 'button' | 'buttonE'
   constructor(
     private scale: HTMLElement,
@@ -19,7 +22,8 @@ export default class Model extends EventEmitter {
     this.btnW = button.getBoundingClientRect().width;
     this.shiftX = this.btnW / 2;
     this.x = 0;
-    this.relativelyX = (this.x - this.scaleX) / this.scaleW;
+    this.buttonRelativelyX = 0;
+    this.buttonERelativelyX = 1;
     this.activeButton = 'button';
   }
 
@@ -33,9 +37,10 @@ export default class Model extends EventEmitter {
   }
 
   setShiftX(e: PointerEvent): void {
-    this.shiftX = (
-      e.x - this[this.activeButton && 'button'].getBoundingClientRect().x
-    );
+    const activeButton = this[this.activeButton];
+    if (activeButton) {
+      this.shiftX = e.x - activeButton.getBoundingClientRect().x;
+    }
   }
 
   setX(e: PointerEvent | number): void {
@@ -45,9 +50,9 @@ export default class Model extends EventEmitter {
       this.x = e.x;
       this.setRelativelyX();
     }
-    console.log(this.x);
     this.emit(
       'changeX',
+      this.activeButton,
       this.x,
       this.scaleX,
       this.scaleW,
@@ -57,12 +62,13 @@ export default class Model extends EventEmitter {
   }
 
   setRelativelyX(): void {
-    this.relativelyX = (this.x - this.scaleX) / this.scaleW;
+    const relativeX = `${this.activeButton}RelativelyX` as relativeX;
+    this[relativeX] = (this.x - this.scaleX) / this.scaleW;
   }
 
-  updateScaleSizes(scaleRect: DOMRect): void {
-    this.scaleW = scaleRect.width;
-    this.scaleX = scaleRect.x;
-    this.setX(this.relativelyX * this.scaleW + this.scaleX);
+  updateScaleSizes(): void {
+    this.scaleW = this.scale.getBoundingClientRect().width;
+    this.scaleX = this.scale.getBoundingClientRect().x;
+    // this.setX(this.relativelyX * this.scaleW + this.scaleX);
   }
 }
