@@ -1,7 +1,9 @@
+import {Options} from './index';
 import {EventEmitter} from './EventEmitter';
 import ButtonModel from './Model/ButtonModel';
 
 export default class Model extends EventEmitter {
+  private isInterval: boolean
   private button: ButtonModel
   private buttonE: ButtonModel
   private scaleW: number
@@ -14,8 +16,10 @@ export default class Model extends EventEmitter {
     private scale: HTMLElement,
     button: HTMLElement,
     buttonE: HTMLElement | false,
+    {interval = false}: Options
   ) {
     super();
+    this.isInterval = interval;
     this.button = new ButtonModel(button);
     this.buttonE = buttonE ? new ButtonModel(buttonE) : this.button;
     this.scaleW = scale.getBoundingClientRect().width;
@@ -51,10 +55,22 @@ export default class Model extends EventEmitter {
       this.activeButton,
       this.x,
       this.scaleX,
-      this.scaleW,
+      this.findMaxExtreme(),
+      this.findMinExtreme(),
       this.shiftX,
-      this.btnW,
     );
+  }
+
+  findMaxExtreme(): number {
+    return this.isInterval && this.activeButton === 'button' 
+      ? this.buttonE.getRect().x - this.scaleX - this.btnW 
+      : this.scaleW - this.btnW;
+  }
+
+  findMinExtreme(): number {
+    return this.isInterval && this.activeButton === 'buttonE' 
+      ? this.button.getRect().x - this.scaleX + this.btnW 
+      : 0;
   }
 
   setRelativelyX(): void {

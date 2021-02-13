@@ -27,13 +27,13 @@ export default class ButtonView extends View {
   moveButton(
     x: number,
     scaleX: number,
-    scaleW: number,
+    maxExtreme: number,
+    minExtreme: number,
     shiftX: number,
-    btnW: number,
   ): void {
     const btnPosition = Math.min(
-      scaleW - btnW,
-      Math.max((x - scaleX - shiftX), 0)
+      maxExtreme,
+      Math.max((x - scaleX - shiftX), minExtreme)
     );
     this.component.style.left = `${btnPosition}px`;
   }

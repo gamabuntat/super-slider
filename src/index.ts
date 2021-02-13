@@ -7,7 +7,7 @@ interface Storage {
   [id: string]: Presenter
 }
 
-export interface Options {
+interface Options {
   interval?: boolean
 }
 
@@ -37,7 +37,8 @@ export interface Options {
           new Model(
             components[1],
             components[2],
-            isInterval && components[3]
+            isInterval && components[3],
+            o
           ),
           new ScaleView(components[1]),
           new ButtonView(components[2]),
@@ -55,3 +56,5 @@ export interface Options {
     };
   })();
 })(jQuery);
+
+export {Options};
