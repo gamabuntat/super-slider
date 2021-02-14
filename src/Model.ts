@@ -4,14 +4,13 @@ import ButtonModel from './Model/ButtonModel';
 
 export default class Model extends EventEmitter {
   private isInterval: boolean
-  private button: ButtonModel
-  private buttonE: ButtonModel
   private scaleW: number
   private scaleX: number
   private btnW: number
-  private shiftX: number
   private x: number
   private activeButton: 'button' | 'buttonE'
+  private button: ButtonModel
+  private buttonE: ButtonModel
   constructor(
     private scale: HTMLElement,
     button: HTMLElement,
@@ -20,12 +19,13 @@ export default class Model extends EventEmitter {
   ) {
     super();
     this.isInterval = interval;
-    this.button = new ButtonModel(button, 0);
-    this.buttonE = buttonE ? new ButtonModel(buttonE, 1) : this.button;
     this.scaleW = scale.getBoundingClientRect().width;
     this.scaleX = scale.getBoundingClientRect().x;
     this.btnW = button.getBoundingClientRect().width;
-    this.shiftX = this.btnW / 2;
+    this.button = new ButtonModel(button, 0);
+    this.buttonE = buttonE 
+      ? new ButtonModel(buttonE, 1) 
+      : this.button;
     this.x = 0;
     this.activeButton = 'button';
   }
@@ -45,11 +45,11 @@ export default class Model extends EventEmitter {
   }
 
   setDefaultShiftX(): void {
-    this.shiftX = this.btnW / 2;
+    this[this.activeButton].setDefaultShift();
   }
 
   setShiftX(e: PointerEvent): void {
-    this.shiftX = e.x - this[this.activeButton].getRect().x;
+    this[this.activeButton].setShift(e);
   }
 
   setX(e: PointerEvent | number): void {
@@ -66,7 +66,7 @@ export default class Model extends EventEmitter {
       this.scaleX,
       this.findMaxExtreme(),
       this.findMinExtreme(),
-      this.shiftX,
+      this[this.activeButton].getShift(),
     );
   }
 
@@ -89,7 +89,7 @@ export default class Model extends EventEmitter {
   updateScaleSizes(entries: ResizeObserverEntry[]): void {
     console.log(entries[0].contentRect.width);
     const buttons: ['button', 'buttonE'] = ['button', 'buttonE'];
-    if (this.scaleW > entries[0].contentRect.width) {
+    if (this.scaleW < entries[0].contentRect.width) {
       buttons.reverse();
     }
     this.scaleX = this.scale.getBoundingClientRect().x;
