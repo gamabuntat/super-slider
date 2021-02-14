@@ -21,7 +21,8 @@ export default class Presenter {
       .on('clickOnScale', (e) => this.findButton(e as PointerEvent[]))
       .on('clickOnScale', () => this.setDefaultShiftX())
       .on('clickOnScale', (e) => this.setX(e as PointerEvent[]))
-      .on('resizeElem', () => this.updateScaleSizes());
+      .on('resizeElem', (entries) => (
+        this.updateScaleSizes(...entries as [ResizeObserverEntry[]])));
     [this.button, this.buttonE].forEach((b) => {
       b && b
         .on('pointerPressed', (e) => this.defineButton(e as PointerEvent[]))
@@ -66,8 +67,8 @@ export default class Presenter {
     this.model.setX(e);
   }
 
-  updateScaleSizes(): void {
-    this.model.updateScaleSizes();
+  updateScaleSizes(entries: ResizeObserverEntry[]): void {
+    this.model.updateScaleSizes(entries);
   }
 }
 

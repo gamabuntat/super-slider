@@ -20,8 +20,8 @@ export default class Model extends EventEmitter {
   ) {
     super();
     this.isInterval = interval;
-    this.button = new ButtonModel(button);
-    this.buttonE = buttonE ? new ButtonModel(buttonE) : this.button;
+    this.button = new ButtonModel(button, 0);
+    this.buttonE = buttonE ? new ButtonModel(buttonE, 1) : this.button;
     this.scaleW = scale.getBoundingClientRect().width;
     this.scaleX = scale.getBoundingClientRect().x;
     this.btnW = button.getBoundingClientRect().width;
@@ -37,7 +37,7 @@ export default class Model extends EventEmitter {
 
   findButton(e: PointerEvent): void {
     const [b, be] = [this.button, this.buttonE].map((b) => (
-      Math.abs(e.x - (b.getRect().x + this.btnW))
+      Math.abs(e.x - (b.getRect().x + this.btnW / 2))
     ));
     const minDistance = Math.min(b, be);
     this.activeButton = minDistance == b ? 'button' : 'buttonE';
@@ -57,7 +57,7 @@ export default class Model extends EventEmitter {
       this.x = e;
     } else {
       this.x = e.x;
-      this.setRelativelyX();
+      this.setRelatively();
     }
     this.emit(
       'changeX',
@@ -82,14 +82,22 @@ export default class Model extends EventEmitter {
       : 0;
   }
 
-  setRelativelyX(): void {
-    this[this.activeButton].setRelative(this.scaleX, this.scaleW);
+  setRelatively(): void {
+    this[this.activeButton].setRelative(this.x, this.scaleX, this.scaleW);
   }
 
-  updateScaleSizes(): void {
-    this.scaleW = this.scale.getBoundingClientRect().width;
+  updateScaleSizes(entries: ResizeObserverEntry[]): void {
+    console.log(entries[0].contentRect.width);
+    const buttons: ['button', 'buttonE'] = ['button', 'buttonE'];
+    if (this.scaleW > entries[0].contentRect.width) {
+      buttons.reverse();
+    }
     this.scaleX = this.scale.getBoundingClientRect().x;
-    // this.setX(this.relativelyX * this.scaleW + this.scaleX);
+    this.scaleW = this.scale.getBoundingClientRect().width;
+    buttons.forEach((b) => {
+      this.activeButton = b;
+      this.setX(this[b].getRelative() * this.scaleW + this.scaleX);
+    });
   }
 }
 

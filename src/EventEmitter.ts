@@ -3,7 +3,7 @@ interface StorageForEvents {
 }
 
 type Handler = (args: AA[]) => void
-type AA = PointerEvent | DOMRect | number | string
+type AA = PointerEvent | DOMRect | number | string | ResizeObserverEntry[]
 
 class EventEmitter {
   protected events: StorageForEvents = {};

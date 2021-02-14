@@ -1,11 +1,8 @@
 export default class ButtonModel {
-  private relative: number
-  constructor(public btn: HTMLElement) {
-    this.relative = 0;
-  }
+  constructor(public btn: HTMLElement, private relative: number) {}
 
-  setRelative(sx: number, sw: number): void {
-    this.relative = (this.getRect().x - sx) / sw;
+  setRelative(x: number, sx: number, sw: number): void {
+    this.relative = (x - sx) / sw;
   }
 
   getRelative(): number {
