@@ -30,8 +30,17 @@ export default class Model extends EventEmitter {
     this.activeButton = 'button';
   }
 
-  determineButton(e: PointerEvent): void {
+  defineButton(e: PointerEvent): void {
     this.activeButton = e.target === this.button.btn ? 'button' : 'buttonE';
+    this.emit('setActiveButton', this.activeButton, e.pointerId);
+  }
+
+  findButton(e: PointerEvent): void {
+    const [b, be] = [this.button, this.buttonE].map((b) => (
+      Math.abs(e.x - (b.getRect().x + this.btnW))
+    ));
+    const minDistance = Math.min(b, be);
+    this.activeButton = minDistance == b ? 'button' : 'buttonE';
     this.emit('setActiveButton', this.activeButton, e.pointerId);
   }
 
@@ -62,13 +71,13 @@ export default class Model extends EventEmitter {
   }
 
   findMaxExtreme(): number {
-    return this.isInterval && this.activeButton === 'button' 
+    return this.isInterval && (this.activeButton === 'button')
       ? this.buttonE.getRect().x - this.scaleX - this.btnW 
       : this.scaleW - this.btnW;
   }
 
   findMinExtreme(): number {
-    return this.isInterval && this.activeButton === 'buttonE' 
+    return this.isInterval && (this.activeButton === 'buttonE')
       ? this.button.getRect().x - this.scaleX + this.btnW 
       : 0;
   }
@@ -83,3 +92,4 @@ export default class Model extends EventEmitter {
     // this.setX(this.relativelyX * this.scaleW + this.scaleX);
   }
 }
+

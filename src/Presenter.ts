@@ -10,7 +10,7 @@ export default class Presenter {
     private model: Model,
     private scale: ScaleView,
     private button: ButtonView,
-    private buttonE: ButtonView | false,
+    private buttonE: ButtonView | false
   ) {
     this.model
       .on('changeX', (x) => this.callMoveButton(x as typeMoveButton))
@@ -18,13 +18,13 @@ export default class Presenter {
         this.fixPointer(btnAndPointerID as [btn, number])
       ));
     this.scale
-      // .on('clickOnScale', (e) => this.fixPointer(e as PointerEvent[]))
+      .on('clickOnScale', (e) => this.findButton(e as PointerEvent[]))
       .on('clickOnScale', () => this.setDefaultShiftX())
       .on('clickOnScale', (e) => this.setX(e as PointerEvent[]))
       .on('resizeElem', () => this.updateScaleSizes());
     [this.button, this.buttonE].forEach((b) => {
       b && b
-        .on('pointerPressed', (e) => this.determineButton(e as PointerEvent[]))
+        .on('pointerPressed', (e) => this.defineButton(e as PointerEvent[]))
         .on('pointerPressed', (e) => (
           this.setShiftX(e as PointerEvent[])
         ))
@@ -46,8 +46,12 @@ export default class Presenter {
     return this[btn] || this.button;
   }
 
-  determineButton([e]: PointerEvent[]): void {
-    this.model.determineButton(e);
+  defineButton([e]: PointerEvent[]): void {
+    this.model.defineButton(e);
+  }
+
+  findButton([e]: PointerEvent[]): void {
+    this.model.findButton(e);
   }
 
   setDefaultShiftX(): void {
