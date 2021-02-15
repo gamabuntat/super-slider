@@ -28,6 +28,8 @@ interface Options {
           ['div', 'ui-slider__scale'],
           ['button', 'ui-slider__button_start'],
           isInterval && ['button', 'ui-slider__button_end'],
+          ['div', 'ui-slider__display_start'],
+          isInterval && ['div', 'ui-slider__display_end'],
         ]
           .filter((args) => args)
           .map((args) => createComponent(args as string[]));
