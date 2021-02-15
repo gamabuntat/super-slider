@@ -4,9 +4,12 @@ import ButtonModel from './Model/ButtonModel';
 
 export default class Model extends EventEmitter {
   private isInterval: boolean
+  private min: number
   private scaleW: number
+  private valueOfDivision: number
   private scaleX: number
   private btnW: number
+  private deflexion: number
   private x: number
   private activeButton: 'button' | 'buttonE'
   private button: ButtonModel
@@ -15,19 +18,32 @@ export default class Model extends EventEmitter {
     private scale: HTMLElement,
     button: HTMLElement,
     buttonE: HTMLElement | false,
-    {interval = false}: Options
+    {interval = false, min = 0, max = 0}: Options
   ) {
     super();
     this.isInterval = interval;
+    this.min = min;
     this.scaleW = scale.getBoundingClientRect().width;
     this.scaleX = scale.getBoundingClientRect().x;
     this.btnW = button.getBoundingClientRect().width;
+    this.deflexion = this.isInterval ? this.btnW * 2 : this.btnW;
+    this.valueOfDivision = (max - min) / (this.scaleW - this.deflexion);
     this.button = new ButtonModel(button, 0);
     this.buttonE = buttonE 
       ? new ButtonModel(buttonE, 1) 
       : this.button;
     this.x = 0;
     this.activeButton = 'button';
+  }
+
+  calcValueForDisplayElem(): void {
+    console.log(
+      Math.round(
+        (this[this.activeButton].getRect().x - this.scaleX
+          - (this.activeButton == 'button' ? 0 : this.btnW)) 
+        * this.valueOfDivision + this.min
+      )
+    );
   }
 
   defineButton(e: PointerEvent): void {
@@ -68,6 +84,12 @@ export default class Model extends EventEmitter {
       this.findMinExtreme(),
       this[this.activeButton].getShift(),
     );
+    this.calcValueForDisplayElem();
+    // console.log(
+    //   `sw: ${this.scaleW},
+    //   relative: ${this[this.activeButton].getRelative()},
+    //   x: ${this.x}`
+    // );
   }
 
   findMaxExtreme(): number {
@@ -87,7 +109,6 @@ export default class Model extends EventEmitter {
   }
 
   updateScaleSizes(entries: ResizeObserverEntry[]): void {
-    console.log(entries[0].contentRect.width);
     const buttons: ['button', 'buttonE'] = ['button', 'buttonE'];
     if (this.scaleW < entries[0].contentRect.width) {
       buttons.reverse();

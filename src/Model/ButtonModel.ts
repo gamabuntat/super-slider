@@ -1,5 +1,5 @@
 export default class ButtonModel {
-  shift: number
+  private shift: number
   constructor(
     public btn: HTMLElement,
     private relative: number,
