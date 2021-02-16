@@ -4,8 +4,10 @@ import ButtonView from './View/ButtonView';
 import DisplayView from './View/DisplayView';
 
 type btn = 'button' | 'buttonE'
+type display = 'display' | 'displayE'
 type typeMoveButton = [btn, number, number, number, number, number]
-type typeMoveDisplay = [btn, number, number, number]
+type typeMoveDisplay = [display, number, number, number, number, number]
+type changeValue = [display, number, number]
 
 export default class Presenter {
   constructor(
@@ -19,6 +21,7 @@ export default class Presenter {
     this.model
       .on('changeX', (x) => this.callMoveButton(x as typeMoveButton))
       .on('changeXDisplay', (x) => this.callMoveDisplay(x as typeMoveDisplay))
+      .on('changeValue', (x) => this.changeDisplayValue(x as changeValue))
       .on('setActiveButton', (btnAndPointerID) => (
         this.fixPointer(btnAndPointerID as [btn, number])
       ));
@@ -44,8 +47,15 @@ export default class Presenter {
     this.selectActiveButton(btn).moveButton(x, scaleX, scaleW, shiftX, btnW);
   }
 
-  callMoveDisplay([btn, btnX, btnCenter, scaleX]: typeMoveDisplay): void {
-    this.selectActiveDisplay(btn).moveDisplay(btnX, btnCenter, scaleX);
+  callMoveDisplay([
+    display, btnX, btnCenter, scaleX, maxExtreme, minExtreme
+  ]: typeMoveDisplay): void {
+    this.selectActiveDisplay(display)
+      .moveDisplay(btnX, btnCenter, scaleX, maxExtreme, minExtreme);
+  }
+
+  changeDisplayValue([display, value]: changeValue): void {
+    this.selectActiveDisplay(display).changeValue(value);
   }
 
   fixPointer([btn, pointerId]: [btn, number]): void {
@@ -56,9 +66,8 @@ export default class Presenter {
     return this[btn] || this.button;
   }
 
-  selectActiveDisplay(btn: btn): DisplayView {
-    const display =  btn == 'button' ? this['display'] : this['displayE'];
-    return display || this.display;
+  selectActiveDisplay(display: display): DisplayView {
+    return this[display] || this.display;
   }
 
   defineButton([e]: PointerEvent[]): void {

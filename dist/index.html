@@ -5,17 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>jquery slider</title>
   <link rel="stylesheet" href="slider.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="index.js"></script>
   <script>
     $(function () {
-      $('#slider1').slider({interval: true, min: 10, max: 24});
+      $('#slider1').slider({interval: true, min: 10, max: 100});
       $('#slider2').slider({});
     });
   </script>
 </head>
 <style>
   body {
+    font-family: 'Montserrat', sans-serif;
     padding: 10px;
   }
 </style>

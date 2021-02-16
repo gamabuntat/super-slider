@@ -24,18 +24,12 @@ export default class ButtonView extends View {
     this.component.setPointerCapture(pointerId);
   }
 
-  moveButton(
-    x: number,
-    scaleX: number,
-    maxExtreme: number,
-    minExtreme: number,
-    shiftX: number,
-  ): void {
+  moveButton(position: number): void {
     const btnPosition = Math.min(
       maxExtreme,
       Math.max((x - scaleX - shiftX), minExtreme)
     );
-    this.component.style.left = `${btnPosition}px`;
+    this.component.style.left = `${position}px`;
   }
 }
 

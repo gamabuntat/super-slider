@@ -12,6 +12,7 @@ export default class Model extends EventEmitter {
   private deflexion: number
   private x: number
   private activeButton: 'button' | 'buttonE'
+  private activeDisplay: 'display' | 'displayE'
   private button: ButtonModel
   private buttonE: ButtonModel
   constructor(
@@ -34,20 +35,20 @@ export default class Model extends EventEmitter {
       : this.button;
     this.x = 0;
     this.activeButton = 'button';
+    this.activeDisplay = 'display';
   }
 
-  calcValueForDisplayElem(): void {
-    console.log(
-      Math.round(
-        (this[this.activeButton].getRect().x - this.scaleX
-          - (this.activeButton == 'button' ? 0 : this.btnW)) 
-        * this.valueOfDivision + this.min
-      )
+  calcValueForDisplayElem(): number {
+    return Math.round(
+      (this[this.activeButton].getRect().x - this.scaleX
+        - (this.activeButton == 'button' ? 0 : this.btnW)) 
+      * this.valueOfDivision + this.min
     );
   }
 
   defineButton(e: PointerEvent): void {
     this.activeButton = e.target === this.button.btn ? 'button' : 'buttonE';
+    this.defineActiveDisplay();
     this.emit('setActiveButton', this.activeButton, e.pointerId);
   }
 
@@ -57,7 +58,12 @@ export default class Model extends EventEmitter {
     ));
     const minDistance = Math.min(b, be);
     this.activeButton = minDistance == b ? 'button' : 'buttonE';
+    this.defineActiveDisplay();
     this.emit('setActiveButton', this.activeButton, e.pointerId);
+  }
+
+  defineActiveDisplay(): void {
+    this.activeDisplay = this.activeButton == 'button' ? 'display' : 'displayE';
   }
 
   setDefaultShiftX(): void {
@@ -86,12 +92,16 @@ export default class Model extends EventEmitter {
     );
     this.emit(
       'changeXDisplay',
-      this.activeButton,
+      this.activeDisplay,
       this[this.activeButton].getRect().x,
       this.btnW / 2,
       this.scaleX,
     );
-    this.calcValueForDisplayElem();
+    this.emit(
+      'changeValue',
+      this.activeDisplay,
+      this.calcValueForDisplayElem(),
+    );
   }
 
   findMaxExtreme(): number {
