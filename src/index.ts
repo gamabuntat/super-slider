@@ -1,6 +1,7 @@
 import Model from './Model';
 import ScaleView from './View/ScaleView';
 import ButtonView from './View/ButtonView';
+import DisplayView from './View/DisplayView';
 import Presenter from './Presenter';
 
 interface Storage {
@@ -27,8 +28,8 @@ interface Options {
           ['div', 'ui-slider__container'],
           ['div', 'ui-slider__scale'],
           ['button', 'ui-slider__button_start'],
-          isInterval && ['button', 'ui-slider__button_end'],
           ['div', 'ui-slider__display_start'],
+          isInterval && ['button', 'ui-slider__button_end'],
           isInterval && ['div', 'ui-slider__display_end'],
         ]
           .filter((args) => args)
@@ -37,16 +38,16 @@ interface Options {
           place.append(e);
           return components[0];
         }, this[0]);
+        const [
+          , scale, button, display, buttonE = false, displayE = false
+        ] = components;
         storage[id] = new Presenter(
-          new Model(
-            components[1],
-            components[2],
-            isInterval && components[3],
-            o
-          ),
-          new ScaleView(components[1]),
-          new ButtonView(components[2]),
-          isInterval && new ButtonView(components[3]),
+          new Model(scale, button, buttonE, o),
+          new ScaleView(scale),
+          new ButtonView(button),
+          new DisplayView(display),
+          buttonE && new ButtonView(buttonE),
+          displayE && new DisplayView(displayE),
         );
         function createComponent([elem, elemClass]: string[]) {
           const component = document.createElement(elem);
@@ -62,3 +63,4 @@ interface Options {
 })(jQuery);
 
 export {Options};
+

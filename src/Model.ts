@@ -84,12 +84,14 @@ export default class Model extends EventEmitter {
       this.findMinExtreme(),
       this[this.activeButton].getShift(),
     );
+    this.emit(
+      'changeXDisplay',
+      this.activeButton,
+      this[this.activeButton].getRect().x,
+      this.btnW / 2,
+      this.scaleX,
+    );
     this.calcValueForDisplayElem();
-    // console.log(
-    //   `sw: ${this.scaleW},
-    //   relative: ${this[this.activeButton].getRelative()},
-    //   x: ${this.x}`
-    // );
   }
 
   findMaxExtreme(): number {
