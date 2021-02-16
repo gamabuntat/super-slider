@@ -19,5 +19,9 @@ export default class View extends EventEmitter {
   moveComponent(position: number): void {
     this.component.style.left = `${position}px`;
   }
+
+  getRect(): DOMRect {
+    return this.component.getBoundingClientRect();
+  }
 }
 

@@ -1,6 +1,6 @@
-import {Options} from './index';
-import {EventEmitter} from './EventEmitter';
-import ButtonModel from './Model/ButtonModel';
+import {Options} from '../index';
+import {EventEmitter} from '../EventEmitter/EventEmitter';
+import ButtonModel from '../Model/ButtonModel';
 
 export default class Model extends EventEmitter {
   private isInterval: boolean
@@ -13,16 +13,30 @@ export default class Model extends EventEmitter {
   private x: number
   private activeButton: 'button' | 'buttonE'
   private activeDisplay: 'display' | 'displayE'
-  private button: ButtonModel
-  private buttonE: ButtonModel
+  private buttonS: ButtonModel
+  private buttonE?: ButtonModel
   constructor(
-    private scale: HTMLElement,
-    button: HTMLElement,
+    scale: HTMLElement,
+    buttonS: HTMLElement,
     buttonE: HTMLElement | false,
     {interval = false, min = 0, max = 0}: Options
   ) {
     super();
     this.isInterval = interval;
+    this.buttonS = new ButtonModel(
+      buttonS.getBoundingClientRect().x,
+      buttonS.getBoundingClientRect().width,
+      0,
+      false,
+    );
+    buttonE && (
+      this.buttonE = new ButtonModel(
+        buttonE.getBoundingClientRect().x,
+        buttonE.getBoundingClientRect().width,
+        1,
+        false,
+      )
+    );
     this.min = min;
     this.scaleW = scale.getBoundingClientRect().width;
     this.scaleX = scale.getBoundingClientRect().x;

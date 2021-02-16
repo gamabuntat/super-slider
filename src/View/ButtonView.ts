@@ -1,17 +1,16 @@
 import View from './View';
 
 export default class ButtonView extends View {
+  private shift: number
   constructor(button: HTMLElement) {
     super(button);
-    this.component.addEventListener(
-      'pointerdown',
-      (e) => {
-        this.toggleTrigger();
-        this.emit('pointerPressed', e, this.getRect());
-      }
-    );
-    this.component.addEventListener('lostpointercapture', (e) => {
-      console.log(e.pointerId);
+    this.shift = this.getRect().width / 2;
+    this.component.addEventListener('pointerdown', (e) => {
+      this.toggleTrigger();
+      this.setShift(e);
+      this.fixPointer(e.pointerId);
+    });
+    this.component.addEventListener('lostpointercapture', () => {
       this.toggleTrigger();
     });
     this.component.addEventListener(
@@ -20,14 +19,24 @@ export default class ButtonView extends View {
     );
   }
 
+  setShift(e: PointerEvent): void {
+    this.shift = e.x - this.getRect().x;
+  }
+
+  setDefaultShift(): void {
+    this.shift = this.getRect().width / 2;
+  }
+
   fixPointer(pointerId: number): void {
     this.component.setPointerCapture(pointerId);
   }
 
-  moveButton(position: number): void {
-    const btnPosition = Math.min(
+  moveButton(
+    x: number, scaleX: number, maxExtreme: number, minExtreme: number
+  ): void {
+    const position = Math.min(
       maxExtreme,
-      Math.max((x - scaleX - shiftX), minExtreme)
+      Math.max((x - scaleX - this.shift), minExtreme)
     );
     this.component.style.left = `${position}px`;
   }

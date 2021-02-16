@@ -42,7 +42,9 @@ interface Options {
           , scale, button, display, buttonE = false, displayE = false
         ] = components;
         storage[id] = new Presenter(
-          new Model(scale, button, buttonE, o),
+          new Model(
+            scale, button, buttonE, o
+          ),
           new ScaleView(scale),
           new ButtonView(button),
           new DisplayView(display),
