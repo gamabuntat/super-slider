@@ -1,8 +1,8 @@
-import Model from './Model';
+import Model from './Model/Model';
 import ScaleView from './View/ScaleView';
 import ButtonView from './View/ButtonView';
 import DisplayView from './View/DisplayView';
-import Presenter from './Presenter';
+import Presenter from './Presenter/Presenter';
 
 interface Storage {
   [id: string]: Presenter
@@ -39,14 +39,14 @@ interface Options {
           return components[0];
         }, this[0]);
         const [
-          , scale, button, display, buttonE = false, displayE = false
+          , scale, buttonS, display, buttonE = false, displayE = false
         ] = components;
         storage[id] = new Presenter(
           new Model(
-            scale, button, buttonE, o
+            scale, buttonS, buttonE, o
           ),
           new ScaleView(scale),
-          new ButtonView(button),
+          new ButtonView(buttonS),
           new DisplayView(display),
           buttonE && new ButtonView(buttonE),
           displayE && new DisplayView(displayE),
