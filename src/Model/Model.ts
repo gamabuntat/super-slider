@@ -27,7 +27,7 @@ export default class Model {
     this.buttonS = new ButtonModel(
       buttonS.getBoundingClientRect().x,
       0,
-      this.scaleW - this.buttonW,
+      this.scaleW - (this.buttonW * (buttonE ? 2 : 1)),
       0,
     );
     this.buttonE = buttonE 
@@ -35,7 +35,7 @@ export default class Model {
         buttonE.getBoundingClientRect().x,
         1,
         this.scaleW - this.buttonW,
-        0,
+        this.buttonW,
       ) 
       : this.buttonS;
   }

@@ -1,7 +1,6 @@
 import {EventEmitter} from '../EventEmitter/EventEmitter';
 
 export default class View extends EventEmitter {
-  protected static isTriggerd = false
   // resizeObserver: ResizeObserver
   constructor(protected component: HTMLElement) {
     super();
@@ -9,15 +8,6 @@ export default class View extends EventEmitter {
     //   this.emit('resizeElem', entries);
     // });
     // this.resizeObserver.observe(this.component);
-  }
-
-  toggleTrigger(): void {
-    View.isTriggerd = View.isTriggerd ? false : true;
-    console.log(View.isTriggerd);
-  }
-
-  moveComponent(position: number): void {
-    this.component.style.left = `${position}px`;
   }
 
   getRect(): DOMRect {

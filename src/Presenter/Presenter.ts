@@ -16,15 +16,18 @@ export default class Presenter {
     private displayE: DisplayView | false
   ) {
     this.service
-      .on('sendArguments', (args) => this.moveButton(args as response));
+      .on('sendArguments', (args) => this.defineMoveButton(args as response));
+    this.scale
+      .on('clickOnScale', (x) => this.defineButton(x as number[]))
     if (this.buttonE) {
       [this.buttonS, this.buttonE].forEach((b) => {
         b
           .on('pointerDown', (x) => this.defineButton(x as number[]))
-          .on('defineMoveButton', () => this.sendArguments());
+          .on('pointerDown', () => this.askArguments())
+          .on('moveButton', (x) => this.saveLastPosition(x as number[]));
       })
-      this.buttonS.on('pointerDown', () => this.setMaxExtreme());
-      this.buttonE.on('pointerDown', () => this.setMinExtreme());
+      this.buttonS.on('lostPointer', () => this.setMinExtreme());
+      this.buttonE.on('lostPointer', () => this.setMaxExtreme());
     }
   }
 
@@ -40,18 +43,19 @@ export default class Presenter {
     this.service.setMinExtreme();
   }
 
-  sendArguments(): void {
+  askArguments(): void {
     this.service.sendArguments();
   }
 
-  moveButton([button, maxExtreme, minExtreme, scaleX]: response): void {
-    this.definButton(button).difineFinnalyMoveButton(
+  defineMoveButton([button, maxExtreme, minExtreme, scaleX]: response): void {
+    const activeButton = this[button] || this.buttonS;
+    activeButton.defineMoveButton(
       maxExtreme, minExtreme, scaleX
     );
   }
 
-  definButton(button: btn): ButtonView {
-    return this[button] || this.buttonS;
+  saveLastPosition([x]: number[]): void {
+    this.service.saveLastPosition(x);
   }
 }
 

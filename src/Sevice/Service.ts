@@ -39,5 +39,9 @@ export default class Service extends EventEmitter {
       this.m.scaleX,
     );
   }
+
+  saveLastPosition(x: number): void {
+    this.m[this.activeButton[0]].buttonX = x;
+  }
 }
 
