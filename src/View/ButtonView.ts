@@ -2,20 +2,26 @@ import View from './View';
 
 export default class ButtonView extends View {
   private shift: number
+  public finallyMoveButton?: (x: number) => void
   constructor(button: HTMLElement) {
     super(button);
     this.shift = this.getRect().width / 2;
     this.component.addEventListener('pointerdown', (e) => {
-      this.toggleTrigger();
       this.setShift(e);
       this.fixPointer(e.pointerId);
+      this.emit('pointerDown', e.x);
+      this.emit('defineMoveButton');
     });
     this.component.addEventListener('lostpointercapture', () => {
-      this.toggleTrigger();
+      this.finallyMoveButton = void 0;
     });
     this.component.addEventListener(
       'pointermove',
-      (e) => View.isTriggerd && this.emit('pointerMoved', e),
+      (e) => {
+        if (typeof this.finallyMoveButton == 'function') {
+          this.finallyMoveButton(e.x);
+        }
+      }
     );
   }
 
@@ -31,9 +37,15 @@ export default class ButtonView extends View {
     this.component.setPointerCapture(pointerId);
   }
 
-  moveButton(
-    x: number, scaleX: number, maxExtreme: number, minExtreme: number
+  difineFinnalyMoveButton(
+    maxExtreme: number, minExtreme: number, scaleX: number
   ): void {
+    this.finallyMoveButton = this.moveButton(maxExtreme, minExtreme, scaleX);
+  }
+
+  moveButton = (
+    maxExtreme: number, minExtreme: number, scaleX: number
+  ) => (x: number): void => {
     const position = Math.min(
       maxExtreme,
       Math.max((x - scaleX - this.shift), minExtreme)

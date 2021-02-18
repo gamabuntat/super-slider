@@ -26,6 +26,7 @@
   height: 1.6rem;
   background-color: #4EB7A8;
   border: 1.6px solid white;
+  outline: none;
   border-radius: 50%;
   cursor: pointer;
   box-sizing: border-box;

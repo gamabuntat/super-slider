@@ -3,7 +3,7 @@ interface StorageForEvents {
 }
 
 type Handler = (args: AA[]) => void
-type AA = PointerEvent | DOMRect | number | string | ResizeObserverEntry[]
+type AA = number | string
 
 class EventEmitter {
   protected events: StorageForEvents = {};
@@ -13,13 +13,8 @@ class EventEmitter {
     return this;
   }
 
-  emit(
-    evt: string, 
-    ...args: AA[]
-  ): void {
-    (this.events[evt] || [])
-      .slice()
-      .forEach((lsn: Handler) => lsn(args));
+  emit( evt: string, ...args: AA[]): void {
+    (this.events[evt] || []).slice().forEach((lsn: Handler) => lsn(args));
   }
 }
 

@@ -1,3 +1,4 @@
+import Service from './Sevice/Service';
 import Model from './Model/Model';
 import ScaleView from './View/ScaleView';
 import ButtonView from './View/ButtonView';
@@ -42,8 +43,8 @@ interface Options {
           , scale, buttonS, display, buttonE = false, displayE = false
         ] = components;
         storage[id] = new Presenter(
-          new Model(
-            scale, buttonS, buttonE, o
+          new Service(
+            new Model(scale, buttonS, buttonE, o)
           ),
           new ScaleView(scale),
           new ButtonView(buttonS),

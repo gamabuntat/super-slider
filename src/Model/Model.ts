@@ -12,7 +12,7 @@ export default class Model {
   constructor(
     scale: HTMLElement,
     buttonS: HTMLElement,
-    buttonE: HTMLElement,
+    buttonE: HTMLElement | false,
     {
       interval: isInterval = false,
       min = 0,
@@ -23,19 +23,21 @@ export default class Model {
     this.min = min;
     this.scaleX = scale.getBoundingClientRect().x;
     this.scaleW = scale.getBoundingClientRect().width;
+    this.buttonW = buttonS.getBoundingClientRect().width;
     this.buttonS = new ButtonModel(
       buttonS.getBoundingClientRect().x,
       0,
-      false
+      this.scaleW - this.buttonW,
+      0,
     );
     this.buttonE = buttonE 
       ? new ButtonModel(
         buttonE.getBoundingClientRect().x,
         1,
-        false
+        this.scaleW - this.buttonW,
+        0,
       ) 
       : this.buttonS;
-    this.buttonW = buttonE.getBoundingClientRect().width;
   }
 }
 

@@ -2,6 +2,7 @@ export default class ButtonModel {
   constructor(
     public buttonX: number,
     public relativePosition: number,
-    public isActive: boolean,
+    public maxExtreme: number,
+    public minExtreme: number,
   ) {}
 }
