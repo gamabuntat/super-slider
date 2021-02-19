@@ -1,13 +1,14 @@
 import {EventEmitter} from '../EventEmitter/EventEmitter';
 
 export default class View extends EventEmitter {
-  // resizeObserver: ResizeObserver
+  protected static isTriggerd = false
   constructor(protected component: HTMLElement) {
     super();
-    // this.resizeObserver = new ResizeObserver((entries) => {
-    //   this.emit('resizeElem', entries);
-    // });
-    // this.resizeObserver.observe(this.component);
+  }
+
+  toggleTrigger(): void {
+    View.isTriggerd = View.isTriggerd ? false : true;
+    console.log(View.isTriggerd);
   }
 
   getRect(): DOMRect {

@@ -4,18 +4,36 @@ import Model from '../Model/Model';
 type tActiveButton = 'buttonS' | 'buttonE'
 
 export default class Service extends EventEmitter {
+  private m: Model
   private activeButton: tActiveButton[]
-  constructor(private m: Model) {
+  constructor(m: Model) {
     super();
+    this.m = new Proxy(m, {
+      set(target, prop, val) {
+        if (prop == 'scaleW') {
+          target.scaleW = val;
+          if (target.isInterval) {
+            target.buttonE.maxExtreme = target.scaleW - target.buttonW;
+          }
+          return true;
+        }
+        return false;
+      }
+    });
     this.activeButton = ['buttonS', 'buttonE'];
   }
 
   defineButton(x: number): void {
     const diff = this.activeButton.reduce((diff, b) => (
-      Math.abs(x - (this.m[b].buttonX + this.m.buttonW)) - diff
+      Math.abs(x - (this.m[b].buttonX + this.m.buttonW / 2)) - diff
     ), 0);
     diff < 0 && this.activeButton.reverse();
     console.log(this.activeButton[0]);
+  }
+
+  setRelative(): void {
+    const ab = this.m[this.activeButton[0]];
+    ab.relativePosition = (ab.buttonX + this.m.buttonW / 2) / this.m.scaleW;
   }
 
   setMaxExtreme(): void {
@@ -30,18 +48,32 @@ export default class Service extends EventEmitter {
     );
   }
 
-  sendArguments(): void {
+  sendData(x: number): void {
+    console.log('calc: ' + x);
     this.emit(
-      'sendArguments',
-      this.activeButton[0],
+      'sendData',
+      x,
       this.m[this.activeButton[0]].maxExtreme, 
       this.m[this.activeButton[0]].minExtreme,
       this.m.scaleX,
     );
   }
 
+  getActiveButton(): tActiveButton {
+    return this.activeButton[0];
+  }
+
   saveLastPosition(x: number): void {
+    console.log('save: ' + x);
     this.m[this.activeButton[0]].buttonX = x;
+    this.setRelative();
+  }
+
+  updateScaleSizes(w: number): void {
+    this.m.scaleW = w;
+    this.sendData(
+      this.m[this.activeButton[0]].relativePosition * w
+    );
   }
 }
 

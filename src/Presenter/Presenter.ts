@@ -3,9 +3,6 @@ import ScaleView from '../View/ScaleView';
 import ButtonView from '../View/ButtonView';
 import DisplayView from '../View/DisplayView';
 
-type btn = 'buttonS' | 'buttonE'
-type response = [btn, number, number, number]
-
 export default class Presenter {
   constructor(
     private service: Service,
@@ -16,16 +13,18 @@ export default class Presenter {
     private displayE: DisplayView | false
   ) {
     this.service
-      .on('sendArguments', (args) => this.defineMoveButton(args as response));
+      .on('sendData', (args) => this.moveButton(args as number[]));
     this.scale
       .on('clickOnScale', (x) => this.defineButton(x as number[]))
+      .on('clickOnScale', (x) => this.getData(x as number[]))
+      .on('resizeScale', (w) => this.updateScaleSizes(w as number[]));
     if (this.buttonE) {
       [this.buttonS, this.buttonE].forEach((b) => {
         b
           .on('pointerDown', (x) => this.defineButton(x as number[]))
-          .on('pointerDown', () => this.askArguments())
-          .on('moveButton', (x) => this.saveLastPosition(x as number[]));
-      })
+          .on('moveButton', (x) => this.getData(x as number[]))
+          .on('updatePosition', (x) => this.saveLastPosition(x as number[]));
+      });
       this.buttonS.on('lostPointer', () => this.setMinExtreme());
       this.buttonE.on('lostPointer', () => this.setMaxExtreme());
     }
@@ -43,19 +42,24 @@ export default class Presenter {
     this.service.setMinExtreme();
   }
 
-  askArguments(): void {
-    this.service.sendArguments();
+  getData([x]: number[]): void {
+    this.service.sendData(x);
   }
 
-  defineMoveButton([button, maxExtreme, minExtreme, scaleX]: response): void {
-    const activeButton = this[button] || this.buttonS;
-    activeButton.defineMoveButton(
-      maxExtreme, minExtreme, scaleX
-    );
+  getActiveButton(): ButtonView {
+    return this[this.service.getActiveButton()] || this.buttonS;
+  }
+
+  moveButton([x, maxExtreme, minExtreme, scaleX]: number[]): void {
+    this.getActiveButton().moveButton(x, maxExtreme, minExtreme, scaleX);
   }
 
   saveLastPosition([x]: number[]): void {
     this.service.saveLastPosition(x);
+  }
+
+  updateScaleSizes([w]: number[]): void {
+    this.service.updateScaleSizes(w);
   }
 }
 
