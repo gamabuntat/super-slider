@@ -49,7 +49,6 @@ export default class Service extends EventEmitter {
   }
 
   sendData(x: number): void {
-    console.log('calc: ' + x);
     this.emit(
       'sendData',
       x,
@@ -64,16 +63,17 @@ export default class Service extends EventEmitter {
   }
 
   saveLastPosition(x: number): void {
-    console.log('save: ' + x);
     this.m[this.activeButton[0]].buttonX = x;
     this.setRelative();
   }
 
   updateScaleSizes(w: number): void {
     this.m.scaleW = w;
+    this.activeButton.reverse();
     this.sendData(
       this.m[this.activeButton[0]].relativePosition * w
     );
+    this.setMaxExtreme();
   }
 }
 

@@ -17,6 +17,9 @@ export default class Presenter {
     this.scale
       .on('clickOnScale', (x) => this.defineButton(x as number[]))
       .on('clickOnScale', (x) => this.getData(x as number[]))
+      .on(
+        'definePointer', (pointerId) => this.fixPointer(pointerId as number[])
+      )
       .on('resizeScale', (w) => this.updateScaleSizes(w as number[]));
     if (this.buttonE) {
       [this.buttonS, this.buttonE].forEach((b) => {
@@ -44,6 +47,10 @@ export default class Presenter {
 
   getData([x]: number[]): void {
     this.service.sendData(x);
+  }
+
+  fixPointer([pointerId]: number[]): void {
+    this.getActiveButton().fixPointer(pointerId);
   }
 
   getActiveButton(): ButtonView {

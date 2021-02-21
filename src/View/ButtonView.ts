@@ -21,7 +21,6 @@ export default class ButtonView extends View {
       (e) => {
         if (View.isTriggerd) {
           this.emit('moveButton', e.x);
-          this.emit('updatePosition', this.getRect().x);
         }
       }
     );
@@ -47,6 +46,7 @@ export default class ButtonView extends View {
       Math.max((x - scaleX - this.shift), minExtreme)
     );
     this.component.style.left = `${position}px`;
+    this.emit('updatePosition', this.getRect().x);
   }
 }
 
