@@ -11,8 +11,11 @@ export default class Service extends EventEmitter {
   }
 
   determineButton(x: number): void {
+    const relativePointerPosition = (
+      (x - this.m.scaleX) / this.m.scaleW - this.m.relativeButtonW / 2
+    );
     const diff = this.activeButton.reduce((diff, b) => (
-      Math.abs(x - (this.m[b].x + this.m.buttonW / 2)) - diff
+      Math.abs(relativePointerPosition - this.m[b].relativeX) - diff
     ), 0);
     diff < 0 && this.activeButton.reverse();
     console.log(this.activeButton[0]);
@@ -20,13 +23,13 @@ export default class Service extends EventEmitter {
 
   setMaxExtreme(): void {
     this.m.buttonS.maxExtreme = (
-      (this.m.buttonE.x - this.m.scaleX - this.m.buttonW) / this.m.scaleW
+      this.m.buttonE.relativeX - this.m.relativeButtonW
     );
   }
 
   setMinExtreme(): void {
     this.m.buttonE.minExtreme = (
-      (this.m.buttonS.x - this.m.scaleX + this.m.buttonW) / this.m.scaleW
+      this.m.buttonS.relativeX + this.m.relativeButtonW
     );
   }
 
@@ -46,12 +49,15 @@ export default class Service extends EventEmitter {
   }
 
   saveLastPosition(x: number): void {
-    this.m[this.activeButton[0]].x = x;
+    this.m[this.activeButton[0]].relativeX = (
+      (x - this.m.scaleX) / this.m.scaleW
+    );
   }
 
   updateScaleSizes(w: number): void {
     this.m.scaleW = w;
-    this.m.buttonE.maxExtreme = 1 - this.m.buttonW / this.m.scaleW,
+    this.m.relativeButtonW = this.m.buttonW / w;
+    this.m.buttonE.maxExtreme = 1 - this.m.relativeButtonW,
     this.setMaxExtreme();
     this.setMinExtreme();
   }

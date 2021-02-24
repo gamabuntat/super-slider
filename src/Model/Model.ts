@@ -9,6 +9,7 @@ export default class Model {
   buttonS: ButtonModel
   buttonE: ButtonModel
   buttonW: number
+  relativeButtonW: number
   constructor(
     scale: HTMLElement,
     buttonS: HTMLElement,
@@ -24,16 +25,17 @@ export default class Model {
     this.scaleX = scale.getBoundingClientRect().x;
     this.scaleW = scale.getBoundingClientRect().width;
     this.buttonW = buttonS.getBoundingClientRect().width;
+    this.relativeButtonW = this.buttonW / this.scaleW;
     this.buttonS = new ButtonModel(
-      buttonS.getBoundingClientRect().x,
-      1 - (this.buttonW * (buttonE ? 2 : 1)) / this.scaleW,
+      (buttonS.getBoundingClientRect().x -this.scaleX) / this.scaleW,
+      1 - (this.relativeButtonW * (buttonE ? 2 : 1)),
       0,
     );
     this.buttonE = buttonE 
       ? new ButtonModel(
-        buttonE.getBoundingClientRect().x,
-        1 - this.buttonW / this.scaleW,
-        this.buttonW / this.scaleW,
+        (buttonE.getBoundingClientRect().x - this.scaleX) / this.scaleW,
+        1 - this.relativeButtonW,
+        this.relativeButtonW,
       ) 
       : this.buttonS;
   }
