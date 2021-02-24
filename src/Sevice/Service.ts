@@ -20,13 +20,13 @@ export default class Service extends EventEmitter {
 
   setMaxExtreme(): void {
     this.m.buttonS.maxExtreme = (
-      this.m.buttonE.x - this.m.scaleX - this.m.buttonW
+      (this.m.buttonE.x - this.m.scaleX - this.m.buttonW) / this.m.scaleW
     );
   }
 
   setMinExtreme(): void {
     this.m.buttonE.minExtreme = (
-      this.m.buttonS.x - this.m.scaleX + this.m.buttonW
+      (this.m.buttonS.x - this.m.scaleX + this.m.buttonW) / this.m.scaleW
     );
   }
 
@@ -51,6 +51,9 @@ export default class Service extends EventEmitter {
 
   updateScaleSizes(w: number): void {
     this.m.scaleW = w;
+    this.m.buttonE.maxExtreme = 1 - this.m.buttonW / this.m.scaleW,
+    this.setMaxExtreme();
+    this.setMinExtreme();
   }
 }
 
