@@ -26,16 +26,14 @@ export default class Model {
     this.buttonW = buttonS.getBoundingClientRect().width;
     this.buttonS = new ButtonModel(
       buttonS.getBoundingClientRect().x,
-      -Infinity,
-      this.scaleW - (this.buttonW * (buttonE ? 2 : 1)),
+      1 - (this.buttonW * (buttonE ? 2 : 1)) / this.scaleW,
       0,
     );
     this.buttonE = buttonE 
       ? new ButtonModel(
         buttonE.getBoundingClientRect().x,
-        Infinity,
-        this.scaleW - this.buttonW,
-        this.buttonW,
+        1 - this.buttonW / this.scaleW,
+        this.buttonW / this.scaleW,
       ) 
       : this.buttonS;
   }

@@ -39,13 +39,17 @@ export default class ButtonView extends View {
   }
 
   moveButton(
-    x: number, maxExtreme: number, minExtreme: number, scaleX: number
+    x: number, 
+    maxExtreme: number,
+    minExtreme: number,
+    scaleX: number,
+    scaleW: number
   ): void {
     const position = Math.min(
       maxExtreme,
-      Math.max((x - scaleX - this.shift), minExtreme)
+      Math.max((x - scaleX - this.shift) / scaleW, minExtreme)
     );
-    this.component.style.left = `${position}px`;
+    this.component.style.left = `${position * 100}%`;
     this.emit('updatePosition', this.getRect().x);
   }
 }

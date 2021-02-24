@@ -13,10 +13,10 @@ export default class Presenter {
     private displayE: DisplayView | false
   ) {
     this.service
-      .on('sendData', (args) => this.moveButton(args as number[]));
+      .on('sendMainData', (args) => this.moveButton(args as number[]));
     this.scale
-      .on('clickOnScale', (x) => this.defineButton(x as number[]))
-      .on('clickOnScale', (x) => this.getData(x as number[]))
+      .on('clickOnScale', (x) => this.determineButton(x as number[]))
+      .on('clickOnScale', (x) => this.getMainData(x as number[]))
       .on(
         'definePointer', (pointerId) => this.fixPointer(pointerId as number[])
       )
@@ -24,8 +24,8 @@ export default class Presenter {
     if (this.buttonE) {
       [this.buttonS, this.buttonE].forEach((b) => {
         b
-          .on('pointerDown', (x) => this.defineButton(x as number[]))
-          .on('moveButton', (x) => this.getData(x as number[]))
+          .on('pointerDown', (x) => this.determineButton(x as number[]))
+          .on('moveButton', (x) => this.getMainData(x as number[]))
           .on('updatePosition', (x) => this.saveLastPosition(x as number[]));
       });
       this.buttonS.on('lostPointer', () => this.setMinExtreme());
@@ -33,8 +33,8 @@ export default class Presenter {
     }
   }
 
-  defineButton([x]: number[]): void {
-    this.service.defineButton(x);
+  determineButton([x]: number[]): void {
+    this.service.determineButton(x);
   }
 
   setMaxExtreme(): void {
@@ -45,8 +45,8 @@ export default class Presenter {
     this.service.setMinExtreme();
   }
 
-  getData([x]: number[]): void {
-    this.service.sendData(x);
+  getMainData([x]: number[]): void {
+    this.service.sendMainData(x);
   }
 
   fixPointer([pointerId]: number[]): void {
@@ -57,8 +57,10 @@ export default class Presenter {
     return this[this.service.getActiveButton()] || this.buttonS;
   }
 
-  moveButton([x, maxExtreme, minExtreme, scaleX]: number[]): void {
-    this.getActiveButton().moveButton(x, maxExtreme, minExtreme, scaleX);
+  moveButton([x, maxExtreme, minExtreme, scaleX, scaleW]: number[]): void {
+    this.getActiveButton().moveButton(
+      x, maxExtreme, minExtreme, scaleX, scaleW
+    );
   }
 
   saveLastPosition([x]: number[]): void {
