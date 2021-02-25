@@ -39,7 +39,8 @@
 }
 
 .ui-slider__button_end {
-  right: 0;
+  right: 1.6em;
+  transform: translateX(1.6rem);
 }
 
 .ui-slider__display_start, .ui-slider__display_end {

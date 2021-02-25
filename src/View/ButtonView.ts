@@ -2,7 +2,7 @@ import View from './View';
 
 export default class ButtonView extends View {
   private shift: number
-  constructor(button: HTMLElement) {
+  constructor(button: HTMLElement, private offset: number) {
     super(button);
     this.shift = this.getRect().width / 2;
     this.component.addEventListener('pointerdown', (e) => {
@@ -47,10 +47,10 @@ export default class ButtonView extends View {
   ): void {
     const position = Math.min(
       maxExtreme,
-      Math.max((x - scaleX - this.shift) / scaleW, minExtreme)
+      Math.max((x - scaleX - (this.shift + this.offset)) / scaleW, minExtreme)
     );
     this.component.style.left = `${position * 100}%`;
-    this.emit('updatePosition', this.getRect().x);
+    this.emit('updatePosition', this.getRect().x - this.offset);
   }
 }
 

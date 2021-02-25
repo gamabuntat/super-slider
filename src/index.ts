@@ -47,9 +47,10 @@ interface Options {
             new Model(scale, buttonS, buttonE, o)
           ),
           new ScaleView(scale),
-          new ButtonView(buttonS),
+          new ButtonView(buttonS, 0),
           new DisplayView(display),
-          buttonE && new ButtonView(buttonE),
+          buttonE 
+            && new ButtonView(buttonE, buttonE.getBoundingClientRect().width),
           displayE && new DisplayView(displayE),
         );
         function createComponent([elem, elemClass]: string[]) {
