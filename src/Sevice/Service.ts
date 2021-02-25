@@ -11,11 +11,14 @@ export default class Service extends EventEmitter {
   }
 
   determineButton(x: number): void {
-    const relativePointerPosition = (
-      (x - this.m.scaleX) / this.m.scaleW - this.m.relativeButtonW / 2
-    );
+    const relativePointerPosition = (x - this.m.scaleX) / this.m.scaleW;
     const diff = this.activeButton.reduce((diff, b) => (
-      Math.abs(relativePointerPosition - this.m[b].relativeX) - diff
+      Math.abs(
+        relativePointerPosition - (
+          this.m[b].relativeX 
+          + this.m.relativeButtonW * (b == 'buttonS' ? 0.5 : 1.5)
+        )
+      ) - diff
     ), 0);
     diff < 0 && this.activeButton.reverse();
     console.log(this.activeButton[0]);
@@ -48,8 +51,6 @@ export default class Service extends EventEmitter {
     this.m[this.activeButton[0]].relativeX = (
       (x - this.m.scaleX) / this.m.scaleW
     );
-    console.log(this.activeButton[0]);
-    console.log(this.m[this.activeButton[0]].relativeX);
   }
 
   updateScaleSizes(w: number): void {
