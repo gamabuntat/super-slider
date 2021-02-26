@@ -4,6 +4,7 @@ import ButtonModel from '../Model/ButtonModel';
 export default class Model {
   isInterval: boolean
   min: number
+  max: number
   scaleX: number
   scaleW: number
   buttonS: ButtonModel
@@ -28,6 +29,7 @@ export default class Model {
   ) {
     this.isInterval = isInterval;
     this.min = min;
+    this.max = max;
     this.scaleX = scale.getBoundingClientRect().x;
     this.scaleW = scale.getBoundingClientRect().width;
     this.buttonW = buttonS.getBoundingClientRect().width;

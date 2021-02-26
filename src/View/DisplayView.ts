@@ -21,6 +21,9 @@ export default class DisplayView extends View {
     } else {
       maxExtreme = Infinity;
     }
+    if (maxExtreme >= (1 - relativeButtonW)) {
+      maxExtreme = Infinity;
+    }
     const position = Math.min(
       maxExtreme - extremDeflexion + relativeOffset,
       Math.max(
@@ -32,9 +35,14 @@ export default class DisplayView extends View {
   }
 
   changeValue(
-    relativeBtnPos: number, min: number, valueOfDivision: number
+    relativeBtnPos: number,
+    min: number,
+    valueOfDivision: number,
   ): void {
-    const value = Math.round(relativeBtnPos * valueOfDivision + min);
+    const calcValue = (x: number): number => (
+      Math.round(x * valueOfDivision + min)
+    );
+    const value = calcValue(relativeBtnPos);
     this.component.innerHTML = value.toString();
   }
 }

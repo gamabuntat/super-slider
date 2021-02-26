@@ -57,7 +57,7 @@ export default class Service extends EventEmitter {
       'changeValue',
       this.m[this.activeButton[0]].relativeX,
       this.m.min,
-      this.m.valueOfDivision
+      this.m.valueOfDivision,
     );
   }
 
@@ -75,17 +75,29 @@ export default class Service extends EventEmitter {
   updateSizes(w: number): void {
     this.m.scaleW = w;
     this.m.relativeButtonW = this.m.buttonW / w;
-    this.m.buttonE.maxExtreme = 1 - (this.m.relativeButtonW * 2);
-    this.setMaxExtreme();
-    this.setMinExtreme();
+    if (this.m.isInterval) {
+      this.m.buttonE.maxExtreme = 1 - (this.m.relativeButtonW * 2);
+    }
+    this.m.relativeDisplayW = this.m.displayW / w;
+    this.m.displayDeflexion = (
+      this.m.relativeDisplayW / 2 - this.m.relativeButtonW / 2
+    );
+    this.m.correctedScaleSizes = (
+      1 - this.m.relativeButtonW * (this.m.isInterval ? 2 : 1)
+    );
+    this.m.valueOfDivision = (
+      (this.m.max - this.m.min) / this.m.correctedScaleSizes
+    );
   }
 
   init(): void {
     this.sendButtonData(-Infinity);
     this.sendDisplayData();
-    this.activeButton.reverse();
-    this.sendButtonData(Infinity);
-    this.sendDisplayData();
+    if (this.m.isInterval) {
+      this.activeButton.reverse();
+      this.sendButtonData(Infinity);
+      this.sendDisplayData();
+    }
   }
 }
 

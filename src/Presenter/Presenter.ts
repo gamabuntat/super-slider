@@ -32,6 +32,10 @@ export default class Presenter {
       });
       this.buttonS.on('lostPointer', () => this.setMinExtreme());
       this.buttonE.on('lostPointer', () => this.setMaxExtreme());
+    } else {
+      this.buttonS
+        .on('moveButton', (x) => this.getButtonData(x as number[]))
+        .on('updatePosition', (x) => this.saveLastPosition(x as number[]));
     }
   }
 
@@ -91,8 +95,12 @@ export default class Presenter {
     );
   }
 
-  changeValue([relativeBtnPos, min, valueOfDivision]: number[]): void {
-    this.getActiveDisplay().changeValue(relativeBtnPos, min, valueOfDivision);
+  changeValue(
+    [relativeBtnPos, min, valueOfDivision]: number[]
+  ): void {
+    this.getActiveDisplay().changeValue(
+      relativeBtnPos, min, valueOfDivision
+    );
   }
 
   saveLastPosition([x]: number[]): void {
