@@ -13,6 +13,8 @@ export default class Model {
   displayW: number
   relativeDisplayW: number
   displayDeflexion: number
+  correctedScaleSizes: number
+  valueOfDivision: number
   constructor(
     scale: HTMLElement,
     buttonS: HTMLElement,
@@ -21,7 +23,7 @@ export default class Model {
     {
       interval: isInterval = false,
       min = 0,
-      max = 0,
+      max = 10,
     }: Options
   ) {
     this.isInterval = isInterval;
@@ -35,6 +37,8 @@ export default class Model {
     this.displayDeflexion = (
       this.relativeDisplayW / 2 - this.relativeButtonW / 2
     );
+    this.correctedScaleSizes = 1 - this.relativeButtonW * (buttonE ? 2 : 1);
+    this.valueOfDivision = (max - min) / this.correctedScaleSizes;
     this.buttonS = new ButtonModel(
       (buttonS.getBoundingClientRect().x - this.scaleX) / this.scaleW,
       1 - (this.relativeButtonW * (buttonE ? 2 : 1)),

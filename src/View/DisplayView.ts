@@ -16,8 +16,11 @@ export default class DisplayView extends View {
     const relativeOffset = this.offset / scaleW;
     const relativeW = this.getRect().width / scaleW;
     const extremDeflexion = relativeW - (relativeButtonW - displayDeflexion);
-    maxExtreme = Infinity;
-    minExtreme = -Infinity;
+    if (this.offset == 0) {
+      minExtreme = -Infinity;
+    } else {
+      maxExtreme = Infinity;
+    }
     const position = Math.min(
       maxExtreme - extremDeflexion + relativeOffset,
       Math.max(
@@ -28,7 +31,10 @@ export default class DisplayView extends View {
     this.component.style.left = `${position * 100}%`;
   }
 
-  changeValue(value: number): void {
+  changeValue(
+    relativeBtnPos: number, min: number, valueOfDivision: number
+  ): void {
+    const value = Math.round(relativeBtnPos * valueOfDivision + min);
     this.component.innerHTML = value.toString();
   }
 }

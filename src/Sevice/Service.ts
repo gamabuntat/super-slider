@@ -53,6 +53,12 @@ export default class Service extends EventEmitter {
       this.m[this.activeButton[0]].maxExtreme,
       this.m[this.activeButton[0]].minExtreme,
     );
+    this.emit(
+      'changeValue',
+      this.m[this.activeButton[0]].relativeX,
+      this.m.min,
+      this.m.valueOfDivision
+    );
   }
 
   getActiveButton(): tActiveButton {

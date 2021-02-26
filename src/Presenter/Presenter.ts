@@ -14,7 +14,8 @@ export default class Presenter {
   ) {
     this.service
       .on('sendButtonData', (args) => this.moveButton(args as number[]))
-      .on('sendDisplayData', (args) => this.moveDisplay(args as number[]));
+      .on('sendDisplayData', (args) => this.moveDisplay(args as number[]))
+      .on('changeValue', (args) => this.changeValue(args as number[]));
     this.scale
       .on('clickOnScale', (x) => this.determineButton(x as number[]))
       .on('clickOnScale', (x) => this.getButtonData(x as number[]))
@@ -88,6 +89,10 @@ export default class Presenter {
       maxExtreme, 
       minExtreme
     );
+  }
+
+  changeValue([relativeBtnPos, min, valueOfDivision]: number[]): void {
+    this.getActiveDisplay().changeValue(relativeBtnPos, min, valueOfDivision);
   }
 
   saveLastPosition([x]: number[]): void {
