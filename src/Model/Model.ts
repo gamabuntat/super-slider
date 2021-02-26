@@ -10,10 +10,14 @@ export default class Model {
   buttonE: ButtonModel
   buttonW: number
   relativeButtonW: number
+  displayW: number
+  relativeDisplayW: number
+  displayDeflexion: number
   constructor(
     scale: HTMLElement,
     buttonS: HTMLElement,
     buttonE: HTMLElement | false,
+    display: HTMLElement,
     {
       interval: isInterval = false,
       min = 0,
@@ -26,6 +30,11 @@ export default class Model {
     this.scaleW = scale.getBoundingClientRect().width;
     this.buttonW = buttonS.getBoundingClientRect().width;
     this.relativeButtonW = this.buttonW / this.scaleW;
+    this.displayW = display.getBoundingClientRect().width;
+    this.relativeDisplayW = this.displayW / this.scaleW;
+    this.displayDeflexion = (
+      this.relativeDisplayW / 2 - this.relativeButtonW / 2
+    );
     this.buttonS = new ButtonModel(
       (buttonS.getBoundingClientRect().x - this.scaleX) / this.scaleW,
       1 - (this.relativeButtonW * (buttonE ? 2 : 1)),

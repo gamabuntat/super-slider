@@ -35,11 +35,9 @@
 }
 
 .ui-slider__button_start {
-  left: 0;
 }
 
 .ui-slider__button_end {
-  right: 1.6em;
   transform: translateX(1.6rem);
 }
 
@@ -59,11 +57,9 @@
 }
 
 .ui-slider__display_start {
-  left: 0;
 }
 
 .ui-slider__display_end {
-  right: 0;
 }
 
 .ui-slider__display_start::before, .ui-slider__display_end::before {

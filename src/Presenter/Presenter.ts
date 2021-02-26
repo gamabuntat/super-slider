@@ -8,24 +8,25 @@ export default class Presenter {
     private service: Service,
     private scale: ScaleView,
     private buttonS: ButtonView,
-    private display: DisplayView,
+    private displayS: DisplayView,
     private buttonE: ButtonView | false,
     private displayE: DisplayView | false
   ) {
     this.service
-      .on('sendMainData', (args) => this.moveButton(args as number[]));
+      .on('sendButtonData', (args) => this.moveButton(args as number[]))
+      .on('sendDisplayData', (args) => this.moveDisplay(args as number[]));
     this.scale
       .on('clickOnScale', (x) => this.determineButton(x as number[]))
-      .on('clickOnScale', (x) => this.getMainData(x as number[]))
+      .on('clickOnScale', (x) => this.getButtonData(x as number[]))
       .on(
         'definePointer', (pointerId) => this.fixPointer(pointerId as number[])
       )
-      .on('resizeScale', (w) => this.updateScaleSizes(w as number[]));
+      .on('resizeScale', (w) => this.updateSizes(w as number[]));
     if (this.buttonE) {
       [this.buttonS, this.buttonE].forEach((b) => {
         b
           .on('pointerDown', (x) => this.determineButton(x as number[]))
-          .on('moveButton', (x) => this.getMainData(x as number[]))
+          .on('moveButton', (x) => this.getButtonData(x as number[]))
           .on('updatePosition', (x) => this.saveLastPosition(x as number[]));
       });
       this.buttonS.on('lostPointer', () => this.setMinExtreme());
@@ -45,8 +46,8 @@ export default class Presenter {
     this.service.setMinExtreme();
   }
 
-  getMainData([x]: number[]): void {
-    this.service.sendMainData(x);
+  getButtonData([x]: number[]): void {
+    this.service.sendButtonData(x);
   }
 
   fixPointer([pointerId]: number[]): void {
@@ -57,9 +58,35 @@ export default class Presenter {
     return this[this.service.getActiveButton()] || this.buttonS;
   }
 
+  getActiveDisplay(): DisplayView {
+    if (!this.displayE) {
+      return this.displayS;
+    }
+    return (this.getActiveButton() === this.buttonS 
+      ? this.displayS : this.displayE);
+  }
+
   moveButton([x, maxExtreme, minExtreme, scaleX, scaleW]: number[]): void {
     this.getActiveButton().moveButton(
       x, maxExtreme, minExtreme, scaleX, scaleW
+    );
+  }
+
+  moveDisplay([
+    relativeBtnPos, 
+    displayDeflexion, 
+    scaleW, 
+    relativeButtonW, 
+    maxExtreme, 
+    minExtreme
+  ]: number[]): void {
+    this.getActiveDisplay().moveDisplay(
+      relativeBtnPos, 
+      displayDeflexion, 
+      scaleW, 
+      relativeButtonW, 
+      maxExtreme, 
+      minExtreme
     );
   }
 
@@ -67,8 +94,13 @@ export default class Presenter {
     this.service.saveLastPosition(x);
   }
 
-  updateScaleSizes([w]: number[]): void {
-    this.service.updateScaleSizes(w);
+  updateSizes([w]: number[]): void {
+    this.service.updateSizes(w);
+  }
+
+  init(): Presenter {
+    this.service.init();
+    return this;
   }
 }
 
