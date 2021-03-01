@@ -3,7 +3,7 @@ interface StorageForEvents {
 }
 
 type Handler = (args: AA[]) => void
-type AA = number | string
+type AA = number
 
 class EventEmitter {
   protected events: StorageForEvents = {};

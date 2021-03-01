@@ -1,4 +1,4 @@
-import Service from './Sevice/Service';
+import Service from './Service/Service';
 import Model from './Model/Model';
 import ScaleView from './View/ScaleView';
 import ButtonView from './View/ButtonView';

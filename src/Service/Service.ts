@@ -75,18 +75,9 @@ export default class Service extends EventEmitter {
   updateSizes(w: number): void {
     this.m.scaleW = w;
     this.m.relativeButtonW = this.m.buttonW / w;
-    if (this.m.isInterval) {
-      this.m.buttonE.maxExtreme = 1 - (this.m.relativeButtonW * 2);
-    }
     this.m.relativeDisplayW = this.m.displayW / w;
     this.m.displayDeflexion = (
       this.m.relativeDisplayW / 2 - this.m.relativeButtonW / 2
-    );
-    this.m.correctedScaleSizes = (
-      1 - this.m.relativeButtonW * (this.m.isInterval ? 2 : 1)
-    );
-    this.m.valueOfDivision = (
-      (this.m.max - this.m.min) / this.m.correctedScaleSizes
     );
   }
 
