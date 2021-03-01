@@ -16,7 +16,7 @@ export default class Service extends EventEmitter {
       Math.abs(
         relativePointerPosition - (
           this.m[b].relativeX 
-          + this.m.relativeButtonW * (b == 'buttonS' ? 0.5 : 1.5)
+          + this.m.relativeButtonW * (b == 'buttonS' ? -0.5 : 0.5)
         )
       ) - diff
     ), 0);
@@ -47,10 +47,8 @@ export default class Service extends EventEmitter {
     this.emit(
       'sendDisplayData',
       this.m[this.activeButton[0]].relativeX,
-      this.m.displayDeflexion,
       this.m.scaleW,
-      this.m.relativeButtonW,
-      this.m[this.activeButton[0]].maxExtreme,
+      this.m.isInterval ? this.m[this.activeButton[0]].maxExtreme : Infinity,
       this.m[this.activeButton[0]].minExtreme,
     );
     this.emit(
@@ -76,9 +74,6 @@ export default class Service extends EventEmitter {
     this.m.scaleW = w;
     this.m.relativeButtonW = this.m.buttonW / w;
     this.m.relativeDisplayW = this.m.displayW / w;
-    this.m.displayDeflexion = (
-      this.m.relativeDisplayW / 2 - this.m.relativeButtonW / 2
-    );
   }
 
   init(): void {

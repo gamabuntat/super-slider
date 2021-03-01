@@ -6,7 +6,6 @@ export default class ScaleView extends View {
     scale: HTMLElement, private buttonW: number
   ) {
     super(scale);
-    this.transform();
     this.resizeObserver = new ResizeObserver((entries) => {
       this.emit('resizeScale', entries[0].contentRect.width);
       this.transform();

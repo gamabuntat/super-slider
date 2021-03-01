@@ -42,27 +42,30 @@ interface Options {
         const [
           container, scale, buttonS, displayS, buttonE = false, displayE = false
         ] = components;
-        container.style.margin = `0 ${buttonS.getBoundingClientRect().width 
-          * (isInterval ? 1 : 0.5)}px`;
+        const buttonW = buttonS.getBoundingClientRect().width;
+        container.style.margin = `0 ${buttonW * (isInterval ? 1 : 0.5)}px`;
         storage[id] = new Presenter(
           new Service(
             new Model(scale, buttonS, buttonE, displayS, o)
           ),
           new ScaleView(
             scale, 
-            buttonS.getBoundingClientRect().width 
-            * (isInterval ? 1 : 0)
+            buttonW * (isInterval ? 1 : 0)
           ),
           new ButtonView(
             buttonS,
-            -buttonS.getBoundingClientRect().width * (isInterval ? 1 : 0.5)
+            -buttonW * (isInterval ? 1 : 0.5)
           ),
-          new DisplayView(displayS, 0),
+          new DisplayView(
+            displayS,
+            -buttonW * (isInterval ? 1 : 0.5),
+            buttonW
+          ),
           buttonE && new ButtonView(
             buttonE, 0
           ),
           displayE && new DisplayView(
-            displayE, buttonS.getBoundingClientRect().width
+            displayE, 0, buttonW
           ),
         ).init();
         function createComponent([elem, elemClass]: string[]) {

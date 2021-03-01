@@ -1,34 +1,30 @@
 import View from './View';
 
 export default class DisplayView extends View {
-  constructor (display: HTMLElement, private offset: number) {
+  private displayDeflexion: number
+  constructor (display: HTMLElement, private offset: number, buttonW: number) {
     super(display);
+    this.displayDeflexion = (this.getRect().width - buttonW) / 2;
+    this.transform(this.displayDeflexion);
   }
 
   moveDisplay(
     relativeBtnPos: number,
-    displayDeflexion: number,
     scaleW: number,
-    relativeButtonW: number,
     maxExtreme: number,
     minExtreme: number
   ): void {
-    const relativeOffset = this.offset / scaleW;
-    const relativeW = this.getRect().width / scaleW;
-    const extremDeflexion = relativeW - (relativeButtonW - displayDeflexion);
+    const relDisplayDeflexion = this.displayDeflexion * 2 / scaleW;
     if (this.offset == 0) {
-      minExtreme = -Infinity;
+      maxExtreme = Infinity;
     } else {
-      maxExtreme = Infinity;
-    }
-    if (maxExtreme >= (1 - relativeButtonW)) {
-      maxExtreme = Infinity;
+      minExtreme = -Infinity;
     }
     const position = Math.min(
-      maxExtreme - extremDeflexion + relativeOffset,
+      maxExtreme - relDisplayDeflexion,
       Math.max(
-        (relativeBtnPos - displayDeflexion + relativeOffset),
-        minExtreme + (relativeW - displayDeflexion)
+        relativeBtnPos,
+        minExtreme + relDisplayDeflexion
       )
     );
     this.component.style.left = `${position * 100}%`;
@@ -44,6 +40,12 @@ export default class DisplayView extends View {
     );
     const value = calcValue(relativeBtnPos);
     this.component.innerHTML = value.toString();
+  }
+
+  transform(displayDeflexion: number): void {
+    this.component.style.transform = (
+      `translate(${this.offset - displayDeflexion}px, 0px)`
+    );
   }
 }
 

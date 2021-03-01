@@ -79,17 +79,13 @@ export default class Presenter {
 
   moveDisplay([
     relativeBtnPos, 
-    displayDeflexion, 
     scaleW, 
-    relativeButtonW, 
     maxExtreme, 
     minExtreme
   ]: number[]): void {
     this.getActiveDisplay().moveDisplay(
       relativeBtnPos, 
-      displayDeflexion, 
       scaleW, 
-      relativeButtonW, 
       maxExtreme, 
       minExtreme
     );

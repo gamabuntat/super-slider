@@ -13,7 +13,6 @@ export default class Model {
   relativeButtonW: number
   displayW: number
   relativeDisplayW: number
-  displayDeflexion: number
   valueOfDivision: number
   constructor(
     scale: HTMLElement,
@@ -35,9 +34,6 @@ export default class Model {
     this.relativeButtonW = this.buttonW / this.scaleW;
     this.displayW = display.getBoundingClientRect().width;
     this.relativeDisplayW = this.displayW / this.scaleW;
-    this.displayDeflexion = (
-      this.relativeDisplayW / 2 - this.relativeButtonW / 2
-    );
     this.valueOfDivision = (max - min) / 1;
     this.buttonS = new ButtonModel(
       (buttonS.getBoundingClientRect().x - this.scaleX) / this.scaleW,
