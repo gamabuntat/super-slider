@@ -46,9 +46,7 @@ export default class Model {
     );
     this.buttonE = buttonE 
       ? new ButtonModel(
-        (
-          buttonE.getBoundingClientRect().x - this.buttonW - this.scaleX
-        ) / this.scaleW,
+        (buttonE.getBoundingClientRect().x - this.scaleX) / this.scaleW,
         1,
         0
       ) 

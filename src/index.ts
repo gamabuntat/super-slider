@@ -40,17 +40,26 @@ interface Options {
           return components[0];
         }, this[0]);
         const [
-          , scale, buttonS, displayS, buttonE = false, displayE = false
+          container, scale, buttonS, displayS, buttonE = false, displayE = false
         ] = components;
+        container.style.margin = `0 ${buttonS.getBoundingClientRect().width 
+          * (isInterval ? 1 : 0.5)}px`;
         storage[id] = new Presenter(
           new Service(
             new Model(scale, buttonS, buttonE, displayS, o)
           ),
-          new ScaleView(scale),
-          new ButtonView(buttonS, 0),
+          new ScaleView(
+            scale, 
+            buttonS.getBoundingClientRect().width 
+            * (isInterval ? 1 : 0)
+          ),
+          new ButtonView(
+            buttonS,
+            -buttonS.getBoundingClientRect().width * (isInterval ? 1 : 0.5)
+          ),
           new DisplayView(displayS, 0),
           buttonE && new ButtonView(
-            buttonE, buttonE.getBoundingClientRect().width
+            buttonE, 0
           ),
           displayE && new DisplayView(
             displayE, buttonS.getBoundingClientRect().width

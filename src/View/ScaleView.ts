@@ -2,10 +2,14 @@ import View from './View';
 
 export default class ScaleView extends View {
   resizeObserver: ResizeObserver
-  constructor(scale: HTMLElement) {
+  constructor(
+    scale: HTMLElement, private buttonW: number
+  ) {
     super(scale);
+    this.transform();
     this.resizeObserver = new ResizeObserver((entries) => {
       this.emit('resizeScale', entries[0].contentRect.width);
+      this.transform();
     });
     this.resizeObserver.observe(this.component);
     this.component.addEventListener(
@@ -17,5 +21,11 @@ export default class ScaleView extends View {
       }
     );
   } 
+
+  transform(): void {
+    this.component.style.transform = (
+      `scaleX(${1 + this.buttonW / this.getRect().width})`
+    );
+  }
 }
 

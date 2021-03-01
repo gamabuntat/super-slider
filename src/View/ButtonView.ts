@@ -1,11 +1,9 @@
 import View from './View';
 
 export default class ButtonView extends View {
-  private offset: number
   private shift: number
-  constructor(button: HTMLElement, offset: number) {
+  constructor(button: HTMLElement, private offset: number) {
     super(button);
-    this.offset = offset - this.getRect().width / 2;
     this.shift = this.getRect().width / 2;
     this.component.style.transform = `translateX(${this.offset}px)`;
     this.component.addEventListener('pointerdown', (e) => {
