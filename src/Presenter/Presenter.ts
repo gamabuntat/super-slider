@@ -92,10 +92,10 @@ export default class Presenter {
   }
 
   changeValue(
-    [relativeBtnPos, min, valueOfDivision]: number[]
+    [relativeBtnPos, min, valueOfDivision, step]: number[]
   ): void {
     this.getActiveDisplay().changeValue(
-      relativeBtnPos, min, valueOfDivision
+      relativeBtnPos, min, valueOfDivision, step
     );
   }
 

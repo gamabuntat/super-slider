@@ -56,6 +56,7 @@ export default class Service extends EventEmitter {
       this.m[this.activeButton[0]].relativeX,
       this.m.min,
       this.m.valueOfDivision,
+      this.m.step
     );
   }
 

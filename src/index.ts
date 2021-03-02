@@ -13,6 +13,7 @@ interface Options {
   interval?: boolean
   min?: number
   max?: number
+  step?: number
 }
 
 (function ($) {

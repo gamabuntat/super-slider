@@ -34,12 +34,19 @@ export default class DisplayView extends View {
     relativeBtnPos: number,
     min: number,
     valueOfDivision: number,
+    step: number
   ): void {
-    const calcValue = (x: number): number => (
-      Math.round(x * valueOfDivision + min)
-    );
-    const value = calcValue(relativeBtnPos);
-    this.component.innerHTML = value.toString();
+    const value = Math.round(relativeBtnPos * valueOfDivision) * step + min;
+    this.component.innerHTML = value.toFixed(this.simbolsAfterComa(step));
+  }
+
+  simbolsAfterComa(x: number): number {
+    const xstr = x.toString();
+    if (xstr.includes('.')) {
+      const factionalPart = xstr.split('.').pop();
+      return factionalPart ? factionalPart.length : 0;
+    }
+    return 0;
   }
 
   transform(displayDeflexion: number): void {
