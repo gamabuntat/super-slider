@@ -33,20 +33,20 @@ export default class DisplayView extends View {
   changeValue(
     relativeBtnPos: number,
     min: number,
+    max: number,
     valueOfDivision: number,
     step: number
   ): void {
-    const value = Math.round(relativeBtnPos * valueOfDivision) * step + min;
-    this.component.innerHTML = value.toFixed(this.simbolsAfterComa(step));
+    const value = Math.min(
+      Math.round(relativeBtnPos * valueOfDivision) * step + min,
+      max
+    );
+    this.component.innerHTML = value.toFixed(this.defineDecimalPlaces(step));
   }
 
-  simbolsAfterComa(x: number): number {
-    const xstr = x.toString();
-    if (xstr.includes('.')) {
-      const factionalPart = xstr.split('.').pop();
-      return factionalPart ? factionalPart.length : 0;
-    }
-    return 0;
+  defineDecimalPlaces(x: number): number {
+    const dotPosition = x.toString().indexOf('.') + 1;
+    return dotPosition == 0 ? 0 : x.toString().length - dotPosition;
   }
 
   transform(displayDeflexion: number): void {
