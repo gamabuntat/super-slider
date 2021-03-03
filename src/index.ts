@@ -4,6 +4,7 @@ import TrackView from './View/TrackView';
 import ButtonView from './View/ButtonView';
 import DisplayView from './View/DisplayView';
 import ProgressBarView from './View/ProgressBarView';
+import ScaleView from './View/ScaleView';
 import Presenter from './Presenter/Presenter';
 
 interface Storage {
@@ -29,6 +30,7 @@ interface Options {
         const isInterval = o?.interval === true;
         const components = [
           ['div', 'ui-slider__container'],
+          ['div', 'ui-slider__scale'],
           ['div', 'ui-slider__track'],
           ['button', 'ui-slider__button_start'],
           ['div', 'ui-slider__display_start'],
@@ -39,14 +41,15 @@ interface Options {
         ]
           .filter((args) => args)
           .map((args) => createComponent(args as string[]));
-        components.reduce((place, e) => {
+        components.reduce((place, e, idx) => {
           [...e.classList].find((c) => c.includes('progress')) 
-            && (place = components[1]);
+            && (place = components[2]);
           place.append(e);
-          return components[0];
+          return idx ? components[0] : this[0];
         }, this[0]);
         const [
           container,
+          scale,
           track,
           buttonS,
           displayS,
@@ -57,6 +60,7 @@ interface Options {
         ] = components;
         const buttonW = buttonS.getBoundingClientRect().width;
         container.style.margin = `0 ${buttonW * (isInterval ? 1 : 0.5)}px`;
+        scale.style.margin = `0 ${buttonW * 0.5}px`;
         storage[id] = new Presenter(
           new Service(new Model(track, buttonS, buttonE, displayS, o)),
           new TrackView(track, buttonW * (isInterval ? 1 : 0)),
@@ -69,6 +73,7 @@ interface Options {
           new ProgressBarView(
             progressBarS, 0, (isInterval ? 1 : 0)
           ),
+          new ScaleView(scale),
           buttonE && new ButtonView(buttonE, 0),
           displayE && new DisplayView(displayE, 0, buttonW),
           progressBarE && new ProgressBarView(

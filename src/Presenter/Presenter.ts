@@ -3,6 +3,7 @@ import TrackView from '../View/TrackView';
 import ButtonView from '../View/ButtonView';
 import DisplayView from '../View/DisplayView';
 import ProgressBarView from '../View/ProgressBarView';
+import ScaleView from '../View/ScaleView';
 
 export default class Presenter {
   constructor(
@@ -11,6 +12,7 @@ export default class Presenter {
     private buttonS: ButtonView,
     private displayS: DisplayView,
     private progressBarS: ProgressBarView,
+    private scale: ScaleView,
     private buttonE: ButtonView | false,
     private displayE: DisplayView | false,
     private progressBarE: ProgressBarView | false
@@ -19,7 +21,8 @@ export default class Presenter {
       .on('sendButtonData', (args) => this.moveButton(args as number[]))
       .on('sendDisplayData', (args) => this.moveDisplay(args as number[]))
       .on('changeValue', (args) => this.changeValue(args as number[]))
-      .on('changeWidth', (args) => this.changeWidth(args as number[]));
+      .on('changeWidth', (args) => this.changeWidth(args as number[]))
+      .on('sendScaleData', (minmax) => this.fillValues(minmax as number[]));
     this.track
       .on('clickOnTrack', (x) => this.determineButton(x as number[]))
       .on('clickOnTrack', (x) => this.getButtonData(x as number[]))
@@ -121,6 +124,10 @@ export default class Presenter {
 
   updateSizes([w]: number[]): void {
     this.service.updateSizes(w);
+  }
+
+  fillValues([max, min]: number[]): void {
+    this.scale.fillValues(max, min);
   }
 
   init(): Presenter {

@@ -69,6 +69,10 @@ export default class Service extends EventEmitter {
     );
   }
 
+  sendScaleData(): void {
+    this.emit('sendScaleData', this.m.max, this.m.min);
+  }
+
   getActiveButton(): tActiveButton {
     return this.activeButton[0];
   }
@@ -95,6 +99,7 @@ export default class Service extends EventEmitter {
       this.sendButtonData(Infinity);
       this.sendDisplayData();
     }
+    this.sendScaleData();
   }
 }
 
