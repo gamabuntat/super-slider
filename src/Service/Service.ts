@@ -61,6 +61,14 @@ export default class Service extends EventEmitter {
     );
   }
 
+  sendProgressBarData(): void {
+    this.emit(
+      'changeWidth',
+      this.m[this.activeButton[0]].relativeX,
+      this.m.relativeButtonW
+    );
+  }
+
   getActiveButton(): tActiveButton {
     return this.activeButton[0];
   }
@@ -70,6 +78,7 @@ export default class Service extends EventEmitter {
       (x - this.m.trackX) / this.m.trackW
     );
     this.sendDisplayData();
+    this.sendProgressBarData();
   }
 
   updateSizes(w: number): void {

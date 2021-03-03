@@ -1,13 +1,13 @@
 import View from './View';
 
-export default class ScaleView extends View {
+export default class TrackView extends View {
   resizeObserver: ResizeObserver
   constructor(
     track: HTMLElement, private buttonW: number
   ) {
     super(track);
     this.resizeObserver = new ResizeObserver((entries) => {
-      this.emit('resizeScale', entries[0].contentRect.width);
+      this.emit('resizeTrack', entries[0].contentRect.width);
       this.transform();
     });
     this.resizeObserver.observe(this.component);
@@ -15,7 +15,7 @@ export default class ScaleView extends View {
       'pointerdown', 
       (e) => {
         this.toggleTrigger();
-        this.emit('clickOnScale', e.x);
+        this.emit('clickOnTrack', e.x);
         this.emit('definePointer', e.pointerId);
       }
     );

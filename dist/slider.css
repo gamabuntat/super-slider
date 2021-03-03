@@ -63,7 +63,7 @@
 }
 
 .ui-slider__progress-bar_start, .ui-slider__progress-bar_end {
-  width: 10px;
+  width: 0;
   height: 100%;
   background-color: tomato;
   border-radius: 20px;

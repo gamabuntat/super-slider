@@ -1,28 +1,32 @@
 import Service from '../Service/Service';
-import ScaleView from '../View/TrackView';
+import TrackView from '../View/TrackView';
 import ButtonView from '../View/ButtonView';
 import DisplayView from '../View/DisplayView';
+import ProgressBarView from '../View/ProgressBarView';
 
 export default class Presenter {
   constructor(
     private service: Service,
-    private track: ScaleView,
+    private track: TrackView,
     private buttonS: ButtonView,
     private displayS: DisplayView,
+    private progressBarS: ProgressBarView,
     private buttonE: ButtonView | false,
-    private displayE: DisplayView | false
+    private displayE: DisplayView | false,
+    private progressBarE: ProgressBarView | false
   ) {
     this.service
       .on('sendButtonData', (args) => this.moveButton(args as number[]))
       .on('sendDisplayData', (args) => this.moveDisplay(args as number[]))
-      .on('changeValue', (args) => this.changeValue(args as number[]));
+      .on('changeValue', (args) => this.changeValue(args as number[]))
+      .on('changeWidth', (args) => this.changeWidth(args as number[]));
     this.track
-      .on('clickOnScale', (x) => this.determineButton(x as number[]))
-      .on('clickOnScale', (x) => this.getButtonData(x as number[]))
+      .on('clickOnTrack', (x) => this.determineButton(x as number[]))
+      .on('clickOnTrack', (x) => this.getButtonData(x as number[]))
       .on(
         'definePointer', (pointerId) => this.fixPointer(pointerId as number[])
       )
-      .on('resizeScale', (w) => this.updateSizes(w as number[]));
+      .on('resizeTrack', (w) => this.updateSizes(w as number[]));
     if (this.buttonE) {
       [this.buttonS, this.buttonE].forEach((b) => {
         b
@@ -71,6 +75,14 @@ export default class Presenter {
       ? this.displayS : this.displayE);
   }
 
+  getActiveProgressBar(): ProgressBarView {
+    if (!this.progressBarE) {
+      return this.progressBarS;
+    }
+    return (this.getActiveButton() === this.buttonS
+      ? this.progressBarS : this.progressBarE);
+  }
+
   moveButton([x, maxExtreme, minExtreme, trackX, trackW]: number[]): void {
     this.getActiveButton().moveButton(
       x, maxExtreme, minExtreme, trackX, trackW
@@ -97,6 +109,10 @@ export default class Presenter {
     this.getActiveDisplay().changeValue(
       relativeBtnPos, min, max, valueOfDivision, step
     );
+  }
+
+  changeWidth([x, relBtnW]: number[]): void {
+    this.getActiveProgressBar().changeWidth(x, relBtnW);
   }
 
   saveLastPosition([x]: number[]): void {
