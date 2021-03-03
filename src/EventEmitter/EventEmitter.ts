@@ -5,7 +5,7 @@ interface StorageForEvents {
 type Handler = (args: AA[]) => void
 type AA = number
 
-class EventEmitter {
+export default class EventEmitter {
   protected events: StorageForEvents = {};
 
   on(evt: string, listener: Handler): EventEmitter {
@@ -18,4 +18,3 @@ class EventEmitter {
   }
 }
 
-export {EventEmitter, AA};

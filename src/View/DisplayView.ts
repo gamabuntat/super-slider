@@ -10,11 +10,11 @@ export default class DisplayView extends View {
 
   moveDisplay(
     relativeBtnPos: number,
-    scaleW: number,
+    trackW: number,
     maxExtreme: number,
     minExtreme: number
   ): void {
-    const relDisplayDeflexion = this.displayDeflexion * 2 / scaleW;
+    const relDisplayDeflexion = this.displayDeflexion * 2 / trackW;
     if (this.offset == 0) {
       maxExtreme = Infinity;
     } else {

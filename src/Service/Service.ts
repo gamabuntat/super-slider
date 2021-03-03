@@ -1,4 +1,4 @@
-import {EventEmitter} from '../EventEmitter/EventEmitter';
+import EventEmitter from '../EventEmitter/EventEmitter';
 import Model from '../Model/Model';
 
 type tActiveButton = 'buttonS' | 'buttonE'
@@ -11,7 +11,7 @@ export default class Service extends EventEmitter {
   }
 
   determineButton(x: number): void {
-    const relativePointerPosition = (x - this.m.scaleX) / this.m.scaleW;
+    const relativePointerPosition = (x - this.m.trackX) / this.m.trackW;
     const diff = this.activeButton.reduce((diff, b) => (
       Math.abs(
         relativePointerPosition - (
@@ -38,8 +38,8 @@ export default class Service extends EventEmitter {
       x,
       this.m[this.activeButton[0]].maxExtreme, 
       this.m[this.activeButton[0]].minExtreme,
-      this.m.scaleX,
-      this.m.scaleW
+      this.m.trackX,
+      this.m.trackW
     );
   }
 
@@ -47,7 +47,7 @@ export default class Service extends EventEmitter {
     this.emit(
       'sendDisplayData',
       this.m[this.activeButton[0]].relativeX,
-      this.m.scaleW,
+      this.m.trackW,
       this.m.isInterval ? this.m[this.activeButton[0]].maxExtreme : Infinity,
       this.m[this.activeButton[0]].minExtreme,
     );
@@ -67,13 +67,13 @@ export default class Service extends EventEmitter {
 
   saveLastPosition(x: number): void {
     this.m[this.activeButton[0]].relativeX = (
-      (x - this.m.scaleX) / this.m.scaleW
+      (x - this.m.trackX) / this.m.trackW
     );
     this.sendDisplayData();
   }
 
   updateSizes(w: number): void {
-    this.m.scaleW = w;
+    this.m.trackW = w;
     this.m.relativeButtonW = this.m.buttonW / w;
     this.m.relativeDisplayW = this.m.displayW / w;
   }

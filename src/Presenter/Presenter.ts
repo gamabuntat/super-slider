@@ -1,12 +1,12 @@
 import Service from '../Service/Service';
-import ScaleView from '../View/ScaleView';
+import ScaleView from '../View/TrackView';
 import ButtonView from '../View/ButtonView';
 import DisplayView from '../View/DisplayView';
 
 export default class Presenter {
   constructor(
     private service: Service,
-    private scale: ScaleView,
+    private track: ScaleView,
     private buttonS: ButtonView,
     private displayS: DisplayView,
     private buttonE: ButtonView | false,
@@ -16,7 +16,7 @@ export default class Presenter {
       .on('sendButtonData', (args) => this.moveButton(args as number[]))
       .on('sendDisplayData', (args) => this.moveDisplay(args as number[]))
       .on('changeValue', (args) => this.changeValue(args as number[]));
-    this.scale
+    this.track
       .on('clickOnScale', (x) => this.determineButton(x as number[]))
       .on('clickOnScale', (x) => this.getButtonData(x as number[]))
       .on(
@@ -71,21 +71,21 @@ export default class Presenter {
       ? this.displayS : this.displayE);
   }
 
-  moveButton([x, maxExtreme, minExtreme, scaleX, scaleW]: number[]): void {
+  moveButton([x, maxExtreme, minExtreme, trackX, trackW]: number[]): void {
     this.getActiveButton().moveButton(
-      x, maxExtreme, minExtreme, scaleX, scaleW
+      x, maxExtreme, minExtreme, trackX, trackW
     );
   }
 
   moveDisplay([
     relativeBtnPos, 
-    scaleW, 
+    trackW, 
     maxExtreme, 
     minExtreme
   ]: number[]): void {
     this.getActiveDisplay().moveDisplay(
       relativeBtnPos, 
-      scaleW, 
+      trackW, 
       maxExtreme, 
       minExtreme
     );

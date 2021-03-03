@@ -1,4 +1,4 @@
-import {EventEmitter} from '../EventEmitter/EventEmitter';
+import EventEmitter from '../EventEmitter/EventEmitter';
 
 export default class View extends EventEmitter {
   protected static isTriggerd = false

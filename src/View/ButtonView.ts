@@ -43,12 +43,12 @@ export default class ButtonView extends View {
     x: number, 
     maxExtreme: number,
     minExtreme: number,
-    scaleX: number,
-    scaleW: number
+    trackX: number,
+    trackW: number
   ): void {
     const position = Math.min(
       maxExtreme,
-      Math.max((x - scaleX - (this.shift + this.offset)) / scaleW, minExtreme)
+      Math.max((x - trackX - (this.shift + this.offset)) / trackW, minExtreme)
     );
     this.component.style.left = `${position * 100}%`;
     this.emit('updatePosition', this.getRect().x - this.offset);

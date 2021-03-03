@@ -6,8 +6,8 @@ export default class Model {
   min: number
   max: number
   step: number
-  scaleX: number
-  scaleW: number
+  trackX: number
+  trackW: number
   buttonS: ButtonModel
   buttonE: ButtonModel
   buttonW: number
@@ -16,7 +16,7 @@ export default class Model {
   relativeDisplayW: number
   valueOfDivision: number
   constructor(
-    scale: HTMLElement,
+    track: HTMLElement,
     buttonS: HTMLElement,
     buttonE: HTMLElement | false,
     display: HTMLElement,
@@ -31,21 +31,21 @@ export default class Model {
     this.min = min;
     this.max = max;
     this.step = step;
-    this.scaleX = scale.getBoundingClientRect().x;
+    this.trackX = track.getBoundingClientRect().x;
     this.buttonW = buttonS.getBoundingClientRect().width;
-    this.scaleW = scale.getBoundingClientRect().width;
-    this.relativeButtonW = this.buttonW / this.scaleW;
+    this.trackW = track.getBoundingClientRect().width;
+    this.relativeButtonW = this.buttonW / this.trackW;
     this.displayW = display.getBoundingClientRect().width;
-    this.relativeDisplayW = this.displayW / this.scaleW;
+    this.relativeDisplayW = this.displayW / this.trackW;
     this.valueOfDivision = (max - min) / this.step;
     this.buttonS = new ButtonModel(
-      (buttonS.getBoundingClientRect().x - this.scaleX) / this.scaleW,
+      (buttonS.getBoundingClientRect().x - this.trackX) / this.trackW,
       1,
       0
     );
     this.buttonE = buttonE 
       ? new ButtonModel(
-        (buttonE.getBoundingClientRect().x - this.scaleX) / this.scaleW,
+        (buttonE.getBoundingClientRect().x - this.trackX) / this.trackW,
         1,
         0
       ) 
