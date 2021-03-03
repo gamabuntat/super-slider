@@ -22,7 +22,7 @@ export default class Presenter {
       .on('sendDisplayData', (args) => this.moveDisplay(args as number[]))
       .on('changeValue', (args) => this.changeValue(args as number[]))
       .on('changeWidth', (args) => this.changeWidth(args as number[]))
-      .on('sendScaleData', (minmax) => this.fillValues(minmax as number[]));
+      .on('sendScaleData', (args) => this.fillValues(args as number[]));
     this.track
       .on('clickOnTrack', (x) => this.determineButton(x as number[]))
       .on('clickOnTrack', (x) => this.getButtonData(x as number[]))
@@ -118,16 +118,16 @@ export default class Presenter {
     this.getActiveProgressBar().changeWidth(x, relBtnW);
   }
 
+  fillValues([max, min, step]: number[]): void {
+    this.scale.fillValues(max, min, step);
+  }
+
   saveLastPosition([x]: number[]): void {
     this.service.saveLastPosition(x);
   }
 
   updateSizes([w]: number[]): void {
     this.service.updateSizes(w);
-  }
-
-  fillValues([max, min]: number[]): void {
-    this.scale.fillValues(max, min);
   }
 
   init(): Presenter {

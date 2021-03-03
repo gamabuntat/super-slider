@@ -44,11 +44,6 @@ export default class DisplayView extends View {
     this.component.innerHTML = value.toFixed(this.defineDecimalPlaces(step));
   }
 
-  defineDecimalPlaces(x: number): number {
-    const dotPosition = x.toString().indexOf('.') + 1;
-    return dotPosition == 0 ? 0 : x.toString().length - dotPosition;
-  }
-
   transform(displayDeflexion: number): void {
     this.component.style.transform = (
       `translate(${this.offset - displayDeflexion}px, 0px)`

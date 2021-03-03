@@ -16,7 +16,7 @@
   min-width: 3.2rem;
   height: .2rem;
   background: #EFEFFC;
-  border-radius: 20px;
+  border-radius: .5rem;
   touch-action: none;
 }
 
@@ -27,7 +27,7 @@
   width: 1.6rem;
   height: 1.6rem;
   background-color: #F0B7DE;
-  border: 1.6px solid white;
+  border: .12rem solid white;
   outline: none;
   border-radius: 50%;
   cursor: pointer;
@@ -38,15 +38,14 @@
 
 .ui-slider__display_start, .ui-slider__display_end {
   position: absolute;
-  padding: 3px;
-  top: -10px;
+  top: -0.4rem;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 3.0rem;
   height: 1.4rem;
   background-color: #F8E944;
-  border-radius: 6px;
+  border-radius: 0.3rem;
   box-sizing: border-box;
   color: #340926;
 }
@@ -54,12 +53,11 @@
 .ui-slider__display_start::before, .ui-slider__display_end::before {
   content: '';
   position: absolute;
-  bottom: -2.5px;
+  bottom: -0.1rem;
   display: block;
-  width: 5px;
-  height: 5px;
+  width: .2rem;
+  height: .2rem;
   background-color: #F8E944;
-;
   transform: rotate(45deg);
 }
 
@@ -67,8 +65,7 @@
   width: 0;
   height: 100%;
   background-color: #ffc2ec;
-  /* background-image: linear-gradient(to right, #FFC2EC, #EFEFFC); */
-  border-radius: 20px;
+  border-radius: .5rem;
 }
 
 .ui-slider__scale {

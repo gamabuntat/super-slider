@@ -14,5 +14,10 @@ export default class View extends EventEmitter {
   getRect(): DOMRect {
     return this.component.getBoundingClientRect();
   }
+
+  defineDecimalPlaces(x: number): number {
+    const dotPosition = x.toString().indexOf('.') + 1;
+    return dotPosition == 0 ? 0 : x.toString().length - dotPosition;
+  }
 }
 

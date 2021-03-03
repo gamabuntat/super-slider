@@ -70,7 +70,7 @@ export default class Service extends EventEmitter {
   }
 
   sendScaleData(): void {
-    this.emit('sendScaleData', this.m.max, this.m.min);
+    this.emit('sendScaleData', this.m.max, this.m.min, this.m.step);
   }
 
   getActiveButton(): tActiveButton {
