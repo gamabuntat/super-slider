@@ -19,9 +19,10 @@ export default class ScaleView extends View {
   }
 
   fillValues(max: number, min: number, step: number): void {
-    this.values.reduce((prevValue, s) => (
-      (s.innerHTML = prevValue.toFixed(this.defineDecimalPlaces(step))), 
-      prevValue + (max - min) / (this.nValues - 1)
-    ), min);
+    this.values.reduce((prevValue, s) => {
+      const value = prevValue.toFixed(this.defineDecimalPlaces(step));
+      s.innerHTML = parseFloat(value).toString(); 
+      return prevValue + (max - min) / (this.nValues - 1);
+    }, min);
   }
 }

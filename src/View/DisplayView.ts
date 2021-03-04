@@ -40,8 +40,8 @@ export default class DisplayView extends View {
     const value = Math.min(
       Math.round(relativeBtnPos * valueOfDivision) * step + min,
       max
-    );
-    this.component.innerHTML = value.toFixed(this.defineDecimalPlaces(step));
+    ).toFixed(this.defineDecimalPlaces(step));
+    this.component.innerHTML = parseFloat(value).toString();
   }
 
   transform(displayDeflexion: number): void {

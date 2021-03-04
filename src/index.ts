@@ -59,7 +59,10 @@ interface Options {
           progressBarE = false,
         ] = components;
         const buttonW = buttonS.getBoundingClientRect().width;
-        container.style.margin = `0 ${buttonW * (isInterval ? 1 : 0.5)}px`;
+        const displaySW = displayS.getBoundingClientRect().width;
+        container.style.margin = 
+          `${displaySW / 8}px ${buttonW * (isInterval ? 1 : 0.5)}px`
+        ;
         storage[id] = new Presenter(
           new Service(new Model(track, buttonS, buttonE, displayS, o)),
           new TrackView(track, buttonW * (isInterval ? 1 : 0)),
