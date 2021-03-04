@@ -38,18 +38,8 @@ export default class Model {
     this.displayW = display.getBoundingClientRect().width;
     this.relativeDisplayW = this.displayW / this.trackW;
     this.valueOfDivision = (max - min) / this.step;
-    this.buttonS = new ButtonModel(
-      (buttonS.getBoundingClientRect().x - this.trackX) / this.trackW,
-      1,
-      0
-    );
-    this.buttonE = buttonE 
-      ? new ButtonModel(
-        (buttonE.getBoundingClientRect().x - this.trackX) / this.trackW,
-        1,
-        0
-      ) 
-      : this.buttonS;
+    this.buttonS = new ButtonModel(-Infinity, 1, 0);
+    this.buttonE = buttonE ? new ButtonModel(Infinity, 1, 0) : this.buttonS;
   }
 }
 

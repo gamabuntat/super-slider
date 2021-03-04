@@ -20,19 +20,27 @@
   }
   body {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-around;
     min-height: 100vh;
     font-family: sans-serif;
     font-weight: lighter;
-    margin: 0 2rem;
+    margin: 0;
     padding: 0;
+  }
+
+  body > div {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 50%;
+    justify-content: center;
+    padding: 1.2rem;
+    box-sizing: border-box;
   }
 </style>
 <body>
   <div id="slider1"></div>
   <div id="slider2"></div>
-  <div id="slider3"></div>
-  <div id="slider4"></div>
 </body>
+  <script src="a.js"></script>
 </html>

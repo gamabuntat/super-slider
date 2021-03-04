@@ -86,9 +86,15 @@ export default class Service extends EventEmitter {
   }
 
   updateSizes(w: number): void {
+    // console.log(`w: ${w}`);
     this.m.trackW = w;
     this.m.relativeButtonW = this.m.buttonW / w;
     this.m.relativeDisplayW = this.m.displayW / w;
+  }
+
+  updateTrackOffset(x: number): void {
+    console.log(x);
+    this.m.trackX = x;
   }
 
   init(): void {

@@ -29,7 +29,8 @@ export default class Presenter {
       .on(
         'definePointer', (pointerId) => this.fixPointer(pointerId as number[])
       )
-      .on('resizeTrack', (w) => this.updateSizes(w as number[]));
+      .on('resizeTrack', (w) => this.updateSizes(w as number[]))
+      .on('changeTrackOffset', (x) => this.updateTrackOffset(x as number[]));
     if (this.buttonE) {
       [this.buttonS, this.buttonE].forEach((b) => {
         b
@@ -128,6 +129,10 @@ export default class Presenter {
 
   updateSizes([w]: number[]): void {
     this.service.updateSizes(w);
+  }
+
+  updateTrackOffset([x]: number[]): void {
+    this.service.updateTrackOffset(x);
   }
 
   init(): Presenter {
