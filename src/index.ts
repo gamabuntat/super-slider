@@ -5,6 +5,7 @@ import ButtonView from './View/ButtonView';
 import DisplayView from './View/DisplayView';
 import ProgressBarView from './View/ProgressBarView';
 import ScaleView from './View/ScaleView';
+import PresenterStorage from './Presenter/PresenterStorage';
 import Presenter from './Presenter/Presenter';
 
 interface Storage {
@@ -66,21 +67,24 @@ interface Options {
         storage[id] = new Presenter(
           new Service(new Model(track, buttonS, buttonE, displayS, o)),
           new TrackView(track, buttonW * (isInterval ? 1 : 0)),
-          new ButtonView(buttonS, -buttonW * (isInterval ? 1 : 0.5)),
-          new DisplayView(
-            displayS,
-            -buttonW * (isInterval ? 1 : 0.5),
-            buttonW
-          ),
-          new ProgressBarView(
-            progressBarS, 0, (isInterval ? 1 : 0)
-          ),
           new ScaleView(scale, buttonW),
-          buttonE && new ButtonView(buttonE, 0),
-          displayE && new DisplayView(displayE, 0, buttonW),
-          progressBarE && new ProgressBarView(
-            progressBarE, 1, (isInterval ? 1 : 0)
-          )
+          new PresenterStorage(
+            new ButtonView(buttonS, -buttonW * (isInterval ? 1 : 0.5)),
+            new DisplayView(
+              displayS,
+              -buttonW * (isInterval ? 1 : 0.5),
+              buttonW
+            ),
+            new ProgressBarView(
+              progressBarS, 0, (isInterval ? 1 : 0)
+            ),
+          ),
+          (buttonE && displayE && progressBarE)
+            && new PresenterStorage(
+              new ButtonView(buttonE, 0),
+              new DisplayView(displayE, 0, buttonW),
+              new ProgressBarView( progressBarE, 1, (isInterval ? 1 : 0))
+            )
         ).init();
         function createComponent([elem, elemClass]: string[]) {
           const component = document.createElement(elem);

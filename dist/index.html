@@ -20,7 +20,7 @@
   }
   body {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-around;
     min-height: 100vh;
     font-family: sans-serif;
@@ -29,18 +29,17 @@
     padding: 0;
   }
 
-  body > div {
+  body > .slider {
     display: flex;
     flex-direction: column;
     flex-basis: 50%;
     justify-content: center;
-    padding: 1.2rem;
+    padding: 0 1.2rem;
     box-sizing: border-box;
   }
 </style>
 <body>
-  <div id="slider1"></div>
-  <div id="slider2"></div>
+  <div id="slider1" class="slider"></div>
+  <div id="slider2" class="slider"></div>
 </body>
-  <script src="a.js"></script>
 </html>

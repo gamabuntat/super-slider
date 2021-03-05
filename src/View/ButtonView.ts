@@ -14,7 +14,6 @@ export default class ButtonView extends View {
     });
     this.component.addEventListener('lostpointercapture', () => {
       this.toggleTrigger();
-      this.emit('lostPointer');
       this.setDefaultShift();
     });
     this.component.addEventListener(

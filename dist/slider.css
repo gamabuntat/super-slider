@@ -1,3 +1,8 @@
+:root {
+  --btn-size: 1.6rem;
+  --track-min-size: cacl(var(--btn-size) * 2);
+}
+
 .ui-slider__container {
   position: relative;
   display: flex;
@@ -13,19 +18,20 @@
   margin: 0;
   padding: 0;
   width: 100%;
-  min-width: 3.2rem;
+  min-width: var(--track-min-size);
   height: .2rem;
   background: #EFEFFC;
   border-radius: .5rem;
   touch-action: none;
 }
 
-.ui-slider__button_start, .ui-slider__button_end {
+.ui-slider__button_start, 
+.ui-slider__button_end {
   position: absolute;
   margin: 0;
   padding: 0;
-  width: 1.6rem;
-  height: 1.6rem;
+  width: var(--btn-size);
+  height: var(--btn-size);
   background-color: #F0B7DE;
   border: .12rem solid white;
   outline: none;
@@ -36,7 +42,8 @@
   z-index: 10;
 }
 
-.ui-slider__display_start, .ui-slider__display_end {
+.ui-slider__display_start,
+.ui-slider__display_end {
   position: absolute;
   top: -0.4rem;
   display: flex;
@@ -50,7 +57,8 @@
   color: #340926;
 }
 
-.ui-slider__display_start::before, .ui-slider__display_end::before {
+.ui-slider__display_start::before,
+.ui-slider__display_end::before {
   content: '';
   position: absolute;
   bottom: -0.1rem;
@@ -61,7 +69,8 @@
   transform: rotate(45deg);
 }
 
-.ui-slider__progress-bar_start, .ui-slider__progress-bar_end {
+.ui-slider__progress-bar_start,
+.ui-slider__progress-bar_end {
   width: 0;
   height: 100%;
   background-color: #ffc2ec;
@@ -71,5 +80,6 @@
 .ui-slider__scale {
   display: flex;
   justify-content: space-between;
+  font-size: .7rem;
   color: lightgray;
 }

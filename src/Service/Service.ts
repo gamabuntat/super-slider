@@ -24,11 +24,8 @@ export default class Service extends EventEmitter {
     console.log(this.activeButton[0]);
   }
 
-  setMaxExtreme(): void {
+  setExtremes(): void {
     this.m.buttonS.maxExtreme = this.m.buttonE.relativeX;
-  }
-
-  setMinExtreme(): void {
     this.m.buttonE.minExtreme = this.m.buttonS.relativeX;
   }
 
@@ -78,23 +75,20 @@ export default class Service extends EventEmitter {
   }
 
   saveLastPosition(x: number): void {
-    this.m[this.activeButton[0]].relativeX = (
-      (x - this.m.trackX) / this.m.trackW
-    );
+    const relPos = (x - this.m.trackX) / this.m.trackW;
+    this.m[this.activeButton[0]].relativeX = relPos;
+    if (this.m.isInterval) {
+      this.setExtremes();
+    }
     this.sendDisplayData();
     this.sendProgressBarData();
   }
 
-  updateSizes(w: number): void {
-    // console.log(`w: ${w}`);
+  updateSizes(w: number, x: number): void {
     this.m.trackW = w;
+    this.m.trackX = x;
     this.m.relativeButtonW = this.m.buttonW / w;
     this.m.relativeDisplayW = this.m.displayW / w;
-  }
-
-  updateTrackOffset(x: number): void {
-    console.log(x);
-    this.m.trackX = x;
   }
 
   init(): void {

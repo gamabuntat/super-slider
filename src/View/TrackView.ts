@@ -9,13 +9,8 @@ export default class TrackView extends View {
     this.resizeObserver = new ResizeObserver(() => {
       this.transform(0);
       const prevW = this.getRect().width;
-      this.emit('resizeTrack', this.getRect().width);
-      this.emit('changeTrackOffset', this.getRect().x);
+      this.emit('resizeTrack', prevW, this.getRect().x);
       this.transform(this.buttonW / prevW);
-      // console.log(`wb: ${this.getRect().width}`);
-      // console.log(`xb: ${this.getRect().x}`);
-      // console.log(`wa: ${this.getRect().width}`);
-      // console.log(`xa: ${this.getRect().x}`);
     });
     this.resizeObserver.observe(this.component);
     this.component.addEventListener(
@@ -29,9 +24,7 @@ export default class TrackView extends View {
   } 
 
   transform(x: number): void {
-    this.component.style.transform = (
-      `scaleX(${1 + x})`
-    );
+    this.component.style.transform = `scaleX(${1 + x})`;
   }
 }
 
