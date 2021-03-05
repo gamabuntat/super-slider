@@ -1,10 +1,11 @@
 import View from './View';
+import OrientationType from './OrientationType';
 
 export default class ScaleView extends View {
   private nValues: number
   private values: HTMLElement[]
-  constructor(scale: HTMLElement, btnW: number) {
-    super(scale);
+  constructor(scale: HTMLElement, orient: OrientationType, btnW: number) {
+    super(scale, orient);
     this.nValues = 5;
     this.values = Array(this.nValues).fill(0).map(() => this.createElement());
     this.values.forEach((s) => (

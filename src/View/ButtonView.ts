@@ -5,10 +5,10 @@ export default class ButtonView extends View {
   private shift: number
   constructor(
     button: HTMLElement,
+    orient: OrientationType,
     private offset: number, 
-    private orient: OrientationType
   ) {
-    super(button);
+    super(button, orient);
     this.shift = this.getRect()[this.orient.size] / 2;
     this.component.style.transform = (
       `translate${this.orient.coord.toUpperCase()}(${this.offset}px)`

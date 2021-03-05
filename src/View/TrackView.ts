@@ -1,18 +1,17 @@
 import View from './View';
+import OrientationType from './OrientationType';
 
 export default class TrackView extends View {
-  resizeObserver: ResizeObserver
   constructor(
-    track: HTMLElement, private buttonW: number
+    track: HTMLElement, orient: OrientationType, private buttonW: number
   ) {
-    super(track);
-    this.resizeObserver = new ResizeObserver(() => {
+    super(track, orient);
+    window.addEventListener('resize', () => {
       this.transform(0);
       const prevW = this.getRect().width;
       this.emit('resizeTrack', prevW, this.getRect().x);
       this.transform(this.buttonW / prevW);
     });
-    this.resizeObserver.observe(this.component);
     this.component.addEventListener(
       'pointerdown', 
       (e) => {

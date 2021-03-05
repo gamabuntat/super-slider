@@ -1,8 +1,11 @@
 import EventEmitter from '../EventEmitter/EventEmitter';
+import OrientationType from './OrientationType';
 
 export default class View extends EventEmitter {
   protected static isTriggerd = false
-  constructor(protected component: HTMLElement) {
+  constructor(
+    protected component: HTMLElement, protected orient: OrientationType
+  ) {
     super();
   }
 

@@ -31,8 +31,7 @@ interface Options {
       }
       if (typeof o == 'object') {
         const isInterval = o?.interval === true;
-        const isVertical = o?.vertical === true;
-        const orientation = new OrientationType(isVertical);
+        const orient = new OrientationType(o?.vertical === true);
         const components = [
           ['div', 'ui-slider__container'],
           ['div', 'ui-slider__scale'],
@@ -70,26 +69,27 @@ interface Options {
         ;
         storage[id] = new Presenter(
           new Service(new Model(track, buttonS, buttonE, displayS, o)),
-          new TrackView(track, buttonW * (isInterval ? 1 : 0)),
-          new ScaleView(scale, buttonW),
+          new TrackView(track, orient, buttonW * (isInterval ? 1 : 0)),
+          new ScaleView(scale, orient, buttonW),
           new PresenterStorage(
             new ButtonView(
-              buttonS, -buttonW * (isInterval ? 1 : 0.5), orientation
+              buttonS, orient, -buttonW * (isInterval ? 1 : 0.5),
             ),
             new DisplayView(
               displayS,
+              orient,
               -buttonW * (isInterval ? 1 : 0.5),
               buttonW
             ),
             new ProgressBarView(
-              progressBarS, 0, (isInterval ? 1 : 0)
+              progressBarS, orient, 0, (isInterval ? 1 : 0)
             ),
           ),
           (buttonE && displayE && progressBarE)
             && new PresenterStorage(
-              new ButtonView(buttonE, 0, orientation),
-              new DisplayView(displayE, 0, buttonW),
-              new ProgressBarView( progressBarE, 1, (isInterval ? 1 : 0))
+              new ButtonView(buttonE, orient, 0),
+              new DisplayView(displayE, orient, 0, buttonW),
+              new ProgressBarView(progressBarE, orient, 1, (isInterval ? 1 : 0))
             )
         ).init();
         function createComponent([elem, elemClass]: string[]) {

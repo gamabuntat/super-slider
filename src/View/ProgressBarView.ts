@@ -1,12 +1,14 @@
 import View from './View';
+import OrientationType from './OrientationType';
 
 export default class ProgressBarView extends View {
   constructor(
     progressBar: HTMLElement, 
+    orient: OrientationType,
     private referencePoint: number, 
     private offset: number
   ) {
-    super(progressBar);
+    super(progressBar, orient);
   }
 
   changeWidth(btnPos: number, relBtnW: number): void {

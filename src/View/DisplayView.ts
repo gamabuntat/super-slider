@@ -1,9 +1,15 @@
 import View from './View';
+import OrientationType from './OrientationType';
 
 export default class DisplayView extends View {
   private displayDeflexion: number
-  constructor (display: HTMLElement, private offset: number, buttonW: number) {
-    super(display);
+  constructor (
+    display: HTMLElement, 
+    orient: OrientationType, 
+    private offset: number,
+    buttonW: number
+  ) {
+    super(display, orient);
     this.displayDeflexion = (this.getRect().width - buttonW) / 2;
     this.transform(this.displayDeflexion);
   }
