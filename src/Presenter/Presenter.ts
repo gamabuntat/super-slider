@@ -12,11 +12,11 @@ export default class Presenter {
     private buttonE: PresenterStorage | false
   ) {
     this.service
-      .on('sendButtonData', (args) => this.moveButton(args))
-      .on('sendDisplayData', (args) => this.moveDisplay(args))
-      .on('changeValue', (args) => this.changeValue(args))
-      .on('changeWidth', (args) => this.changeWidth(args))
-      .on('sendScaleData', (args) => this.fillValues(args));
+      .on('sendButtonData', (data) => this.moveButton(data))
+      .on('sendDisplayData', (data) => this.moveDisplay(data))
+      .on('changeValue', (data) => this.changeValue(data))
+      .on('changeWidth', (data) => this.changeWidth(data))
+      .on('sendScaleData', (data) => this.fillValues(data));
     this.track
       .on('clickOnTrack', (x) => this.determineButton(x))
       .on('clickOnTrack', (x) => this.getButtonData(x))
