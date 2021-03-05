@@ -1,11 +1,18 @@
 import View from './View';
+import OrientationType from './OrientationType';
 
 export default class ButtonView extends View {
   private shift: number
-  constructor(button: HTMLElement, private offset: number) {
+  constructor(
+    button: HTMLElement,
+    private offset: number, 
+    private orient: OrientationType
+  ) {
     super(button);
-    this.shift = this.getRect().width / 2;
-    this.component.style.transform = `translateX(${this.offset}px)`;
+    this.shift = this.getRect()[this.orient.size] / 2;
+    this.component.style.transform = (
+      `translate${this.orient.coord.toUpperCase()}(${this.offset}px)`
+    );
     this.component.addEventListener('pointerdown', (e) => {
       this.toggleTrigger();
       this.setShift(e);
@@ -27,7 +34,7 @@ export default class ButtonView extends View {
   }
 
   setShift(e: PointerEvent): void {
-    this.shift = e.x - this.getRect().x;
+    this.shift = e[this.orient.coord] - this.getRect()[this.orient.coord];
   }
 
   setDefaultShift(): void {

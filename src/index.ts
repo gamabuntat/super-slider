@@ -5,6 +5,7 @@ import ButtonView from './View/ButtonView';
 import DisplayView from './View/DisplayView';
 import ProgressBarView from './View/ProgressBarView';
 import ScaleView from './View/ScaleView';
+import OrientationType from './View/OrientationType';
 import PresenterStorage from './Presenter/PresenterStorage';
 import Presenter from './Presenter/Presenter';
 
@@ -30,6 +31,8 @@ interface Options {
       }
       if (typeof o == 'object') {
         const isInterval = o?.interval === true;
+        const isVertical = o?.vertical === true;
+        const orientation = new OrientationType(isVertical);
         const components = [
           ['div', 'ui-slider__container'],
           ['div', 'ui-slider__scale'],
@@ -70,7 +73,9 @@ interface Options {
           new TrackView(track, buttonW * (isInterval ? 1 : 0)),
           new ScaleView(scale, buttonW),
           new PresenterStorage(
-            new ButtonView(buttonS, -buttonW * (isInterval ? 1 : 0.5)),
+            new ButtonView(
+              buttonS, -buttonW * (isInterval ? 1 : 0.5), orientation
+            ),
             new DisplayView(
               displayS,
               -buttonW * (isInterval ? 1 : 0.5),
@@ -82,7 +87,7 @@ interface Options {
           ),
           (buttonE && displayE && progressBarE)
             && new PresenterStorage(
-              new ButtonView(buttonE, 0),
+              new ButtonView(buttonE, 0, orientation),
               new DisplayView(displayE, 0, buttonW),
               new ProgressBarView( progressBarE, 1, (isInterval ? 1 : 0))
             )

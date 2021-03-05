@@ -22,12 +22,18 @@ export default class Presenter {
       .on('clickOnTrack', (x) => this.getButtonData(x))
       .on('definePointer', (pointerId) => this.fixPointer(pointerId))
       .on('resizeTrack', (wx) => this.updateSizes(wx));
-    [this.buttonS, this.buttonE].forEach((storage) => {
-      storage && storage.button
-        .on('pointerDown', (x) => this.determineButton(x))
+    if (this.buttonE) {
+      [this.buttonS, this.buttonE].forEach((storage) => {
+        storage.button
+          .on('pointerDown', (x) => this.determineButton(x))
+          .on('moveButton', (x) => this.getButtonData(x))
+          .on('updatePosition', (x) => this.saveLastPosition(x));
+      });
+    } else {
+      this.buttonS.button
         .on('moveButton', (x) => this.getButtonData(x))
         .on('updatePosition', (x) => this.saveLastPosition(x));
-    });
+    }
   }
 
   determineButton([x]: number[]): void {
