@@ -26,10 +26,9 @@ export default class ButtonView extends View {
       this.setDefaultShift();
     });
     this.component.addEventListener(
-      'pointermove',
-      (e) => {
+      'pointermove', (e) => {
         if (View.isTriggerd) {
-          this.emit('moveButton', e.x);
+          this.emit('moveButton', e[this.orient.coord]);
         }
       }
     );
@@ -48,18 +47,23 @@ export default class ButtonView extends View {
   }
 
   moveButton(
-    x: number, 
+    coord: number, 
     maxExtreme: number,
     minExtreme: number,
-    trackX: number,
+    trackCoord: number,
     trackW: number
   ): void {
     const position = Math.min(
       maxExtreme,
-      Math.max((x - trackX - (this.shift + this.offset)) / trackW, minExtreme)
+      Math.max(
+        (coord - trackCoord - (this.shift + this.offset)) / trackW,
+        minExtreme
+      )
     );
-    this.component.style.left = `${position * 100}%`;
-    this.emit('updatePosition', this.getRect().x - this.offset);
+    this.component.style[this.orient.styleCoord] = `${position * 100}%`;
+    this.emit(
+      'updatePosition', this.getRect()[this.orient.coord] - this.offset
+    );
   }
 }
 
