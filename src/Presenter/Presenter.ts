@@ -1,15 +1,15 @@
 import PresenterStorage from './PresenterStorage';
-import Service from '../Service/Service';
 import TrackView from '../View/TrackView';
 import ScaleView from '../View/ScaleView';
+import Service from '../Service/Service';
 
 export default class Presenter {
   constructor(
-    private service: Service,
     private track: TrackView,
     private scale: ScaleView,
     private buttonS: PresenterStorage,
-    private buttonE: PresenterStorage | false
+    private buttonE: PresenterStorage | false,
+    private service: Service,
   ) {
     this.service
       .on('sendButtonData', (data) => this.moveButton(data))

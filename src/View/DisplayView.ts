@@ -10,7 +10,7 @@ export default class DisplayView extends View {
     buttonW: number
   ) {
     super(display, orient);
-    this.displayDeflexion = (this.getRect().width - buttonW) / 2;
+    this.displayDeflexion = (this.getRect()[this.orient.size] - buttonW) / 2;
     this.transform(this.displayDeflexion);
   }
 

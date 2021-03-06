@@ -32,7 +32,8 @@ interface Options {
       if (typeof o == 'object') {
         this[0].innerHTML = '';
         const isInterval = o?.interval === true;
-        const orient = new OrientationType(o?.vertical === true);
+        const isVertical = o?.vertical === true;
+        const orient = new OrientationType(isVertical);
         const components = [
           ['div', 'ui-slider__container'],
           ['div', 'ui-slider__scale'],
@@ -52,6 +53,12 @@ interface Options {
           place.append(e);
           return idx ? components[0] : this[0];
         }, this[0]);
+        isVertical && components.forEach((c) => {
+          const defaultClass = (
+            c.classList[0].replace(/((?<!\_)\_[^\_]+|\_$)/, '')
+          );
+          c.classList.add(`${defaultClass}_vertical`);
+        });
         const [
           container,
           scale,
@@ -69,7 +76,6 @@ interface Options {
           `${displaySW / 8}px ${buttonW * (isInterval ? 1 : 0.5)}px`
         ;
         storage[id] = new Presenter(
-          new Service(new Model(track, buttonS, buttonE, displayS, o)),
           new TrackView(track, orient, buttonW * (isInterval ? 1 : 0)),
           new ScaleView(scale, orient, buttonW),
           new PresenterStorage(
@@ -91,7 +97,8 @@ interface Options {
               new ButtonView(buttonE, orient, 0),
               new DisplayView(displayE, orient, 0, buttonW),
               new ProgressBarView(progressBarE, orient, 1, (isInterval ? 1 : 0))
-            )
+            ),
+          new Service(new Model(track, buttonS, buttonE, displayS, o)),
         ).init();
         function createComponent([elem, elemClass]: string[]) {
           const component = document.createElement(elem);
