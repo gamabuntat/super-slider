@@ -2,6 +2,7 @@ import View from './View';
 import OrientationType from './OrientationType';
 
 export default class ButtonView extends View {
+  private width: number
   private shift: number
   constructor(
     button: HTMLElement,
@@ -9,15 +10,16 @@ export default class ButtonView extends View {
     private offset: number, 
   ) {
     super(button, orient);
-    this.shift = this.getRect()[this.orient.size] / 2;
+    this.width = this.getRect().width;
+    this.shift = this.width / 2;
     this.component.style.transform = (
       `translate${this.orient.coord.toUpperCase()}(${this.offset}px)`
     );
     this.component.addEventListener('pointerdown', (e) => {
       this.toggleTrigger();
-      this.setShift(e);
+      this.setShift(e[this.orient.coord]);
       this.fixPointer(e.pointerId);
-      this.emit('pointerDown', e.x);
+      this.emit('pointerDown', e[this.orient.coord]);
     });
     this.component.addEventListener('lostpointercapture', () => {
       this.toggleTrigger();
@@ -33,12 +35,12 @@ export default class ButtonView extends View {
     );
   }
 
-  setShift(e: PointerEvent): void {
-    this.shift = e[this.orient.coord] - this.getRect()[this.orient.coord];
+  setShift(coord: number): void {
+    this.shift = coord - this.getRect()[this.orient.coord];
   }
 
   setDefaultShift(): void {
-    this.shift = this.getRect().width / 2;
+    this.shift = this.width / 2;
   }
 
   fixPointer(pointerId: number): void {

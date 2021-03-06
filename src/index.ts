@@ -30,6 +30,7 @@ interface Options {
         return this;
       }
       if (typeof o == 'object') {
+        this[0].innerHTML = '';
         const isInterval = o?.interval === true;
         const orient = new OrientationType(o?.vertical === true);
         const components = [
