@@ -31,10 +31,10 @@ export default class TrackView extends View {
   }
 
   resizeHandler(): void {
-    // this.transform(0);
+    this.transform(0);
     const prevSize = this.getRect()[this.orient.size];
     this.emit('resizeTrack', prevSize, this.getRect()[this.orient.coord]);
-    // this.transform(this.buttonW / prevSize);
+    this.transform(this.buttonW / prevSize);
   }
 }
 

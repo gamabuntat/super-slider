@@ -35,9 +35,10 @@ interface Options {
         const isVertical = o?.vertical === true;
         const orient = new OrientationType(isVertical);
         const components = [
+          ['div', 'ui-slider__foremost-container'],
           ['div', 'ui-slider__main-container'],
-          ['div', 'ui-slider__container'],
           ['div', 'ui-slider__scale'],
+          ['div', 'ui-slider__container'],
           ['div', 'ui-slider__track'],
           ['button', 'ui-slider__button_start'],
           ['div', 'ui-slider__display_start'],
@@ -50,14 +51,18 @@ interface Options {
           .map((args) => createComponent(args as string[]));
         components.reduce((place, e, idx) => {
           [...e.classList].find((c) => c.includes('progress')) 
-            && (place = components[3]);
+            && (place = components[4]);
           place.append(e);
-          return idx >= 2 ? components[1] : components[0];
+          if (idx == 2) {
+            return components[1];
+          }
+          return idx >= 3 ? components[3] : components[0];
         }, this[0]);
         const [
+          foremostContainer,
           mainContainer,
-          container,
           scale,
+          container,
           track,
           buttonS,
           displayS,
@@ -68,8 +73,8 @@ interface Options {
         ] = components;
         const buttonW = buttonS.getBoundingClientRect().width;
         const displaySW = displayS.getBoundingClientRect().width;
-        // container.style.padding = 
-        //   `${displaySW / 8}px ${buttonW * (isInterval ? 1 : 0.5)}px`;
+        mainContainer.style.padding = 
+          `${0}px ${buttonW * (isInterval ? 1 : 0.5)}px`;
         storage[id] = new Presenter(
           new ScaleView(scale, orient, buttonW),
           new PresenterStorage(

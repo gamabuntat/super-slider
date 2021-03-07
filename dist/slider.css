@@ -1,12 +1,11 @@
 :root {
-  --btn-size: 1.6rem;
+  --btn-size: 1.5rem;
   --track-min-size: cacl(var(--btn-size) * 2);
 }
 
 .ui-slider__main-container {
   display: flex;
   flex-direction: column;
-  padding: 0 60px;
 }
 
 .ui-slider__main-container_vertical {
@@ -21,7 +20,6 @@
   align-items: center;
   height: 4rem;
   box-sizing: border-box;
-  /* padding: 0 40px; */
 }
 
 .ui-slider__container_vertical {
