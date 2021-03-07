@@ -1,10 +1,8 @@
 import EventEmitter from '../EventEmitter/EventEmitter';
 import Model from '../Model/Model';
 
-type tActiveButton = 'buttonS' | 'buttonE'
-
 export default class Service extends EventEmitter {
-  private activeButton: tActiveButton[]
+  private activeButton: Array<'buttonS' | 'buttonE'>
   constructor(private m: Model) {
     super();
     this.activeButton = ['buttonS', 'buttonE'];
@@ -70,7 +68,7 @@ export default class Service extends EventEmitter {
     this.emit('sendScaleData', this.m.max, this.m.min, this.m.step);
   }
 
-  getActiveButton(): tActiveButton {
+  getActiveButton(): 'buttonS' | 'buttonE' {
     return this.activeButton[0];
   }
 

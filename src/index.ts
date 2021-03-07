@@ -35,6 +35,7 @@ interface Options {
         const isVertical = o?.vertical === true;
         const orient = new OrientationType(isVertical);
         const components = [
+          ['div', 'ui-slider__main-container'],
           ['div', 'ui-slider__container'],
           ['div', 'ui-slider__scale'],
           ['div', 'ui-slider__track'],
@@ -49,17 +50,12 @@ interface Options {
           .map((args) => createComponent(args as string[]));
         components.reduce((place, e, idx) => {
           [...e.classList].find((c) => c.includes('progress')) 
-            && (place = components[2]);
+            && (place = components[3]);
           place.append(e);
-          return idx ? components[0] : this[0];
+          return idx >= 2 ? components[1] : components[0];
         }, this[0]);
-        isVertical && components.forEach((c) => {
-          const defaultClass = (
-            c.classList[0].replace(/((?<!\_)\_[^\_]+|\_$)/, '')
-          );
-          c.classList.add(`${defaultClass}_vertical`);
-        });
         const [
+          mainContainer,
           container,
           scale,
           track,
@@ -103,6 +99,10 @@ interface Options {
         function createComponent([elem, elemClass]: string[]) {
           const component = document.createElement(elem);
           component.classList.add(elemClass);
+          if (isVertical) {
+            const defaultClass = elemClass.replace(/((?<!\_)\_[^\_]+|\_$)/, '');
+            component.classList.add(`${defaultClass}_vertical`);
+          }
           return component;
         }
       } else {
