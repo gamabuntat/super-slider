@@ -5,10 +5,10 @@ import Service from '../Service/Service';
 
 export default class Presenter {
   constructor(
-    private track: TrackView,
     private scale: ScaleView,
     private buttonS: PresenterStorage,
     private buttonE: PresenterStorage | false,
+    private track: TrackView,
     private service: Service,
   ) {
     this.service

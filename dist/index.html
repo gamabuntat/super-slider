@@ -9,6 +9,7 @@
   <script src="index.js"></script>
   <script>
     $(function () {
+      $('#slider2').slider({interval: true, min: 1, max: 2, step: 0.01});
     });
   </script>
 </head>
@@ -25,12 +26,18 @@
     margin: 0;
     padding: 0;
   }
+
+  #slider1, #slider2 {
+    margin: 49px;
+  }
 </style>
 <body>
   <div id="slider1" class="slider">
-    <div class="ui-slider__main-container ui-slider__main-container_vertical ">
-      <div class="ui-slider__container ui-slider__container_vertical">
-        <div class="ui-slider__track ui-slider__track_vertical"></div>
+    <div class="ui-slider__main-container">
+      <div class="ui-slider__container">
+        <div class="ui-slider__track">
+        </div>
+        <button class="ui-slider__button_start"></button>
       </div>
     </div>
   </div>

@@ -68,11 +68,9 @@ interface Options {
         ] = components;
         const buttonW = buttonS.getBoundingClientRect().width;
         const displaySW = displayS.getBoundingClientRect().width;
-        container.style.margin = 
-          `${displaySW / 8}px ${buttonW * (isInterval ? 1 : 0.5)}px`
-        ;
+        // container.style.padding = 
+        //   `${displaySW / 8}px ${buttonW * (isInterval ? 1 : 0.5)}px`;
         storage[id] = new Presenter(
-          new TrackView(track, orient, buttonW * (isInterval ? 1 : 0)),
           new ScaleView(scale, orient, buttonW),
           new PresenterStorage(
             new ButtonView(
@@ -94,6 +92,7 @@ interface Options {
               new DisplayView(displayE, orient, 0, buttonW),
               new ProgressBarView(progressBarE, orient, 1, (isInterval ? 1 : 0))
             ),
+          new TrackView(track, orient, buttonW * (isInterval ? 1 : 0)),
           new Service(new Model(track, buttonS, buttonE, displayS, o)),
         ).init();
         function createComponent([elem, elemClass]: string[]) {
