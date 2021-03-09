@@ -15,7 +15,7 @@ export default class Presenter {
       .on('sendButtonData', (data) => this.moveButton(data))
       .on('sendDisplayData', (data) => this.moveDisplay(data))
       .on('changeValue', (data) => this.changeValue(data))
-      .on('changeWidth', (data) => this.changeWidth(data))
+      .on('changeSize', (data) => this.changeSize(data))
       .on('sendScaleData', (data) => this.fillValues(data));
     this.track
       .on('clickOnTrack', (x) => this.determineButton(x))
@@ -74,8 +74,8 @@ export default class Presenter {
     );
   }
 
-  changeWidth([x, relBtnW]: number[]): void {
-    this.getActiveButton().progressBar.changeWidth(x, relBtnW);
+  changeSize([x, relBtnW]: number[]): void {
+    this.getActiveButton().progressBar.changeSize(x, relBtnW);
   }
 
   fillValues([max, min, step]: number[]): void {

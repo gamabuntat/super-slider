@@ -73,8 +73,12 @@ interface Options {
         ] = components;
         const buttonW = buttonS.getBoundingClientRect().width;
         const displaySW = displayS.getBoundingClientRect().width;
-        mainContainer.style.padding = 
-          `${0}px ${buttonW * (isInterval ? 1 : 0.5)}px`;
+        foremostContainer.style.padding = `${(displaySW - buttonW) / 2}px`;
+        mainContainer.style.padding = (
+          isVertical 
+            ? `${buttonW * (isInterval ? 1 : 0.5)}px 0`
+            : `0 ${buttonW * (isInterval ? 1 : 0.5)}px`
+        );
         storage[id] = new Presenter(
           new ScaleView(scale, orient, buttonW),
           new PresenterStorage(

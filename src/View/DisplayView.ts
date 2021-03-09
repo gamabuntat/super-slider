@@ -33,7 +33,7 @@ export default class DisplayView extends View {
         minExtreme + relDisplayDeflexion
       )
     );
-    this.component.style.left = `${position * 100}%`;
+    this.component.style[this.orient.styleCoord] = `${position * 100}%`;
   }
 
   changeValue(
@@ -52,7 +52,9 @@ export default class DisplayView extends View {
 
   transform(displayDeflexion: number): void {
     this.component.style.transform = (
-      `translate(${this.offset - displayDeflexion}px, 0px)`
+      `translate${this.orient.coord.toUpperCase()}(
+        ${this.offset - displayDeflexion}px
+      )`
     );
   }
 }

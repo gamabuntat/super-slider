@@ -9,7 +9,7 @@ export default class Service extends EventEmitter {
   }
 
   determineButton(x: number): void {
-    const relativePointerPosition = (x - this.m.trackX) / this.m.trackW;
+    const relativePointerPosition = (x - this.m.trackCoord) / this.m.trackSize;
     const diff = this.activeButton.reduce((diff, b) => (
       Math.abs(
         relativePointerPosition - (
@@ -33,8 +33,8 @@ export default class Service extends EventEmitter {
       x,
       this.m[this.activeButton[0]].maxExtreme, 
       this.m[this.activeButton[0]].minExtreme,
-      this.m.trackX,
-      this.m.trackW
+      this.m.trackCoord,
+      this.m.trackSize
     );
   }
 
@@ -42,7 +42,7 @@ export default class Service extends EventEmitter {
     this.emit(
       'sendDisplayData',
       this.m[this.activeButton[0]].relativeX,
-      this.m.trackW,
+      this.m.trackSize,
       this.m.isInterval ? this.m[this.activeButton[0]].maxExtreme : Infinity,
       this.m[this.activeButton[0]].minExtreme,
     );
@@ -58,7 +58,7 @@ export default class Service extends EventEmitter {
 
   sendProgressBarData(): void {
     this.emit(
-      'changeWidth',
+      'changeSize',
       this.m[this.activeButton[0]].relativeX,
       this.m.relativeButtonW
     );
@@ -73,7 +73,7 @@ export default class Service extends EventEmitter {
   }
 
   saveLastPosition(x: number): void {
-    const relPos = (x - this.m.trackX) / this.m.trackW;
+    const relPos = (x - this.m.trackCoord) / this.m.trackSize;
     this.m[this.activeButton[0]].relativeX = relPos;
     if (this.m.isInterval) {
       this.setExtremes();
@@ -83,8 +83,8 @@ export default class Service extends EventEmitter {
   }
 
   updateSizes(w: number, x: number): void {
-    this.m.trackW = w;
-    this.m.trackX = x;
+    this.m.trackSize = w;
+    this.m.trackCoord = x;
     this.m.relativeButtonW = this.m.buttonW / w;
     this.m.relativeDisplayW = this.m.displayW / w;
   }

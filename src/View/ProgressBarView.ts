@@ -11,12 +11,12 @@ export default class ProgressBarView extends View {
     super(progressBar, orient);
   }
 
-  changeWidth(btnPos: number, relBtnW: number): void {
+  changeSize(btnPos: number, relBtnW: number): void {
     const value = (
       Math.abs(this.referencePoint - btnPos) 
        - relBtnW * this.offset / 2
     );
-    this.component.style.width = `${value * 100}%`;
+    this.component.style[this.orient.size] = `${value * 100}%`;
   }
 }
 
