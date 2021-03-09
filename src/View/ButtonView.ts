@@ -13,7 +13,9 @@ export default class ButtonView extends View {
     this.width = this.getRect().width;
     this.shift = this.width / 2;
     this.component.style.transform = (
-      `translate${this.orient.coord.toUpperCase()}(${this.offset}px)`
+      `translate${this.orient.coord.toUpperCase()}(
+        ${this.offset * (this.orient.isVertical ? -1 : 1)}px
+      )`
     );
     this.component.addEventListener('pointerdown', (e) => {
       this.toggleTrigger();
@@ -51,12 +53,15 @@ export default class ButtonView extends View {
     maxExtreme: number,
     minExtreme: number,
     trackCoord: number,
-    trackW: number
+    trackSize: number
   ): void {
+    const provisionalPos = (
+      (coord - trackCoord - (this.shift + this.offset)) / trackSize
+    );
     const position = Math.min(
       maxExtreme,
       Math.max(
-        (coord - trackCoord - (this.shift + this.offset)) / trackW,
+        this.orient.isVertical ? (1 - provisionalPos) : provisionalPos,
         minExtreme
       )
     );

@@ -83,7 +83,7 @@ interface Options {
           new ScaleView(scale, orient, buttonW),
           new PresenterStorage(
             new ButtonView(
-              buttonS, orient, -buttonW * (isInterval ? 1 : 0.5),
+              buttonS, orient, buttonW * (isInterval ? -1 : -0.5),
             ),
             new DisplayView(
               displayS,

@@ -1,10 +1,10 @@
 export default class OrientationType {
   public coord: 'y' | 'x'
-  public styleCoord: 'top' | 'left'
+  public styleCoord: 'bottom' | 'left'
   public size: 'height' | 'width'
-  constructor(isVertical: boolean) {
+  constructor(public isVertical: boolean) {
     this.coord = isVertical ? 'y' : 'x';
-    this.styleCoord = isVertical ? 'top' : 'left';
+    this.styleCoord = isVertical ? 'bottom' : 'left';
     this.size = isVertical ? 'height' : 'width';
   }
 }

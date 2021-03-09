@@ -73,7 +73,11 @@ export default class Service extends EventEmitter {
   }
 
   saveLastPosition(x: number): void {
-    const relPos = (x - this.m.trackCoord) / this.m.trackSize;
+    const relPos = (
+      Math.abs(
+        (this.m.isVertical ? 1 : 0) - (x - this.m.trackCoord) / this.m.trackSize
+      )
+    );
     this.m[this.activeButton[0]].relativeX = relPos;
     if (this.m.isInterval) {
       this.setExtremes();
