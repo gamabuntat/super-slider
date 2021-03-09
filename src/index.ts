@@ -88,7 +88,7 @@ interface Options {
             new DisplayView(
               displayS,
               orient,
-              -buttonW * (isInterval ? 1 : 0.5),
+              buttonW * (isInterval ? -1 : -0.5),
               buttonW
             ),
             new ProgressBarView(

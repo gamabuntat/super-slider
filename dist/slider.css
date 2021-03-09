@@ -111,6 +111,7 @@
 
 .ui-slider__display_vertical {
   left: -.6rem;
+  top: initial;
 }
 
 .ui-slider__progress-bar_start,

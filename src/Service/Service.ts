@@ -13,18 +13,20 @@ export default class Service extends EventEmitter {
     const diff = this.activeButton.reduce((diff, b) => (
       Math.abs(
         relativePointerPosition - (
-          this.m[b].relativeX 
+          this.m[b].relativePos 
           + this.m.relativeButtonW * (b == 'buttonS' ? -0.5 : 0.5)
         )
       ) - diff
     ), 0);
-    diff < 0 && this.activeButton.reverse();
+    if ((diff < 0 && !this.m.isVertical) || diff > 0 && this.m.isVertical) {
+      this.activeButton.reverse();
+    }
     console.log(this.activeButton[0]);
   }
 
   setExtremes(): void {
-    this.m.buttonS.maxExtreme = this.m.buttonE.relativeX;
-    this.m.buttonE.minExtreme = this.m.buttonS.relativeX;
+    this.m.buttonS.maxExtreme = this.m.buttonE.relativePos;
+    this.m.buttonE.minExtreme = this.m.buttonS.relativePos;
   }
 
   sendButtonData(x: number): void {
@@ -41,14 +43,14 @@ export default class Service extends EventEmitter {
   sendDisplayData(): void {
     this.emit(
       'sendDisplayData',
-      this.m[this.activeButton[0]].relativeX,
+      this.m[this.activeButton[0]].relativePos,
       this.m.trackSize,
       this.m.isInterval ? this.m[this.activeButton[0]].maxExtreme : Infinity,
       this.m[this.activeButton[0]].minExtreme,
     );
     this.emit(
       'changeValue',
-      this.m[this.activeButton[0]].relativeX,
+      this.m[this.activeButton[0]].relativePos,
       this.m.min,
       this.m.max,
       this.m.valueOfDivision,
@@ -59,7 +61,7 @@ export default class Service extends EventEmitter {
   sendProgressBarData(): void {
     this.emit(
       'changeSize',
-      this.m[this.activeButton[0]].relativeX,
+      this.m[this.activeButton[0]].relativePos,
       this.m.relativeButtonW
     );
   }
@@ -73,12 +75,12 @@ export default class Service extends EventEmitter {
   }
 
   saveLastPosition(x: number): void {
-    const relPos = (
-      Math.abs(
-        (this.m.isVertical ? 1 : 0) - (x - this.m.trackCoord) / this.m.trackSize
-      )
-    );
-    this.m[this.activeButton[0]].relativeX = relPos;
+    let relPos = (x - this.m.trackCoord) / this.m.trackSize;
+    if (this.m.isVertical) {
+      relPos = 1 - relPos;
+    }
+    console.log(relPos);
+    this.m[this.activeButton[0]].relativePos = relPos;
     if (this.m.isInterval) {
       this.setExtremes();
     }
@@ -86,19 +88,19 @@ export default class Service extends EventEmitter {
     this.sendProgressBarData();
   }
 
-  updateSizes(w: number, x: number): void {
-    this.m.trackSize = w;
-    this.m.trackCoord = x;
-    this.m.relativeButtonW = this.m.buttonW / w;
-    this.m.relativeDisplayW = this.m.displayW / w;
+  updateSizes(size: number, coord: number): void {
+    this.m.trackSize = size;
+    this.m.trackCoord = coord;
+    this.m.relativeButtonW = this.m.buttonW / size;
+    this.m.relativeDisplaySize = this.m.displaySize / size;
   }
 
   init(): void {
-    this.sendButtonData(-Infinity);
+    this.sendButtonData(this.m.isVertical ? Infinity : -Infinity);
     this.sendDisplayData();
     if (this.m.isInterval) {
       this.activeButton.reverse();
-      this.sendButtonData(Infinity);
+      this.sendButtonData(this.m.isVertical ? -Infinity : Infinity);
       this.sendDisplayData();
     }
     this.sendScaleData();

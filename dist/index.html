@@ -11,7 +11,7 @@
   <script src="index.js"></script>
   <script>
     $(function () {
-      $('#slider1').slider({vertical: true, min: 1, max: 2, step: 0.01});
+      $('#slider1').slider({interval: true, vertical: true, min: 1, max: 2, step: 0.01});
       $('#slider2').slider({interval: true, min: 1, max: 2, step: 0.01});
     });
   </script>
@@ -21,12 +21,11 @@
     font-size: 26px;
   }
   body {
-    font-family: 'Work Sans', sans-serif;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     grid-template-rows: 1fr;
-    min-height: 100vh;
-    font-weight: lighter;
+    min-height: 90vh;
+    font-family: 'Work Sans', sans-serif;
     margin: 0;
     padding: 0;
   }

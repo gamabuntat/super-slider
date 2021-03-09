@@ -11,16 +11,21 @@ export default class DisplayView extends View {
   ) {
     super(display, orient);
     this.displayDeflexion = (this.getRect()[this.orient.size] - buttonW) / 2;
-    this.transform(this.displayDeflexion);
+    this.component.style.transform = (
+      `translate${this.orient.coord.toUpperCase()}(
+        ${(this.offset - this.displayDeflexion) 
+        * (this.orient.isVertical ? -1 : 1)}px
+      )`
+    );
   }
 
   moveDisplay(
     relativeBtnPos: number,
-    trackW: number,
+    trackSize: number,
     maxExtreme: number,
     minExtreme: number
   ): void {
-    const relDisplayDeflexion = this.displayDeflexion * 2 / trackW;
+    const relDisplayDeflexion = this.displayDeflexion * 2 / trackSize;
     if (this.offset == 0) {
       maxExtreme = Infinity;
     } else {
@@ -48,14 +53,6 @@ export default class DisplayView extends View {
       max
     ).toFixed(this.defineDecimalPlaces(step));
     this.component.innerHTML = parseFloat(value).toString();
-  }
-
-  transform(displayDeflexion: number): void {
-    this.component.style.transform = (
-      `translate${this.orient.coord.toUpperCase()}(
-        ${this.offset - displayDeflexion}px
-      )`
-    );
   }
 }
 
