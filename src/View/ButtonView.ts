@@ -60,7 +60,8 @@ export default class ButtonView extends View {
     trackSize: number
   ): void {
     const provisionalPos = (
-      (coord - trackCoord + (this.shift + this.transformOffset)) / trackSize
+      (coord - trackCoord + (this.shift + this.transformOffset) 
+       * (this.orient.isVertical ? 1 : -1)) / trackSize
     );
     const position = Math.min(
       maxExtreme,

@@ -86,7 +86,12 @@ interface Options {
               buttonS,
               orient,
               buttonW * (isInterval ? -1 : -0.5),
-              buttonW * (isInterval ? 0 : 0.5),
+              buttonW * ((
+                isInterval && isVertical 
+                  ? 0
+                  : isInterval 
+                    ? 1 : 0.5
+              )),
             ),
             new DisplayView(
               displayS,
@@ -103,8 +108,8 @@ interface Options {
               new ButtonView(
                 buttonE,
                 orient,
-                buttonW * (0),
-                buttonW * (1),
+                0,
+                buttonW * (isVertical ? 1 : 0),
               ),
               new DisplayView(displayE, orient, 0, buttonW),
               new ProgressBarView(progressBarE, orient, 1, (isInterval ? 1 : 0))
