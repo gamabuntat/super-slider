@@ -8,8 +8,8 @@ export default class Presenter {
     private scale: ScaleView,
     private buttonS: PresenterStorage,
     private buttonE: PresenterStorage | false,
-    private track: TrackView,
     private service: Service,
+    private track: TrackView,
   ) {
     this.service
       .on('sendButtonData', (data) => this.moveButton(data))

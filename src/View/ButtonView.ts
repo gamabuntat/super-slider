@@ -7,6 +7,7 @@ export default class ButtonView extends View {
   constructor(
     button: HTMLElement,
     orient: OrientationType,
+    private transformOffset: number,
     private offset: number, 
   ) {
     super(button, orient);
@@ -14,7 +15,7 @@ export default class ButtonView extends View {
     this.shift = this.width / 2;
     this.component.style.transform = (
       `translate${this.orient.coord.toUpperCase()}(
-        ${this.offset * (this.orient.isVertical ? -1 : 1)}px
+        ${transformOffset * (this.orient.isVertical ? -1 : 1)}px
       )`
     );
     this.component.addEventListener('pointerdown', (e) => {
@@ -38,6 +39,9 @@ export default class ButtonView extends View {
 
   setShift(coord: number): void {
     this.shift = coord - this.getRect()[this.orient.coord];
+    if (this.orient.isVertical) {
+      this.shift = this.width - this.shift;
+    }
   }
 
   setDefaultShift(): void {
@@ -56,7 +60,7 @@ export default class ButtonView extends View {
     trackSize: number
   ): void {
     const provisionalPos = (
-      (coord - trackCoord - (this.shift + this.offset)) / trackSize
+      (coord - trackCoord + (this.shift + this.transformOffset)) / trackSize
     );
     const position = Math.min(
       maxExtreme,
@@ -67,7 +71,7 @@ export default class ButtonView extends View {
     );
     this.component.style[this.orient.styleCoord] = `${position * 100}%`;
     this.emit(
-      'updatePosition', this.getRect()[this.orient.coord] - this.offset
+      'updatePosition', this.getRect()[this.orient.coord] + this.offset
     );
   }
 }

@@ -7,6 +7,7 @@ export default class TrackView extends View {
     track: HTMLElement, orient: OrientationType, private buttonW: number
   ) {
     super(track, orient);
+    this.transform(this.buttonW / this.getRect()[this.orient.size]);
     window.addEventListener('resize', () => {
       this.resizeHandler();
     });

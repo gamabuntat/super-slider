@@ -83,7 +83,10 @@ interface Options {
           new ScaleView(scale, orient, buttonW),
           new PresenterStorage(
             new ButtonView(
-              buttonS, orient, buttonW * (isInterval ? -1 : -0.5),
+              buttonS,
+              orient,
+              buttonW * (isInterval ? -1 : -0.5),
+              buttonW * (isInterval ? 0 : 0.5),
             ),
             new DisplayView(
               displayS,
@@ -97,12 +100,17 @@ interface Options {
           ),
           (buttonE && displayE && progressBarE)
             && new PresenterStorage(
-              new ButtonView(buttonE, orient, 0),
+              new ButtonView(
+                buttonE,
+                orient,
+                buttonW * (0),
+                buttonW * (1),
+              ),
               new DisplayView(displayE, orient, 0, buttonW),
               new ProgressBarView(progressBarE, orient, 1, (isInterval ? 1 : 0))
             ),
-          new TrackView(track, orient, buttonW * (isInterval ? 1 : 0)),
           new Service(new Model(track, buttonS, buttonE, displayS, o)),
+          new TrackView(track, orient, buttonW * (isInterval ? 1 : 0)),
         ).init();
         function createComponent([elem, elemClass]: string[]) {
           const component = document.createElement(elem);

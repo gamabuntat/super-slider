@@ -61,7 +61,7 @@
   height: .2rem;
   background: #EFEFFC;
   border-radius: .5rem;
-  box-shadow: 0 .4px 1.0px 0 rgba(0, 0, 0, .2) inset;
+  box-shadow: 0 .4px 1.4px 0 rgba(0, 0, 0, .2) inset;
   touch-action: none;
 }
 
@@ -86,7 +86,6 @@
   cursor: pointer;
   touch-action: none;
   z-index: 10;
-  left: 0; right: 0, bottom: 0, top: 0;
 }
 
 .ui-slider__button_vertical, .ui-slider__button_vertical {

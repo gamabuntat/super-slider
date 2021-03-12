@@ -9,7 +9,10 @@ export default class Service extends EventEmitter {
   }
 
   determineButton(x: number): void {
-    const relativePointerPosition = (x - this.m.trackCoord) / this.m.trackSize;
+    let relativePointerPosition = (x - this.m.trackCoord) / this.m.trackSize;
+    if (this.m.isVertical) {
+      relativePointerPosition = 1 - relativePointerPosition;
+    }
     const diff = this.activeButton.reduce((diff, b) => (
       Math.abs(
         relativePointerPosition - (
@@ -18,9 +21,7 @@ export default class Service extends EventEmitter {
         )
       ) - diff
     ), 0);
-    if ((diff < 0 && !this.m.isVertical) || diff > 0 && this.m.isVertical) {
-      this.activeButton.reverse();
-    }
+    diff < 0 && this.activeButton.reverse();
     console.log(this.activeButton[0]);
   }
 
@@ -90,6 +91,7 @@ export default class Service extends EventEmitter {
 
   updateSizes(size: number, coord: number): void {
     this.m.trackSize = size;
+    console.log(size);
     this.m.trackCoord = coord;
     this.m.relativeButtonW = this.m.buttonW / size;
     this.m.relativeDisplaySize = this.m.displaySize / size;
