@@ -65,6 +65,7 @@
   margin: 0;
   padding: 0;
   width: 100%;
+  min-width: calc(var(--btn-size) * 2);
   height: .2rem;
   background: #EFEFFC;
   border-radius: .5rem;
@@ -74,6 +75,7 @@
 
 .ui-slider__track_vertical {
   width: .2rem;
+  min-width: unset;
   height: 100%;
   flex-direction: column-reverse;
 }
