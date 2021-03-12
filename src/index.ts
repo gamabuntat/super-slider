@@ -58,6 +58,12 @@ interface Options {
           }
           return idx >= 3 ? components[3] : components[0];
         }, this[0]);
+        isVertical && components.forEach((c) => {
+          const defaultClass = (
+            c.classList[0].replace(/((?<!\_)\_[^\_]+|\_$)/, '')
+          );
+          c.classList.add(`${defaultClass}_vertical`);
+        });
         const [
           foremostContainer,
           mainContainer,
@@ -118,10 +124,6 @@ interface Options {
         function createComponent([elem, elemClass]: string[]) {
           const component = document.createElement(elem);
           component.classList.add(elemClass);
-          if (isVertical) {
-            const defaultClass = elemClass.replace(/((?<!\_)\_[^\_]+|\_$)/, '');
-            component.classList.add(`${defaultClass}_vertical`);
-          }
           return component;
         }
       } else {
