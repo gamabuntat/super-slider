@@ -23,14 +23,17 @@
     font-size: 26px;
   }
   body {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    min-height: 95vh;
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 100vh;
     font-family: 'Work Sans', sans-serif;
     margin: 0;
-    padding: 0;
+    padding: 1rem;
+    box-sizing: border-box;
   }
-  #slider1 {
+  .slider {
+    flex-grow: 1;
+    flex-basis: 50%;
   }
 </style>
 <body>

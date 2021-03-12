@@ -40,7 +40,13 @@ export default class TrackView extends View {
   resizeHandler(): void {
     this.transform(0);
     const prevSize = this.getRect()[this.orient.size];
-    this.emit('resizeTrack', prevSize, this.getRect()[this.orient.coord]);
+    this.emit(
+      'resizeTrack',
+      prevSize,
+      this.getRect()[this.orient.coord] + (
+        this.orient.isVertical ? window.pageYOffset : window.pageXOffset
+      )
+    );
     this.transform(this.buttonW / prevSize);
   }
 }
