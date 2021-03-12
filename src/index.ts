@@ -72,8 +72,6 @@ interface Options {
           progressBarE = false,
         ] = components;
         const buttonW = buttonS.getBoundingClientRect().width;
-        const displaySW = displayS.getBoundingClientRect().width;
-        foremostContainer.style.padding = `${(displaySW - buttonW) / 2}px`;
         mainContainer.style.padding = (
           isVertical 
             ? `${buttonW * (isInterval ? 1 : 0.5)}px 0`

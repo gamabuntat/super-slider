@@ -60,8 +60,10 @@ export default class ButtonView extends View {
     trackSize: number
   ): void {
     const provisionalPos = (
-      (coord - trackCoord + (this.shift + this.transformOffset) 
-       * (this.orient.isVertical ? 1 : -1)) / trackSize
+      (coord + 
+        (this.orient.isVertical ? window.pageYOffset : window.pageXOffset) 
+        - trackCoord + (this.shift + this.transformOffset) 
+        * (this.orient.isVertical ? 1 : -1)) / trackSize
     );
     const position = Math.min(
       maxExtreme,
@@ -72,7 +74,12 @@ export default class ButtonView extends View {
     );
     this.component.style[this.orient.styleCoord] = `${position * 100}%`;
     this.emit(
-      'updatePosition', this.getRect()[this.orient.coord] + this.offset
+      'updatePosition', 
+      this.getRect()[this.orient.coord] + this.offset + (
+        this.orient.isVertical 
+          ? window.pageYOffset != 0 ? window.pageYOffset : 0
+          : window.pageXOffset != 0 ? window.pageXOffset : 0
+      )
     );
   }
 }

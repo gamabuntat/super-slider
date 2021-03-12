@@ -11,8 +11,10 @@ export default class ScaleView extends View {
     this.values.forEach((s) => (
       this.component.insertAdjacentElement('beforeend', s)
     ));
-    scale.style.margin = `${btnW * 0.5}px ${btnW * 0.5}px`;
-    scale.style.marginBottom = `0`;
+    scale.style.padding = (
+      `${btnW * (orient.isVertical ? 0.5 : 0)}px 
+      ${btnW * (orient.isVertical ? 0 : 0.5)}px`
+    );
   }
 
   createElement(): HTMLElement {

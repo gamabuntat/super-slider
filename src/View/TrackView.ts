@@ -4,7 +4,7 @@ import OrientationType from './OrientationType';
 export default class TrackView extends View {
   resizeObserver: ResizeObserver
   constructor(
-    track: HTMLElement, orient: OrientationType, private buttonW: number
+    track: HTMLElement, public orient: OrientationType, private buttonW: number
   ) {
     super(track, orient);
     this.transform(this.buttonW / this.getRect()[this.orient.size]);
@@ -19,7 +19,10 @@ export default class TrackView extends View {
       'pointerdown', 
       (e) => {
         this.toggleTrigger();
-        this.emit('clickOnTrack', e[this.orient.coord]);
+        this.emit(
+          'clickOnTrack', 
+          e[this.orient.coord]
+        );
         this.emit('definePointer', e.pointerId);
       }
     );
