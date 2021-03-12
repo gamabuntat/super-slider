@@ -18,30 +18,30 @@ export default class Presenter {
       .on('changeSize', (data) => this.changeSize(data))
       .on('sendScaleData', (data) => this.fillValues(data));
     this.track
-      .on('clickOnTrack', (x) => this.determineButton(x))
-      .on('clickOnTrack', (x) => this.getButtonData(x))
+      .on('clickOnTrack', (coord) => this.determineButton(coord))
+      .on('movemove', (coord) => this.getButtonData(coord))
       .on('definePointer', (pointerId) => this.fixPointer(pointerId))
-      .on('resizeTrack', (wx) => this.updateSizes(wx));
+      .on('resizeTrack', (sizeCoord) => this.updateSizes(sizeCoord));
     if (this.buttonE) {
       [this.buttonS, this.buttonE].forEach((storage) => {
         storage.button
-          .on('pointerDown', (x) => this.determineButton(x))
-          .on('moveButton', (x) => this.getButtonData(x))
-          .on('updatePosition', (x) => this.saveLastPosition(x));
+          .on('pointerDown', (coord) => this.determineButton(coord))
+          .on('moveButton', (coord) => this.getButtonData(coord))
+          .on('updatePosition', (coord) => this.saveLastPosition(coord));
       });
     } else {
       this.buttonS.button
-        .on('moveButton', (x) => this.getButtonData(x))
-        .on('updatePosition', (x) => this.saveLastPosition(x));
+        .on('moveButton', (coord) => this.getButtonData(coord))
+        .on('updatePosition', (coord) => this.saveLastPosition(coord));
     }
   }
 
-  determineButton([x]: number[]): void {
-    this.service.determineButton(x);
+  determineButton([coord]: number[]): void {
+    this.service.determineButton(coord);
   }
 
-  getButtonData([x]: number[]): void {
-    this.service.sendButtonData(x);
+  getButtonData([coord]: number[]): void {
+    this.service.sendButtonData(coord);
   }
 
   getActiveButton(): PresenterStorage {
@@ -52,17 +52,17 @@ export default class Presenter {
     this.getActiveButton().button.fixPointer(pointerId);
   }
 
-  moveButton([x, maxExtreme, minExtreme, trackX, trackW]: number[]): void {
+  moveButton([coord, maxExtreme, minExtreme, trackX, trackW]: number[]): void {
     this.getActiveButton().button.moveButton(
-      x, maxExtreme, minExtreme, trackX, trackW
+      coord, maxExtreme, minExtreme, trackX, trackW
     );
   }
 
   moveDisplay(
-    [relativeBtnPos, trackW, maxExtreme, minExtreme]: number[]
+    [relativeBtnPos, trackSize, maxExtreme, minExtreme]: number[]
   ): void {
     this.getActiveButton().display.moveDisplay(
-      relativeBtnPos, trackW, maxExtreme, minExtreme
+      relativeBtnPos, trackSize, maxExtreme, minExtreme
     );
   }
 
@@ -74,20 +74,20 @@ export default class Presenter {
     );
   }
 
-  changeSize([x, relBtnW]: number[]): void {
-    this.getActiveButton().progressBar.changeSize(x, relBtnW);
+  changeSize([coord, relBtnW]: number[]): void {
+    this.getActiveButton().progressBar.changeSize(coord, relBtnW);
   }
 
   fillValues([max, min, step]: number[]): void {
     this.scale.fillValues(max, min, step);
   }
 
-  saveLastPosition([x]: number[]): void {
-    this.service.saveLastPosition(x);
+  saveLastPosition([coord]: number[]): void {
+    this.service.saveLastPosition(coord);
   }
 
-  updateSizes([w, x]: number[]): void {
-    this.service.updateSizes(w, x);
+  updateSizes([size, coord]: number[]): void {
+    this.service.updateSizes(size, coord);
   }
 
   init(): Presenter {

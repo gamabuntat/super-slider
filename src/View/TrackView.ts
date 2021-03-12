@@ -21,8 +21,11 @@ export default class TrackView extends View {
         this.toggleTrigger();
         this.emit(
           'clickOnTrack', 
-          e[this.orient.coord]
+          e[this.orient.coord] + (
+            this.orient.isVertical ? window.pageYOffset : window.pageXOffset
+          )
         );
+        this.emit('movemove', e[this.orient.coord]);
         this.emit('definePointer', e.pointerId);
       }
     );

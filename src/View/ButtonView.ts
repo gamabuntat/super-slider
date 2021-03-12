@@ -22,7 +22,12 @@ export default class ButtonView extends View {
       this.toggleTrigger();
       this.setShift(e[this.orient.coord]);
       this.fixPointer(e.pointerId);
-      this.emit('pointerDown', e[this.orient.coord]);
+      this.emit(
+        'pointerDown',
+        e[this.orient.coord] + (
+          this.orient.isVertical ? window.pageYOffset : window.pageXOffset
+        ),
+      );
     });
     this.component.addEventListener('lostpointercapture', () => {
       this.toggleTrigger();
@@ -61,7 +66,7 @@ export default class ButtonView extends View {
   ): void {
     const provisionalPos = (
       (coord + 
-        (this.orient.isVertical ? window.pageYOffset : window.pageXOffset) 
+        (this.orient.isVertical ? window.pageYOffset : window.pageXOffset)
         - trackCoord + (this.shift + this.transformOffset) 
         * (this.orient.isVertical ? 1 : -1)) / trackSize
     );
@@ -76,9 +81,7 @@ export default class ButtonView extends View {
     this.emit(
       'updatePosition', 
       this.getRect()[this.orient.coord] + this.offset + (
-        this.orient.isVertical 
-          ? window.pageYOffset != 0 ? window.pageYOffset : 0
-          : window.pageXOffset != 0 ? window.pageXOffset : 0
+        (this.orient.isVertical ? window.pageYOffset : window.pageXOffset)
       )
     );
   }

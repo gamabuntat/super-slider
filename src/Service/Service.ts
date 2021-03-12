@@ -8,8 +8,10 @@ export default class Service extends EventEmitter {
     this.activeButton = ['buttonS', 'buttonE'];
   }
 
-  determineButton(x: number): void {
-    let relativePointerPosition = (x - this.m.trackCoord) / this.m.trackSize;
+  determineButton(coord: number): void {
+    let relativePointerPosition = (
+      (coord - this.m.trackCoord) / this.m.trackSize
+    );
     if (this.m.isVertical) {
       relativePointerPosition = 1 - relativePointerPosition;
     }
