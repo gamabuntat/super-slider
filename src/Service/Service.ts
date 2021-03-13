@@ -32,10 +32,10 @@ export default class Service extends EventEmitter {
     this.m.buttonE.minExtreme = this.m.buttonS.relativePos;
   }
 
-  sendButtonData(x: number): void {
+  sendButtonData(coord: number): void {
     this.emit(
       'sendButtonData',
-      x,
+      coord,
       this.m[this.activeButton[0]].maxExtreme, 
       this.m[this.activeButton[0]].minExtreme,
       this.m.trackCoord,
