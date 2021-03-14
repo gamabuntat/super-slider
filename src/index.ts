@@ -16,6 +16,8 @@ interface Storage {
 interface Options {
   interval?: boolean
   vertical?: boolean
+  hideDisplay?: boolean
+  hideScale?: boolean
   min?: number
   max?: number
   step?: number
