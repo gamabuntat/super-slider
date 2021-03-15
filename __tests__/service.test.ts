@@ -1,6 +1,5 @@
 import EventEmitter from '../src/EventEmitter/EventEmitter';
 import Service from '../src/Service/Service';
-jest.mock('../src/EventEmitter/EventEmitter');
 
 const emit = jest.fn();
 EventEmitter.prototype.emit = emit;
@@ -71,6 +70,43 @@ test('save last position correctly', () => {
   console.log(correctlyCoord);
 });
 
-test('', () => {
-  expect(emit).toHaveBeenCalledTimes(0);
+test('send display data correctly', () => {
+  const model = {
+    activeButton: ['buttonS', 'buttonE'],
+    m: {
+      trackSize: 100,
+      isInterval: true,
+      min: 0,
+      max: 10,
+      valueOfDivision: 1,
+      step: 1,
+      buttonS: {
+        relativePos: 0.2,
+        maxExtreme: 0.9,
+        minExtreme: 0,
+      },
+      buttonE: {
+        relativePos: 0.9,
+      }
+    },
+  };
+  const sendDisplayData = Service.prototype.sendDisplayData;
+  Object.setPrototypeOf(model, Service.prototype);
+  sendDisplayData.call(model);
+  expect(emit).toBeCalledTimes(2);
+  expect(emit.mock.calls[0]).toEqual([
+    'sendDisplayData',
+    model.m.buttonS.relativePos,
+    model.m.trackSize,
+    model.m.buttonS.maxExtreme,
+    model.m.buttonS.minExtreme
+  ]);
+  expect(emit.mock.calls[1]).toEqual([
+    'changeValue',
+    model.m.buttonS.relativePos,
+    model.m.min,
+    model.m.max,
+    model.m.valueOfDivision,
+    model.m.step
+  ]);
 });
