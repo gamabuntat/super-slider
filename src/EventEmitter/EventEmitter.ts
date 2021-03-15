@@ -2,8 +2,7 @@ interface StorageForEvents {
   [evt: string]: Handler[]
 }
 
-type Handler = (args: AA[]) => void
-type AA = number
+type Handler = (args: number[]) => void
 
 export default class EventEmitter {
   protected events: StorageForEvents = {};
@@ -13,7 +12,7 @@ export default class EventEmitter {
     return this;
   }
 
-  emit( evt: string, ...args: AA[]): void {
+  emit(evt: string, ...args: number[]): void {
     (this.events[evt] || []).slice().forEach((lsn: Handler) => lsn(args));
   }
 }

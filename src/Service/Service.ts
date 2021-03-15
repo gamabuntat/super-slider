@@ -77,8 +77,8 @@ export default class Service extends EventEmitter {
     return this.activeButton[0];
   }
 
-  saveLastPosition(x: number): void {
-    let relPos = (x - this.m.trackCoord) / this.m.trackSize;
+  saveLastPosition(coord: number): void {
+    let relPos = (coord - this.m.trackCoord) / this.m.trackSize;
     if (this.m.isVertical) {
       relPos = 1 - relPos;
     }
