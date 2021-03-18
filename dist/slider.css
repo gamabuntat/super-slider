@@ -16,7 +16,7 @@
   flex-direction: row;
   height: 100%;
   min-height: 2.3rem;
-  padding: 0 2.2rem;
+  padding: 0 0 0 2.2rem;
 } 
 
 .ui-slider__main-container {

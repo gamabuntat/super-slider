@@ -21,15 +21,6 @@
     "url": "https://github.com/gamabuntat/metalamp-4-step/issues"
   },
   "homepage": "https://github.com/gamabuntat/metalamp-4-step#readme",
-  "jest": {
-    "testRegex": "/__tests__/.*[test|spec].(ts|tsx|js)$",
-    "transform": {
-      ".(ts|tsx)": "ts-jest"
-    },
-    "moduleFileExtensions": [
-      "ts", "tsx", "js"
-    ]
-  },
   "devDependencies": {
     "@types/jest": "^26.0.20",
     "@types/jquery": "^3.5.5",
@@ -47,5 +38,14 @@
   },
   "dependencies": {
     "jquery": "^3.5.1"
+  },
+  "jest": {
+    "testRegex": "/__tests__/.*[test|spec].(ts|tsx|js)$",
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "moduleFileExtensions": [
+      "ts", "tsx", "js"
+    ]
   }
 }
