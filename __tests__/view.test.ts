@@ -1,9 +1,5 @@
 import View from '../src/View/View';
 
-// jest.mock('../src/View/View');
-
-// const mockView = View as jest.MockedClass<typeof View>;
-
 test('toggle correctly', () => {
   expect(View['isTriggerd']).toBe(false);
   View.prototype.toggleTrigger();

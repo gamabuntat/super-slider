@@ -1,6 +1,6 @@
 import Presenter from '../src/Presenter/Presenter';
 
-test.only('', () => {
+test('', () => {
   const s = {
     service: {
       sendButtonData: jest.fn(),
