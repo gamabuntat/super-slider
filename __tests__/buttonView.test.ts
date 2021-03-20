@@ -5,10 +5,6 @@ jest.mock('../src/View/View');
 
 const mockView = View as jest.MockedClass<typeof View>;
 
-beforeEach(() => {
-  // View.prototype.getRect.mockClear();
-})
-
 test('correctly set shift', () => {
   const rectObj = {
     x: 42,
@@ -25,6 +21,16 @@ test('correctly set shift', () => {
   };
   mockView.prototype.getRect.mockImplementation(() => rectObj as DOMRect);
   Object.setPrototypeOf(mock, ButtonView.prototype);
-  ButtonView.prototype.setShift.call(mock, 10);
-  expect(mock.shift).toBe(-32);
-})
+  const x = -3.23123;
+  ButtonView.prototype.setShift.call(mock, x);
+  expect(mock.shift).toBe(x - rectObj.x);
+});
+
+test.only('correctly move button', () => {
+  document.body.innerHTML = (
+    '<button id="button" style="display: none; width: 0px">click me</button>'
+  );
+  const button = document.getElementById('button')!;
+  button.style.width = '10px';
+  expect(button).toHaveStyle('width: 10px');
+});

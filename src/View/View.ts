@@ -23,10 +23,8 @@ export default class View extends EventEmitter {
       return 0;
     }
     const ns = n.toString();
-    if (ns.includes('e')) {
-      return +ns.match(/\d+$/)![0]; 
-    }
-    return ns.match(/\d+$/)![0].length;
+    const lastDigits = ns.match(/\d+$/)![0];
+    return ns.includes('e') ? +lastDigits : +lastDigits.length;
   }
 }
 
