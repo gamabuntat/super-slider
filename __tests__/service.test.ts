@@ -61,13 +61,11 @@ test('save last position correctly', () => {
   saveLastPosition.call(model, coord);
   let correctlyCoord = calcCorrectRelCoord(coord);
   expect(model.m.buttonS.relativePos).toBe(correctlyCoord);
-  console.log(correctlyCoord);
   expect(emit).toHaveBeenCalledTimes(3);
   coord = Math.trunc((Math.random() * 100) * 100) / 100;
   saveLastPosition.call(model, coord);
   correctlyCoord = calcCorrectRelCoord(coord);
   expect(model.m.buttonS.relativePos).toBe(correctlyCoord);
-  console.log(correctlyCoord);
 });
 
 test('send display data correctly', () => {
@@ -78,7 +76,6 @@ test('send display data correctly', () => {
       isInterval: true,
       min: 0,
       max: 10,
-      valueOfDivision: 1,
       step: 1,
       buttonS: {
         relativePos: 0.2,
@@ -106,7 +103,6 @@ test('send display data correctly', () => {
     model.m.buttonS.relativePos,
     model.m.min,
     model.m.max,
-    model.m.valueOfDivision,
     model.m.step
   ]);
 });

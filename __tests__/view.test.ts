@@ -14,6 +14,5 @@ test('how many digits after the decimal point?', () => {
     [0.011, 3213213213.1, -1, -0.00000001].map((n) => defineDecimalPlaces(n))
   );
   const expectations = [3, 1, 0, 8];
-  console.log(checkedValues);
   expect(checkedValues).toEqual(expectations);
 });

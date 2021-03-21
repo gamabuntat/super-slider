@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/gamabuntat/metalamp-4-step#readme",
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.11.9",
     "@types/jest": "^26.0.20",
     "@types/jquery": "^3.5.5",
     "@types/resize-observer-browser": "^0.1.5",

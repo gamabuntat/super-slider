@@ -67,10 +67,10 @@ export default class Presenter {
   }
 
   changeValue(
-    [relativeBtnPos, min, max, valueOfDivision, step]: number[]
+    [relativeBtnPos, min, max, step]: number[]
   ): void {
     this.getActiveButton().display.changeValue(
-      relativeBtnPos, min, max, valueOfDivision, step
+      relativeBtnPos, min, max, step
     );
   }
 

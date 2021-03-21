@@ -45,11 +45,10 @@ export default class DisplayView extends View {
     relativeBtnPos: number,
     min: number,
     max: number,
-    valueOfDivision: number,
     step: number
   ): void {
     const value = Math.min(
-      Math.round(relativeBtnPos * valueOfDivision) * step + min,
+      Math.round(relativeBtnPos * ((max - min) / step)) * step + min,
       max
     ).toFixed(this.defineDecimalPlaces(step));
     this.component.innerHTML = parseFloat(value).toString();

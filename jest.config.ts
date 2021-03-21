@@ -7,6 +7,6 @@ const config: Config.InitialOptions = {
     ".(ts|tsx)": "ts-jest"
   },
   moduleFileExtensions: ["ts", "js"],
-  setupFilesAfterEnv: ['./jest.setup.ts'],
+  // setupFilesAfterEnv: ['./jest.setup.ts'],
 };
 export default config;

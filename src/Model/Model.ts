@@ -15,7 +15,6 @@ export default class Model {
   relativeButtonW: number
   displaySize: number
   relativeDisplaySize: number
-  valueOfDivision: number
   constructor(
     track: HTMLElement,
     buttonS: HTMLElement,
@@ -46,7 +45,6 @@ export default class Model {
       display.getBoundingClientRect()[this.isVertical ? 'height' : 'width']
     );
     this.relativeDisplaySize = this.displaySize / this.trackSize;
-    this.valueOfDivision = (max - min) / this.step;
     this.buttonS = new ButtonModel(-Infinity, 1, 0);
     this.buttonE = buttonE ? new ButtonModel(Infinity, 1, 0) : this.buttonS;
   }
