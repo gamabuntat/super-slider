@@ -5,4 +5,4 @@ test('correctly change value', () => {
   Object.setPrototypeOf(mock, DisplayView.prototype);
   DisplayView.prototype.changeValue.call(mock, 0.4, 0, 10, 0.1);
   expect(parseFloat(mock.component.innerHTML)).toBe(4);
-})
+});

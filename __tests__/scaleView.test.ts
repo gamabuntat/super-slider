@@ -9,4 +9,4 @@ test('correctly fill values', () => {
   ScaleView.prototype.fillValues.call(mock, 10, -10, 1);
   const expectValues = ['-10', '-5', '0', '5', '10'];
   expect(mock.values.map((v) => v.innerHTML)).toEqual(expectValues);
-})
+});
