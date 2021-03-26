@@ -1,3 +1,4 @@
+import {buttonT} from '../../types/commonTypes';
 import PresenterStorage from './PresenterStorage';
 import TrackView from '../View/TrackView';
 import ScaleView from '../View/ScaleView';
@@ -12,7 +13,8 @@ export default class Presenter {
     private track: TrackView,
   ) {
     this.service
-      .on('sendButtonData', (data) => this.moveButton(data))
+      .on('sendButtonData', (data) => this.calcButtonPosition(data))
+      .on('sendButtonApi', (data) => this.calcButtonPositionApi(data))
       .on('sendDisplayData', (data) => this.moveDisplay(data))
       .on('changeValue', (data) => this.changeValue(data))
       .on('changeSize', (data) => this.changeSize(data))
@@ -36,8 +38,8 @@ export default class Presenter {
     }
   }
 
-  calcButtonCoord(pos: number): void {
-    this.service.calcButtonCoord(pos);
+  validateButtonPosition(button: buttonT, pos: number): void {
+    this.service.validateButtonPosition(button, pos);
   }
 
   determineButton([coord]: number[]): void {
@@ -56,9 +58,19 @@ export default class Presenter {
     this.getActiveButton().button.fixPointer(pointerId);
   }
 
-  moveButton([coord, maxExtreme, minExtreme, trackX, trackW]: number[]): void {
-    this.getActiveButton().button.moveButton(
+  calcButtonPosition(
+    [coord, maxExtreme, minExtreme, trackX, trackW]: number[]
+  ): void {
+    this.getActiveButton().button.calcPosition(
       coord, maxExtreme, minExtreme, trackX, trackW
+    );
+  }
+
+  calcButtonPositionApi(
+    [pos, maxExtreme, minExtreme, max, min]: number[]
+  ): void {
+    this.getActiveButton().button.calcPositionApi(
+      pos, maxExtreme, minExtreme, max, min
     );
   }
 

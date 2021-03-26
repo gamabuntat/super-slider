@@ -1,15 +1,26 @@
+import {buttonT} from '../../types/commonTypes';
 import EventEmitter from '../EventEmitter/EventEmitter';
 import Model from '../Model/Model';
 
 export default class Service extends EventEmitter {
-  private activeButton: Array<'buttonS' | 'buttonE'>
+  private activeButton: buttonT[]
   constructor(private m: Model) {
     super();
     this.activeButton = ['buttonS', 'buttonE'];
   }
 
-  calcButtonCoord(pos: number): void {
-    console.log(pos);
+  validateButtonPosition(button: buttonT, pos: number): void {
+    if (this.m.isInterval && this.activeButton[0] != button) {
+      this.activeButton.reverse();
+    }
+    this.emit(
+      'sendButtonApi',
+      Math.min(this.m.max, Math.max(pos, this.m.min)),
+      this.m[this.activeButton[0]].maxExtreme,
+      this.m[this.activeButton[0]].minExtreme,
+      this.m.max,
+      this.m.min
+    );
   }
 
   determineButton(coord: number): void {

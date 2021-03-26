@@ -57,7 +57,7 @@ export default class ButtonView extends View {
     this.component.setPointerCapture(pointerId);
   }
 
-  moveButton(
+  calcPosition(
     coord: number, 
     maxExtreme: number,
     minExtreme: number,
@@ -77,6 +77,21 @@ export default class ButtonView extends View {
         minExtreme
       )
     );
+    this.moveButton(position);
+  }
+
+  calcPositionApi(
+    pos: number,
+    maxExtreme: number,
+    minExtreme: number,
+    max: number,
+    min: number
+  ): void {
+    const position = (pos - min) / (max - min);
+    this.moveButton(position);
+  }
+
+  moveButton(position: number): void {
     this.component.style[this.orient.styleCoord] = `${position * 100}%`;
     this.emit(
       'updatePosition', 

@@ -127,8 +127,7 @@ interface Options {
           return component;
         }
       } else if (o == 'option') {
-        console.log(storage[id]);
-        console.log(args);
+        storage[id].validateButtonPosition(args[0], args[1]);
       }
       return this;
     };
