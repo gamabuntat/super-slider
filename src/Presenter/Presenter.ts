@@ -36,6 +36,10 @@ export default class Presenter {
     }
   }
 
+  calcButtonCoord(pos: number): void {
+    this.service.calcButtonCoord(pos);
+  }
+
   determineButton([coord]: number[]): void {
     this.service.determineButton(coord);
   }

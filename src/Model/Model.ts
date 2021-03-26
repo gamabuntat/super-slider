@@ -35,6 +35,7 @@ export default class Model {
     this.step = step;
     this.trackCoord = (
       track.getBoundingClientRect()[this.isVertical ? 'y' : 'x']
+      + (this.isVertical ? window.pageYOffset : window.pageXOffset)
     );
     this.buttonW = buttonS.getBoundingClientRect().width;
     this.trackSize = (

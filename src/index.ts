@@ -24,7 +24,7 @@ interface Options {
 }
 
 (function ($) {
-  const storage: Storage = {} as Storage;
+  const storage: Storage = {};
   (function () {
     $.fn.slider = function (o: Options | string = {}, ...args): JQuery {
       const id = this.attr('id');
@@ -80,11 +80,9 @@ interface Options {
           progressBarE = false,
         ] = components;
         const buttonW = buttonS.getBoundingClientRect().width;
-        mainContainer.style.padding = (
-          isVertical 
-            ? `${buttonW * (isInterval ? 1 : 0.5)}px 0`
-            : `0 ${buttonW * (isInterval ? 1 : 0.5)}px`
-        );
+        mainContainer.style.padding = isVertical 
+          ? `${buttonW * (isInterval ? 1 : 0.5)}px 0`
+          : `0 ${buttonW * (isInterval ? 1 : 0.5)}px`;
         storage[id] = new Presenter(
           new ScaleView(scale, orient, buttonW),
           new PresenterStorage(
@@ -128,8 +126,9 @@ interface Options {
           component.classList.add(elemClass);
           return component;
         }
-      } else {
-        console.log('no options :(', args, storage);
+      } else if (o == 'option') {
+        console.log(storage[id]);
+        console.log(args);
       }
       return this;
     };

@@ -8,7 +8,7 @@ module.exports = {
     index: './src/index.ts',
   },
   output: {
-    filename: '[name].js',
+    filename: 'slider.js',
     path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
