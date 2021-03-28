@@ -10,8 +10,7 @@ export default class View extends EventEmitter {
   }
 
   toggleTrigger(): void {
-    View.isTriggerd = View.isTriggerd ? false : true;
-    console.log(View.isTriggerd);
+    View.isTriggerd = !View.isTriggerd;
   }
 
   getRect(): DOMRect {
@@ -23,8 +22,17 @@ export default class View extends EventEmitter {
       return 0;
     }
     const ns = n.toString();
-    const lastDigits = ns.match(/\d+$/)![0];
+    const lastDigits = (ns.match(/\d+$/) || [])[0];
     return ns.includes('e') ? +lastDigits : +lastDigits.length;
+  }
+
+  toggleVisibility(): void {
+    const defaultClass = (
+      [...this.component.classList].find((c) => (
+        !(c.match(/(?<!_)_(?!_)/) || [])[0]
+      ))
+    );
+    defaultClass && this.component.classList.toggle(`${defaultClass}_hide`);
   }
 }
 

@@ -1,11 +1,11 @@
-interface StorageForEvents {
+interface IEvents {
   [evt: string]: Handler[]
 }
 
 type Handler = (args: number[]) => void
 
 export default class EventEmitter {
-  protected events: StorageForEvents = {};
+  protected events: IEvents = {};
 
   on(evt: string, listener: Handler): EventEmitter {
     (this.events[evt] || (this.events[evt] = [])).push(listener);

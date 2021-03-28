@@ -1,4 +1,3 @@
-import {buttonT} from '../../types/commonTypes';
 import EventEmitter from '../EventEmitter/EventEmitter';
 import Model from '../Model/Model';
 
@@ -9,6 +8,18 @@ export default class Service extends EventEmitter {
     this.activeButton = ['buttonS', 'buttonE'];
   }
 
+  getOptions(): Options {
+    return {
+      interval: this.m.isInterval,
+      vertical: this.m.isVertical,
+      displayVisibility: this.m.displayVisibility,
+      scaleVisibility: this.m.scaleVisibility,
+      min: this.m.min,
+      max: this.m.max,
+      step: this.m.step,
+    };
+  }
+
   validateButtonPosition(button: buttonT, pos: number): void {
     if (this.m.isInterval && this.activeButton[0] != button) {
       this.activeButton.reverse();
@@ -17,8 +28,18 @@ export default class Service extends EventEmitter {
       'sendButtonApi',
       Math.min(this.m.max, Math.max(pos, this.m.min)),
       this.m.max,
-      this.m.min
+      this.m.min,
+      this.m[this.activeButton[0]].maxExtreme,
+      this.m[this.activeButton[0]].minExtreme
     );
+  }
+
+  updateVisibility(prop: 'display' | 'scale'): void {
+    const key = `${prop}Visibility`;
+    this.m[key] = !this.m[keu];
+    // prop == 'scaleVisibility' 
+    //   ? this.emit('toggleScaleVisibility') 
+    //   : this.emit('toggleDisplayVisibility');
   }
 
   determineButton(coord: number): void {
@@ -37,7 +58,6 @@ export default class Service extends EventEmitter {
       ) - diff
     ), 0);
     diff < 0 && this.activeButton.reverse();
-    console.log(this.activeButton[0]);
   }
 
   setExtremes(): void {
@@ -85,17 +105,15 @@ export default class Service extends EventEmitter {
     this.emit('sendScaleData', this.m.max, this.m.min, this.m.step);
   }
 
-  getActiveButton(): 'buttonS' | 'buttonE' {
+  getActiveButton(): buttonT {
     return this.activeButton[0];
   }
 
   saveLastPosition(coord: number): void {
-    console.log(coord);
     let relPos = (coord - this.m.trackCoord) / this.m.trackSize;
     if (this.m.isVertical) {
       relPos = 1 - relPos;
     }
-    console.log(relPos);
     this.m[this.activeButton[0]].relativePos = relPos;
     if (this.m.isInterval) {
       this.setExtremes();

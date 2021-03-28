@@ -1,9 +1,10 @@
-import {Options} from '../index';
 import ButtonModel from '../Model/ButtonModel';
 
 export default class Model {
   isVertical: boolean
   isInterval: boolean
+  displayVisibility: boolean
+  scaleVisibility: boolean
   min: number
   max: number
   step: number
@@ -23,6 +24,8 @@ export default class Model {
     {
       vertical: isVertical = false,
       interval: isInterval = false,
+      displayVisibility = true,
+      scaleVisibility = true,
       min = 0,
       max = 10,
       step = 1,
@@ -30,6 +33,8 @@ export default class Model {
   ) {
     this.isVertical = isVertical;
     this.isInterval = isInterval;
+    this.displayVisibility = displayVisibility;
+    this.scaleVisibility = scaleVisibility;
     this.min = min;
     this.max = max;
     this.step = step;

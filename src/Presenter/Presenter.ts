@@ -1,4 +1,3 @@
-import {buttonT} from '../../types/commonTypes';
 import PresenterStorage from './PresenterStorage';
 import TrackView from '../View/TrackView';
 import ScaleView from '../View/ScaleView';
@@ -18,7 +17,9 @@ export default class Presenter {
       .on('sendDisplayData', (data) => this.moveDisplay(data))
       .on('changeValue', (data) => this.changeValue(data))
       .on('changeSize', (data) => this.changeSize(data))
-      .on('sendScaleData', (data) => this.fillValues(data));
+      .on('sendScaleData', (data) => this.fillValues(data))
+      .on('toggleScaleVisibility', () => this.toggleScaleVisibility())
+      .on('toggleDisplayVisibility', () => this.toggleDisplayVisibility());
     this.track
       .on('clickOnTrack', (coord) => this.determineButton(coord))
       .on('movemove', (coord) => this.getButtonData(coord))
@@ -38,8 +39,16 @@ export default class Presenter {
     }
   }
 
+  getOptions(): Options {
+    return this.service.getOptions();
+  }
+
   validateButtonPosition(button: buttonT, pos: number): void {
     this.service.validateButtonPosition(button, pos);
+  }
+
+  updateVisibility(prop: 'display' | 'scale'): void {
+    this.service.updateVisibility(prop);
   }
 
   determineButton([coord]: number[]): void {
@@ -66,8 +75,12 @@ export default class Presenter {
     );
   }
 
-  calcButtonPositionApi([pos, max, min]: number[]): void {
-    this.getActiveButton().button.calcPositionApi(pos, max, min);
+  calcButtonPositionApi(
+    [pos, max, min, maxExtreme, minExtreme]: number[]
+  ): void {
+    this.getActiveButton().button.calcPositionApi(
+      pos, max, min, maxExtreme, minExtreme
+    );
   }
 
   moveDisplay(
@@ -86,12 +99,21 @@ export default class Presenter {
     );
   }
 
+  toggleDisplayVisibility(): void {
+    this.buttonS.display.toggleVisibility();
+    this.buttonE && this.buttonE.display.toggleVisibility;
+  }
+
   changeSize([coord, relBtnW]: number[]): void {
     this.getActiveButton().progressBar.changeSize(coord, relBtnW);
   }
 
   fillValues([max, min, step]: number[]): void {
     this.scale.fillValues(max, min, step);
+  }
+
+  toggleScaleVisibility(): void {
+    this.scale.toggleVisibility();
   }
 
   saveLastPosition([coord]: number[]): void {

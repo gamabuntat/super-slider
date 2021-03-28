@@ -58,6 +58,10 @@
   flex-direction: column-reverse;
 }
 
+.ui-slider__scale_hide {
+  display: none;
+}
+
 .ui-slider__track {
   position: relative;
   display: flex;
@@ -120,6 +124,10 @@
 .ui-slider__display_vertical {
   left: -2.2rem;
   top: initial;
+}
+
+.ui-slider__display_hide {
+  display: none;
 }
 
 .ui-slider__progress-bar_start,

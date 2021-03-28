@@ -13,20 +13,10 @@ interface Storage {
   [id: string]: Presenter
 }
 
-interface Options {
-  interval?: boolean
-  vertical?: boolean
-  hideDisplay?: boolean
-  hideScale?: boolean
-  min?: number
-  max?: number
-  step?: number
-}
-
 (function ($) {
   const storage: Storage = {};
   (function () {
-    $.fn.slider = function (o: Options | string = {}, ...args): JQuery {
+    $.fn.slider = function ( o = {}, ...args) {
       const id = this.attr('id');
       if (!id) {
         return this;
@@ -60,11 +50,12 @@ interface Options {
           }
           return idx >= 3 ? components[3] : components[0];
         }, this[0]);
-        isVertical && components.forEach((c) => {
+        components.forEach((c) => {
           const defaultClass = (
             c.classList[0].replace(/((?<!\_)\_[^\_]+|\_$)/, '')
           );
-          c.classList.add(`${defaultClass}_vertical`);
+          c.classList.add(defaultClass);
+          isVertical && c.classList.add(`${defaultClass}_vertical`);
         });
         const [
           foremostContainer,
@@ -127,14 +118,18 @@ interface Options {
           return component;
         }
       } else if (o == 'option') {
-        setTimeout(() => (
-          storage[id].validateButtonPosition(args[0], args[1])
-        ), 0);
+        if (args[0] == 'get') {
+          return storage[id].getOptions();
+        } else if (args[0] == 'move') {
+          setTimeout(() => (
+            storage[id].validateButtonPosition(args[1], args[2])
+          ), 0);
+        } else if (args[0] == 'toggleVisibility') {
+          storage[id].updateVisibility(args[2]);
+        }
       }
       return this;
     };
   })();
 })(jQuery);
-
-export {Options};
 

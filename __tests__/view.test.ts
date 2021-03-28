@@ -1,5 +1,6 @@
 import View from '../src/View/View';
 
+
 test('toggle correctly', () => {
   expect(View['isTriggerd']).toBe(false);
   View.prototype.toggleTrigger();
@@ -16,3 +17,4 @@ test('how many digits after the decimal point?', () => {
   const expectations = [3, 1, 0, 8];
   expect(checkedValues).toEqual(expectations);
 });
+
