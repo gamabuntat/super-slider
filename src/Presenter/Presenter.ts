@@ -66,12 +66,8 @@ export default class Presenter {
     );
   }
 
-  calcButtonPositionApi(
-    [pos, maxExtreme, minExtreme, max, min]: number[]
-  ): void {
-    this.getActiveButton().button.calcPositionApi(
-      pos, maxExtreme, minExtreme, max, min
-    );
+  calcButtonPositionApi([pos, max, min]: number[]): void {
+    this.getActiveButton().button.calcPositionApi(pos, max, min);
   }
 
   moveDisplay(

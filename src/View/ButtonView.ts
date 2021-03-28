@@ -80,13 +80,7 @@ export default class ButtonView extends View {
     this.moveButton(position);
   }
 
-  calcPositionApi(
-    pos: number,
-    maxExtreme: number,
-    minExtreme: number,
-    max: number,
-    min: number
-  ): void {
+  calcPositionApi(pos: number, max: number, min: number): void {
     const position = (pos - min) / (max - min);
     this.moveButton(position);
   }

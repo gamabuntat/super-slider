@@ -127,7 +127,9 @@ interface Options {
           return component;
         }
       } else if (o == 'option') {
-        storage[id].validateButtonPosition(args[0], args[1]);
+        setTimeout(() => (
+          storage[id].validateButtonPosition(args[0], args[1])
+        ), 0);
       }
       return this;
     };

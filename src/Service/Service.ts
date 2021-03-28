@@ -16,8 +16,6 @@ export default class Service extends EventEmitter {
     this.emit(
       'sendButtonApi',
       Math.min(this.m.max, Math.max(pos, this.m.min)),
-      this.m[this.activeButton[0]].maxExtreme,
-      this.m[this.activeButton[0]].minExtreme,
       this.m.max,
       this.m.min
     );
@@ -92,6 +90,7 @@ export default class Service extends EventEmitter {
   }
 
   saveLastPosition(coord: number): void {
+    console.log(coord);
     let relPos = (coord - this.m.trackCoord) / this.m.trackSize;
     if (this.m.isVertical) {
       relPos = 1 - relPos;
@@ -107,7 +106,6 @@ export default class Service extends EventEmitter {
 
   updateSizes(size: number, coord: number): void {
     this.m.trackSize = size;
-    console.log(size);
     this.m.trackCoord = coord;
     this.m.relativeButtonW = this.m.buttonW / size;
     this.m.relativeDisplaySize = this.m.displaySize / size;
