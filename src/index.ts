@@ -58,10 +58,10 @@ interface Storage {
           isVertical && c.classList.add(`${defaultClass}_vertical`);
         });
         const [
-          foremostContainer,
+          ,
           mainContainer,
           scale,
-          container,
+          ,
           track,
           buttonS,
           displayS,

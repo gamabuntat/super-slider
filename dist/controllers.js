@@ -13,3 +13,17 @@ console.log($('#slider2').slider('option', 'get'));
 // $('#slider2').slider('option', 'toggleVisibility', 'display');
 // $('#slider2').slider('option', 'toggleVisibility', 'scale');
 
+[...document.querySelectorAll('.controls input:first-child')].forEach((i) => (
+  i.addEventListener('change', (e) => (
+    $(`#slider${e.target.dataset.sliderid}`)
+      .slider('option', 'move', 'buttonS', e.target.value)
+  ))
+));
+
+const displayStart = document.querySelector('.ui-slider__display_start');
+const displaySObserver = new MutationObserver((mr) => (
+  document.querySelector('.controls input:first-child').value = (
+    mr[0].target.childNodes[0].data
+  )
+));
+displaySObserver.observe(displayStart, {childList: true});
