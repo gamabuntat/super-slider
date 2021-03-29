@@ -47,7 +47,7 @@ export default class Presenter {
     this.service.validateButtonPosition(button, pos);
   }
 
-  updateVisibility(prop: 'display' | 'scale'): void {
+  updateVisibility(prop: visibilityT): void {
     this.service.updateVisibility(prop);
   }
 
@@ -101,7 +101,7 @@ export default class Presenter {
 
   toggleDisplayVisibility(): void {
     this.buttonS.display.toggleVisibility();
-    this.buttonE && this.buttonE.display.toggleVisibility;
+    this.buttonE && this.buttonE.display.toggleVisibility();
   }
 
   changeSize([coord, relBtnW]: number[]): void {

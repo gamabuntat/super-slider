@@ -125,7 +125,7 @@ interface Storage {
             storage[id].validateButtonPosition(args[1], args[2])
           ), 0);
         } else if (args[0] == 'toggleVisibility') {
-          storage[id].updateVisibility(args[2]);
+          storage[id].updateVisibility(args[1]);
         }
       }
       return this;

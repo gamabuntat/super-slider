@@ -13,4 +13,10 @@ interface Options {
 }
 
 type buttonT = 'buttonS' | 'buttonE'
-type argsT = ['move', buttonT, number] | ['get']
+type visibilityT = 'scale' | 'display'
+type argsT = (
+  ['move', buttonT, number] 
+  | ['get'] 
+  | ['toggleVisibility', visibilityT]
+)
+

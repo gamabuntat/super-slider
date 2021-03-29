@@ -81,6 +81,7 @@
   width: .2rem;
   min-width: unset;
   height: 100%;
+  min-height: var(--btn-size);
   flex-direction: column-reverse;
 }
 

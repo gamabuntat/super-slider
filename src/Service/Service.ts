@@ -34,12 +34,10 @@ export default class Service extends EventEmitter {
     );
   }
 
-  updateVisibility(prop: 'display' | 'scale'): void {
-    const key = `${prop}Visibility`;
-    this.m[key] = !this.m[keu];
-    // prop == 'scaleVisibility' 
-    //   ? this.emit('toggleScaleVisibility') 
-    //   : this.emit('toggleDisplayVisibility');
+  updateVisibility(prop: visibilityT): void {
+    const key = prop == 'scale' ? 'scaleVisibility' : 'displayVisibility';
+    this.m[key] = !this.m[key];
+    this.emit(`toggle${key[0].toUpperCase()}${key.slice(1)}`);
   }
 
   determineButton(coord: number): void {

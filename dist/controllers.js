@@ -10,5 +10,6 @@ $('#slider2').slider('option', 'move', 'buttonE', 0.8);
 $('#slider3').slider('option', 'move', 'buttonS', 1.4293);
 $('#slider4').slider('option', 'move', 'buttonS', 1.7812);
 console.log($('#slider2').slider('option', 'get'));
-$('#slider2').slider('option', 'toggleVisibility', 'display');
+// $('#slider2').slider('option', 'toggleVisibility', 'display');
+// $('#slider2').slider('option', 'toggleVisibility', 'scale');
 
