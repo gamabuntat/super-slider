@@ -1,6 +1,5 @@
 import View from '../src/View/View';
 
-
 test('toggle correctly', () => {
   expect(View['isTriggerd']).toBe(false);
   View.prototype.toggleTrigger();

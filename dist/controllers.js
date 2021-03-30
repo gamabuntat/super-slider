@@ -10,15 +10,57 @@ $('#slider2').slider('option', 'move', 'buttonE', 0.8);
 $('#slider3').slider('option', 'move', 'buttonS', 1.4293);
 $('#slider4').slider('option', 'move', 'buttonS', 1.7812);
 console.log($('#slider2').slider('option', 'get'));
-// $('#slider2').slider('option', 'toggleVisibility', 'display');
+// $('#slider1').slider('option', 'toggleVisibility', 'display');
 // $('#slider2').slider('option', 'toggleVisibility', 'scale');
 
-[...document.querySelectorAll('.controls input:first-child')].forEach((i) => (
-  i.addEventListener('change', (e) => (
-    $(`#slider${e.target.dataset.sliderid}`)
-      .slider('option', 'move', 'buttonS', e.target.value)
-  ))
-));
+class Slider {
+  constructor(rootID) {
+    this.rootID = `#${rootID}`;
+    this.update();
+  }
+
+  getDisplayS() {
+    return document.querySelector(`${this.rootID} .ui-slider__display_start`);
+  }
+
+  getDisplayE() {
+    return document.querySelector(`${this.rootID} .ui-slider__display_end`);
+  }
+
+  update() {
+    this.displayS = this.getDisplayS();
+    this.displayE = this.getDisplayE() || false;
+  }
+}
+
+class Interaction {
+  constructor() {
+    this.sliders = (
+      [...document.querySelectorAll('.slider')]
+        .map((s) => s.id)
+        .map((id) => new Slider(id))
+    );
+    this.observer = new MutationObserver((mr) => {
+      const slider = this.sliders.find((s) => s.displayS == mr[0].target);
+      const index = slider.rootID.match(/\d/)[0] - 1;
+      this.buttonSInputs[index].value = slider.displayS.innerHTML;
+    });
+    this.buttonSInputs = (
+      [...document.querySelectorAll('.controls input:first-child')]
+    );
+    this.buttonSInputs.forEach((i, idx) => (
+      i.addEventListener('change', (e) => (
+        $(this.sliders[idx].rootID)
+          .slider('option', 'move', 'buttonS', e.target.value)
+      ))
+    ));
+    this.sliders.forEach((s) => (
+      this.observer.observe(s.displayS, {childList: true})
+    ));
+  }
+}
+
+const interaction = new Interaction();
 
 const displayStart = document.querySelector('.ui-slider__display_start');
 const displaySObserver = new MutationObserver((mr) => (
@@ -27,3 +69,4 @@ const displaySObserver = new MutationObserver((mr) => (
   )
 ));
 displaySObserver.observe(displayStart, {childList: true});
+

@@ -45,10 +45,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: .2rem;
   }
   .controls input{
-    width: 70%;
-    min-width: 70px;
+    width: clamp(4.6rem, 70%, 9rem);
     height: 1.1rem;
     border-radius: .1rem;
     border: none;
@@ -65,19 +65,29 @@
     <div id="slider1" class="slider"></div>
     <div class="controls">
       <input data-sliderid="1" type="number" name="btn-position" placeholder="buttonS position" min="0" max="1" step="0.011">
+      <input data-sliderid="1" type="number" name="btn-position" placeholder="buttonE position" min="0" max="1" step="0.011">
     </div>
   </div>
   <div class="container">
     <div id="slider2" class="slider"></div>
     <div class="controls">
       <input data-sliderid="2" type="number" name="btn-position" placeholder="buttonS position" min="0" max="1" step="0.011">
+      <input data-sliderid="2" type="number" name="btn-position" placeholder="buttonE position" min="0" max="1" step="0.011">
     </div>
   </div>
   <div class="container">
     <div id="slider3" class="slider"></div>
+    <div class="controls">
+      <input data-sliderid="3" type="number" name="btn-position" placeholder="buttonS position" min="0" max="1" step="0.011">
+      <input data-sliderid="3" type="number" name="btn-position" placeholder="buttonE position" min="0" max="1" step="0.011">
+    </div>
   </div>
   <div class="container">
     <div id="slider4" class="slider"></div>
+    <div class="controls">
+      <input data-sliderid="4" type="number" name="btn-position" placeholder="buttonS position" min="0" max="1" step="0.011">
+      <input data-sliderid="4" type="number" name="btn-position" placeholder="buttonE position" min="0" max="1" step="0.011">
+    </div>
   </div>
   <script src="controllers.js"></script>
 </body>
