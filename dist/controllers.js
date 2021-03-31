@@ -9,14 +9,12 @@ $('#slider2').slider('option', 'move', 'buttonS', 0.4);
 $('#slider2').slider('option', 'move', 'buttonE', 0.8);
 $('#slider3').slider('option', 'move', 'buttonS', 1.4293);
 $('#slider4').slider('option', 'move', 'buttonS', 1.7812);
-console.log($('#slider2').slider('option', 'get'));
 // $('#slider1').slider('option', 'toggleVisibility', 'display');
 // $('#slider2').slider('option', 'toggleVisibility', 'scale');
 
 class Slider {
   constructor(rootID) {
     this.rootID = `#${rootID}`;
-    this.update();
   }
 
   getDisplayS() {
@@ -27,61 +25,48 @@ class Slider {
     return document.querySelector(`${this.rootID} .ui-slider__display_end`);
   }
 
-  update() {
-    this.displayS = this.getDisplayS();
-    this.displayE = this.getDisplayE() || false;
+  getOptions() {
+    return $(`${this.rootID}`).slider('option', 'get');
+  }
+
+  moveButton(pos, button) {
+    $(`${this.rootID}`).slider('option', 'move', button, pos);
+  }
+
+  rebuild(options) {
+    $(`${this.rootID}`).slider(options);
   }
 }
 
-class Interaction {
-  constructor() {
-    this.index = this.compose(this.whatIndex, this.findDisplayS);
-    this.rootElems = document.querySelectorAll('.slider');
-    this.sliders = (
-      [...this.rootElems].map((s) => s.id).map((id) => new Slider(id))
-    );
-    this.buttonSInputs = (
-      document.querySelectorAll('.controls input:first-child')
-    );
-    this.buttonEInputs = (
-      document.querySelectorAll('.controls input:nth-child(2)')
-    );
-    this.buttonSInputs.forEach((i, idx) => (
-      i.addEventListener('change', (e) => (
-        $(this.sliders[idx].rootID)
-          .slider('option', 'move', 'buttonS', e.target.value)
-      ))
+class Interaction extends Slider {
+  constructor(rootID) {
+    super(rootID);
+    document.getElementById(`${rootID}`).parentElement
+      .querySelectorAll('input')
+      .forEach((i) => (this[i.name] = i));
+    this.btnS.addEventListener('change', (e) => (
+      this.moveButton(e.target.value, 'buttonS')
     ));
-    this.buttonEInputs.forEach((i, idx) => (
-      i.addEventListener('change', (e) => (
-        $(this.sliders[idx].rootID)
-          .slider('option', 'move', 'buttonE', e.target.value)
-      ))
+    this.btnE.addEventListener('change', (e) => (
+      this.moveButton(e.target.value, 'buttonE')
     ));
-    this.observerS = new MutationObserver((mr) => {
-      this.buttonSInputs[this.index(mr[0].target)].value = (
-        mr[0].target.childNodes[0].data
-      );
-    });
-    this.observerE = new MutationObserver((mr) => {
-      this.buttonEInputs[this.index(mr[0].target)].value = (
-        mr[0].target.childNodes[0].data
-      );
-    });
-    this.sliders.forEach((s) => {
-      this.observerS.observe(s.displayS, {childList: true});
-      s.displayE && this.observerE.observe(s.displayE, {childList: true});
-    });
+    this.observerS = new MutationObserver((mr) => (
+      this.btnS.value = mr[0].target.childNodes[0].data
+    ));
+    this.observerE = new MutationObserver((mr) => (
+      this.btnE.value = mr[0].target.childNodes[0].data
+    ));
+    this.observe();
   }
 
-  findDisplayS(display) {
-    return this.sliders.find((s) => (
-      s.displayS === display || s.displayE === display
-    ));
+  observe() {
+    this.observerS.observe(this.getDisplayS(), {childList: true});
+    this.getDisplayE() && 
+      this.observerE.observe(this.getDisplayE(), {childList: true});
   }
 
-  whatIndex(slider) {
-    return slider.rootID.match(/\d/)[0] - 1;
+  toggleDisableInput(input) {
+    input.disabled = !this.getOptions().interval;
   }
 
   compose(...fns) {
@@ -91,5 +76,10 @@ class Interaction {
   }
 }
 
-const interaction = new Interaction();
+const interactions = (
+  ['slider1', 'slider2', 'slider3', 'slider4'].map((s) => (
+    new Interaction(s)
+  ))
+);
 
+console.log(interactions[3])
