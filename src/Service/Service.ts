@@ -21,6 +21,9 @@ export default class Service extends EventEmitter {
   }
 
   validateButtonPosition(button: buttonT, pos: number): void {
+    if (!this.m.isInterval && button == 'buttonE') {
+      return;
+    }
     if (this.m.isInterval && this.activeButton[0] != button) {
       this.activeButton.reverse();
     }

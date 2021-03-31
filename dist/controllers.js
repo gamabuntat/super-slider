@@ -35,18 +35,16 @@ class Slider {
 
 class Interaction {
   constructor() {
+    this.index = this.compose(this.whatIndex, this.findDisplayS);
+    this.rootElems = document.querySelectorAll('.slider');
     this.sliders = (
-      [...document.querySelectorAll('.slider')]
-        .map((s) => s.id)
-        .map((id) => new Slider(id))
+      [...this.rootElems].map((s) => s.id).map((id) => new Slider(id))
     );
-    this.observer = new MutationObserver((mr) => {
-      const slider = this.sliders.find((s) => s.displayS == mr[0].target);
-      const index = slider.rootID.match(/\d/)[0] - 1;
-      this.buttonSInputs[index].value = slider.displayS.innerHTML;
-    });
     this.buttonSInputs = (
-      [...document.querySelectorAll('.controls input:first-child')]
+      document.querySelectorAll('.controls input:first-child')
+    );
+    this.buttonEInputs = (
+      document.querySelectorAll('.controls input:nth-child(2)')
     );
     this.buttonSInputs.forEach((i, idx) => (
       i.addEventListener('change', (e) => (
@@ -54,19 +52,44 @@ class Interaction {
           .slider('option', 'move', 'buttonS', e.target.value)
       ))
     ));
-    this.sliders.forEach((s) => (
-      this.observer.observe(s.displayS, {childList: true})
+    this.buttonEInputs.forEach((i, idx) => (
+      i.addEventListener('change', (e) => (
+        $(this.sliders[idx].rootID)
+          .slider('option', 'move', 'buttonE', e.target.value)
+      ))
     ));
+    this.observerS = new MutationObserver((mr) => {
+      this.buttonSInputs[this.index(mr[0].target)].value = (
+        mr[0].target.childNodes[0].data
+      );
+    });
+    this.observerE = new MutationObserver((mr) => {
+      this.buttonEInputs[this.index(mr[0].target)].value = (
+        mr[0].target.childNodes[0].data
+      );
+    });
+    this.sliders.forEach((s) => {
+      this.observerS.observe(s.displayS, {childList: true});
+      s.displayE && this.observerE.observe(s.displayE, {childList: true});
+    });
+  }
+
+  findDisplayS(display) {
+    return this.sliders.find((s) => (
+      s.displayS === display || s.displayE === display
+    ));
+  }
+
+  whatIndex(slider) {
+    return slider.rootID.match(/\d/)[0] - 1;
+  }
+
+  compose(...fns) {
+    return fns
+      .map((f) => f.bind(this))
+      .reduce((a, b) => (...args) => a(b(...args)));
   }
 }
 
 const interaction = new Interaction();
-
-const displayStart = document.querySelector('.ui-slider__display_start');
-const displaySObserver = new MutationObserver((mr) => (
-  document.querySelector('.controls input:first-child').value = (
-    mr[0].target.childNodes[0].data
-  )
-));
-displaySObserver.observe(displayStart, {childList: true});
 
