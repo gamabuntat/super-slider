@@ -35,9 +35,9 @@ export default class Model {
     this.isInterval = isInterval;
     this.displayVisibility = displayVisibility;
     this.scaleVisibility = scaleVisibility;
-    this.min = min;
-    this.max = max;
-    this.step = step;
+    this.min = +min;
+    this.max = +max;
+    this.step = +step;
     this.trackCoord = (
       track.getBoundingClientRect()[this.isVertical ? 'y' : 'x']
       + (this.isVertical ? window.pageYOffset : window.pageXOffset)

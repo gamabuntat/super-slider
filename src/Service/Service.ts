@@ -138,6 +138,12 @@ export default class Service extends EventEmitter {
       this.sendButtonData(this.m.isVertical ? -Infinity : Infinity);
       this.sendDisplayData();
     }
+    if (!this.m.displayVisibility) {
+      this.emit('toggleDisplayVisibility');
+    }
+    if (!this.m.scaleVisibility) {
+      this.emit('toggleScaleVisibility');
+    }
     this.sendScaleData();
   }
 }

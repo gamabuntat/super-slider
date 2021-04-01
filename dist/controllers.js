@@ -9,10 +9,8 @@ $('#slider2').slider('option', 'move', 'buttonS', 0.4);
 $('#slider2').slider('option', 'move', 'buttonE', 0.8);
 $('#slider3').slider('option', 'move', 'buttonS', 1.4293);
 $('#slider4').slider('option', 'move', 'buttonS', 1.7812);
-// $('#slider1').slider('option', 'toggleVisibility', 'display');
-// $('#slider2').slider('option', 'toggleVisibility', 'scale');
 
-class Slider {
+class ISlider {
   constructor(rootID) {
     this.rootID = `#${rootID}`;
   }
@@ -33,12 +31,16 @@ class Slider {
     $(`${this.rootID}`).slider('option', 'move', button, pos);
   }
 
+  toggleVisibility(elem) {
+    $(`${this.rootID}`).slider('option', 'toggleVisibility', elem);
+  }
+
   rebuild(options) {
     $(`${this.rootID}`).slider(options);
   }
 }
 
-class Interaction extends Slider {
+class Interaction extends ISlider {
   constructor(rootID) {
     super(rootID);
     document.getElementById(`${rootID}`).parentElement
@@ -50,36 +52,91 @@ class Interaction extends Slider {
     this.btnE.addEventListener('change', (e) => (
       this.moveButton(e.target.value, 'buttonE')
     ));
+    this.interval.addEventListener('change', (e) => (
+      this.rebuild({interval: e.target.checked})
+    ));
+    this.vertical.addEventListener('change', (e) => (
+      this.rebuild({vertical: e.target.checked})
+    ));
+    this.displays.addEventListener('change', () => (
+      this.toggleVisibility('display'),
+      this.updateO()
+    ));
+    this.scale.addEventListener('change', () => (
+      this.toggleVisibility('scale'),
+      this.updateO()
+    ));
+    this.max.addEventListener('change', (e) => (
+      this.rebuild({max: e.target.value}),
+      this.updateAttr()
+    ));
+    this.min.addEventListener('change', (e) => (
+      this.rebuild({min: e.target.value}),
+      this.updateAttr()
+    ));
+    this.step.addEventListener('change', (e) => (
+      this.rebuild({step: e.target.value}),
+      this.updateAttr()
+    ));
     this.observerS = new MutationObserver((mr) => (
       this.btnS.value = mr[0].target.childNodes[0].data
     ));
     this.observerE = new MutationObserver((mr) => (
       this.btnE.value = mr[0].target.childNodes[0].data
     ));
+    this.o = this.getOptions();
     this.observe();
+    this.toggleDisableInput(this.btnE);
+    this.init();
+    this.updateAttr();
+  }
+
+  rebuild(newOption) {
+    const newO = {...this.o, ...newOption};
+    super.rebuild(newO);
+    this.updateO();
+    this.observe();
+    this.toggleDisableInput(this.btnE);
+  }
+
+  updateO() {
+    this.o = this.getOptions();
+  }
+  
+  updateAttr() {
+    this.btnS.max = this.o.max;
+    this.btnS.min = this.o.min;
+    this.btnS.step = this.o.step;
+    if (this.o.interval) {
+      this.btnE.max = this.o.max;
+      this.btnE.min = this.o.min;
+      this.btnE.step = this.o.step;
+    }
   }
 
   observe() {
     this.observerS.observe(this.getDisplayS(), {childList: true});
-    this.getDisplayE() && 
+    if (this.o.interval) {
       this.observerE.observe(this.getDisplayE(), {childList: true});
+    }
   }
 
   toggleDisableInput(input) {
-    input.disabled = !this.getOptions().interval;
+    input.disabled = !this.o.interval;
   }
 
-  compose(...fns) {
-    return fns
-      .map((f) => f.bind(this))
-      .reduce((a, b) => (...args) => a(b(...args)));
+  init() {
+    this.max.value = this.o.max.toString();
+    this.min.value = this.o.min.toString();
+    this.step.value = this.o.step.toString();
+    this.interval.checked = this.o.interval;
+    this.vertical.checked = this.o.vertical;
+    this.displays.checked = !this.o.displayVisibility;
+    this.scale.checked = !this.o.scaleVisibility;
   }
 }
 
 const interactions = (
-  ['slider1', 'slider2', 'slider3', 'slider4'].map((s) => (
-    new Interaction(s)
-  ))
+  ['slider1', 'slider2', 'slider3', 'slider4'].map((s) => new Interaction(s))
 );
 
-console.log(interactions[3])
