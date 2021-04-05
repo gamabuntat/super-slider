@@ -16,7 +16,7 @@ interface Storage {
 (function ($) {
   const storage: Storage = {};
   (function () {
-    $.fn.slider = function ( o = {}, ...args) {
+    $.fn.slider = function (o = {}, ...args) {
       const id = this.attr('id');
       if (!id) {
         return this;

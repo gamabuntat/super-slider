@@ -4,7 +4,7 @@ import OrientationType from './OrientationType';
 export default class ScaleView extends View {
   private nValues: number
   private values: HTMLElement[]
-  constructor(scale: HTMLElement, orient: OrientationType, btnW: number) {
+  constructor(scale: HTMLElement, orient: OrientationType, buttonW: number) {
     super(scale, orient);
     this.nValues = 5;
     this.values = Array(this.nValues).fill(0).map(() => this.createElement());
@@ -12,8 +12,8 @@ export default class ScaleView extends View {
       this.component.insertAdjacentElement('beforeend', s)
     ));
     scale.style.padding = (
-      `${btnW * (orient.isVertical ? 0.5 : 0)}px 
-      ${btnW * (orient.isVertical ? 0 : 0.5)}px`
+      `${buttonW * (orient.isVertical ? 0.5 : 0)}px 
+      ${buttonW * (orient.isVertical ? 0 : 0.5)}px`
     );
   }
 

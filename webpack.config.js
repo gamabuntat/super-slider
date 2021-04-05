@@ -9,7 +9,7 @@ module.exports = {
   },
   output: {
     filename: 'slider.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'docs'),
   },
   resolve: {
     extensions: [ '.ts', '.js' ],

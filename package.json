@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "build": "npx webpack && cp dist/slider.js docs",
+    "build": "npx webpack",
     "test": "jest --coverage"
   },
   "repository": {
