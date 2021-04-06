@@ -8,28 +8,29 @@ export default class TrackView extends View {
   ) {
     super(track, orient);
     this.transform(this.buttonW / this.getRect()[this.orient.size]);
-    window.addEventListener('resize', () => {
-      this.resizeHandler();
-    });
-    this.resizeObserver = new ResizeObserver(() => {
-      this.resizeHandler();
-    });
+    this.bindEventListeners();
+    this.resizeObserver = new ResizeObserver(this.resizeHandler.bind(this));
     this.resizeObserver.observe(this.component);
-    this.component.addEventListener(
-      'pointerdown', 
-      (e) => {
-        this.toggleTrigger();
-        this.emit(
-          'clickOnTrack', 
-          e[this.orient.coord] + (
-            this.orient.isVertical ? window.pageYOffset : window.pageXOffset
-          )
-        );
-        this.emit('movemove', e[this.orient.coord]);
-        this.emit('definePointer', e.pointerId);
-      }
-    );
   } 
+
+  bindEventListeners(): void {
+    window.addEventListener('resize', this.resizeHandler.bind(this));
+    this.component.addEventListener(
+      'pointerdown', this.pointerDownHandler.bind(this)
+    );
+  }
+
+  pointerDownHandler(e: PointerEvent): void {
+    this.toggleTrigger();
+    this.emit(
+      'clickOnTrack', 
+      e[this.orient.coord] + (
+        this.orient.isVertical ? window.pageYOffset : window.pageXOffset
+      )
+    );
+    this.emit('movemove', e[this.orient.coord]);
+    this.emit('definePointer', e.pointerId);
+  }
 
   transform(x: number): void {
     this.component.style.transform = (

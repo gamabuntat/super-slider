@@ -26,10 +26,10 @@ export default class ButtonView extends View {
       'pointerdown', this.pointerDownHandler.bind(this)
     );
     this.component.addEventListener(
-      'lostpointercapture', this.pointerLost.bind(this)
+      'lostpointercapture', this.pointerLostHandler.bind(this)
     );
     this.component.addEventListener(
-      'pointermove', this.pointerMove.bind(this)
+      'pointermove', this.pointerMoveHandler.bind(this)
     );
   }
 
@@ -45,12 +45,12 @@ export default class ButtonView extends View {
     );
   }
 
-  pointerLost(): void {
+  pointerLostHandler(): void {
     this.toggleTrigger();
     this.setDefaultShift();
   }
 
-  pointerMove(e: PointerEvent): void {
+  pointerMoveHandler(e: PointerEvent): void {
     View.isTriggerd && this.emit('moveButton', e[this.orient.coord]);
   }
 
