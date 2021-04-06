@@ -18,28 +18,40 @@ export default class ButtonView extends View {
         ${transformOffset * (this.orient.isVertical ? -1 : 1)}px
       )`
     );
-    this.component.addEventListener('pointerdown', (e) => {
-      this.toggleTrigger();
-      this.setShift(e[this.orient.coord]);
-      this.fixPointer(e.pointerId);
-      this.emit(
-        'pointerDown',
-        e[this.orient.coord] + (
-          this.orient.isVertical ? window.pageYOffset : window.pageXOffset
-        ),
-      );
-    });
-    this.component.addEventListener('lostpointercapture', () => {
-      this.toggleTrigger();
-      this.setDefaultShift();
-    });
+    this.bindEventListeners();
+  }
+
+  bindEventListeners(): void {
     this.component.addEventListener(
-      'pointermove', (e) => {
-        if (View.isTriggerd) {
-          this.emit('moveButton', e[this.orient.coord]);
-        }
-      }
+      'pointerdown', this.pointerDownHandler.bind(this)
     );
+    this.component.addEventListener(
+      'lostpointercapture', this.pointerLost.bind(this)
+    );
+    this.component.addEventListener(
+      'pointermove', this.pointerMove.bind(this)
+    );
+  }
+
+  pointerDownHandler(e: PointerEvent): void {
+    this.toggleTrigger();
+    this.setShift(e[this.orient.coord]);
+    this.fixPointer(e.pointerId);
+    this.emit(
+      'pointerDown',
+      e[this.orient.coord] + (
+        this.orient.isVertical ? window.pageYOffset : window.pageXOffset
+      ),
+    );
+  }
+
+  pointerLost(): void {
+    this.toggleTrigger();
+    this.setDefaultShift();
+  }
+
+  pointerMove(e: PointerEvent): void {
+    View.isTriggerd && this.emit('moveButton', e[this.orient.coord]);
   }
 
   setShift(coord: number): void {
