@@ -4,8 +4,9 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
+  plugins: ['fsd'],
   extends: [
-    'plugin:@typescript-eslint/recommended'
+    'plugin:@typescript-eslint/recommended',
   ],
   rules: {
     'prefer-arrow-callback': 'warn',
@@ -14,5 +15,11 @@ module.exports = {
     'semi': 'warn',
     'no-new-wrappers': 'error',
     'indent': ["error", 2],
+    'fsd/hof-name-prefix': 'error',
+    'fsd/no-heavy-constructor': 'error',
+    'fsd/jq-cache-dom-elements': 'error',
+    'fsd/jq-use-js-prefix-in-selector': 'error',
+    'fsd/no-function-declaration-in-event-listener': 'error',
+    'fsd/split-conditionals': 'error'
   }
 };
