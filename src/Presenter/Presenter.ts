@@ -11,6 +11,12 @@ export default class Presenter {
     private service: Service,
     private track: TrackView,
   ) {
+    this.bindServiceListeners();
+    this.bindTrackListeners();
+    this.bindButtonListeners();
+  }
+
+  bindServiceListeners(): void {
     this.service
       .on('sendButtonData', this.calcButtonPosition.bind(this))
       .on('sendButtonApi', this.calcButtonPositionApi.bind(this))
@@ -20,23 +26,29 @@ export default class Presenter {
       .on('sendScaleData', this.fillValues.bind(this))
       .on('toggleScaleVisibility', this.toggleScaleVisibility.bind(this))
       .on('toggleDisplayVisibility', this.toggleDisplayVisibility.bind(this));
+  }
+
+  bindTrackListeners(): void {
     this.track
       .on('clickOnTrack', this.determineButton.bind(this))
       .on('movemove', this.getButtonData.bind(this))
       .on('definePointer', this.fixPointer.bind(this))
       .on('resizeTrack', this.updateSizes.bind(this));
+  }
+
+  bindButtonListeners(): void {
     if (this.buttonE) {
-      [this.buttonS, this.buttonE].forEach((storage) => {
+      [this.buttonS, this.buttonE].forEach((storage) => (
         storage.button
           .on('pointerDown', this.determineButton.bind(this))
           .on('moveButton', this.getButtonData.bind(this))
-          .on('updatePosition', this.saveLastPosition.bind(this));
-      });
-    } else {
-      this.buttonS.button
-        .on('moveButton', this.getButtonData.bind(this))
-        .on('updatePosition', this.saveLastPosition.bind(this));
+          .on('updatePosition', this.saveLastPosition.bind(this))
+      ));
+      return;
     }
+    this.buttonS.button
+      .on('moveButton', this.getButtonData.bind(this))
+      .on('updatePosition', this.saveLastPosition.bind(this));
   }
 
   getOptions(): Options {
