@@ -12,30 +12,30 @@ export default class Presenter {
     private track: TrackView,
   ) {
     this.service
-      .on('sendButtonData', (data) => this.calcButtonPosition(data))
-      .on('sendButtonApi', (data) => this.calcButtonPositionApi(data))
-      .on('sendDisplayData', (data) => this.moveDisplay(data))
-      .on('changeValue', (data) => this.changeValue(data))
-      .on('changeSize', (data) => this.changeSize(data))
-      .on('sendScaleData', (data) => this.fillValues(data))
-      .on('toggleScaleVisibility', () => this.toggleScaleVisibility())
-      .on('toggleDisplayVisibility', () => this.toggleDisplayVisibility());
+      .on('sendButtonData', this.calcButtonPosition.bind(this))
+      .on('sendButtonApi', this.calcButtonPositionApi.bind(this))
+      .on('sendDisplayData', this.moveDisplay.bind(this))
+      .on('changeValue', this.changeValue.bind(this))
+      .on('changeSize', this.changeSize.bind(this))
+      .on('sendScaleData', this.fillValues.bind(this))
+      .on('toggleScaleVisibility', this.toggleScaleVisibility.bind(this))
+      .on('toggleDisplayVisibility', this.toggleDisplayVisibility.bind(this));
     this.track
-      .on('clickOnTrack', (coord) => this.determineButton(coord))
-      .on('movemove', (coord) => this.getButtonData(coord))
-      .on('definePointer', (pointerId) => this.fixPointer(pointerId))
-      .on('resizeTrack', (sizeCoord) => this.updateSizes(sizeCoord));
+      .on('clickOnTrack', this.determineButton.bind(this))
+      .on('movemove', this.getButtonData.bind(this))
+      .on('definePointer', this.fixPointer.bind(this))
+      .on('resizeTrack', this.updateSizes.bind(this));
     if (this.buttonE) {
       [this.buttonS, this.buttonE].forEach((storage) => {
         storage.button
-          .on('pointerDown', (coord) => this.determineButton(coord))
-          .on('moveButton', (coord) => this.getButtonData(coord))
-          .on('updatePosition', (coord) => this.saveLastPosition(coord));
+          .on('pointerDown', this.determineButton.bind(this))
+          .on('moveButton', this.getButtonData.bind(this))
+          .on('updatePosition', this.saveLastPosition.bind(this));
       });
     } else {
       this.buttonS.button
-        .on('moveButton', (coord) => this.getButtonData(coord))
-        .on('updatePosition', (coord) => this.saveLastPosition(coord));
+        .on('moveButton', this.getButtonData.bind(this))
+        .on('updatePosition', this.saveLastPosition.bind(this));
     }
   }
 
