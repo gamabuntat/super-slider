@@ -1,8 +1,9 @@
-# gh-pages
+# Just a slider
+## gh-pages
 [example](https://gamabuntat.github.io/metalamp-4-step/)
-# Запуск тестов
+## Запуск тестов
 `npm test`
-# Подключение
+## Подключение
 ##### slider.js и slider.css лежат в docs
 
     <!DOCTYPE html>
@@ -23,7 +24,7 @@
       <div id="slider"></div>
     </body>
 
-# Опции
+## Опции
 Базовый сладер имеет горизонтальную ориентацию и один бегунок.
 Вот такие опции поддерживает слайдер:
 
@@ -41,7 +42,7 @@
     // с максимальным значением шкалы равным 11
     $(sliderID).slider({interval: true, scaleVisibility: false, max: 11})
 
-# Методы
+## Методы
     // передвинет первый бегунок на позицию 10.12
     $(sliderID).slider('option', 'move', 'buttonS', 10.12);
     // передвинет второй бегунок на позицию 0.8
@@ -53,9 +54,9 @@
     // скрыть\показать шкалу
     $(sliderID).slider('option', 'toggleVisibility', 'scale');
 
-# Архитектура
+## Архитектура
 Плагин реализован по схеме MVP, с пассивным view.
 Взаимодействие между слоями приложения реализовано с помощью класса EventEmitter. Presenter подписывается на события, которые вызывают Service и различные subViews.
 
-# UML
+## UML
 ![](./UML.jpg)
