@@ -51,7 +51,7 @@ export default class DisplayView extends View {
       Math.round(relativeBtnPos * ((max - min) / step)) * step + min,
       max
     ).toFixed(View.defineDecimalPlaces(step));
-    this.component.innerHTML = parseFloat(value).toString();
+    this.component.innerHTML = String(parseFloat(value));
   }
 }
 

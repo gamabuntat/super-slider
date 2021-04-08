@@ -24,14 +24,13 @@ export default class View extends EventEmitter {
 
   static toggleTrigger(): void {
     View.isTriggerd = !View.isTriggerd;
-    console.log(View.isTriggerd);
   }
 
   static defineDecimalPlaces(n: number): number {
     if (Math.abs(n) - Math.abs(Math.trunc(n)) == 0) { 
       return 0;
     }
-    const ns = n.toString();
+    const ns = String(n);
     const lastDigits = (ns.match(/\d+$/) || [])[0];
     return ns.includes('e') ? +lastDigits : +lastDigits.length;
   }
