@@ -30,8 +30,8 @@ export default class Presenter {
 
   bindTrackListeners(): void {
     this.track
-      .on('clickOnTrack', this.determineButton.bind(this))
-      .on('movemove', this.getButtonData.bind(this))
+      .on('pointerDown', this.determineButton.bind(this))
+      .on('moveButton', this.getButtonData.bind(this))
       .on('definePointer', this.fixPointer.bind(this))
       .on('resizeTrack', this.updateSizes.bind(this));
   }

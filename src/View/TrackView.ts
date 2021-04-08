@@ -9,26 +9,26 @@ export default class TrackView extends View {
     super(track, orient);
     this.transform(this.buttonW / this.getRect()[this.orient.size]);
     this.bindEventListeners();
-    this.resizeObserver = new ResizeObserver(this.resizeHandler.bind(this));
+    this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));
     this.resizeObserver.observe(this.component);
   } 
 
   bindEventListeners(): void {
-    window.addEventListener('resize', this.resizeHandler.bind(this));
+    window.addEventListener('resize', this.handleResize.bind(this));
     this.component.addEventListener(
-      'pointerdown', this.pointerDownHandler.bind(this)
+      'pointerdown', this.handleTrackPointerDown.bind(this)
     );
   }
 
-  pointerDownHandler(e: PointerEvent): void {
+  handleTrackPointerDown(e: PointerEvent): void {
     this.toggleTrigger();
     this.emit(
-      'clickOnTrack', 
+      'pointerDown', 
       e[this.orient.coord] + (
         this.orient.isVertical ? window.pageYOffset : window.pageXOffset
       )
     );
-    this.emit('movemove', e[this.orient.coord]);
+    this.emit('moveButton', e[this.orient.coord]);
     this.emit('definePointer', e.pointerId);
   }
 
@@ -38,7 +38,7 @@ export default class TrackView extends View {
     );
   }
 
-  resizeHandler(): void {
+  handleResize(): void {
     this.transform(0);
     const prevSize = this.getRect()[this.orient.size];
     this.emit(
