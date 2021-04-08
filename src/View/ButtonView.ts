@@ -34,7 +34,7 @@ export default class ButtonView extends View {
   }
 
   handleButtonPointerDown(e: PointerEvent): void {
-    this.toggleTrigger();
+    View.toggleTrigger();
     this.setShift(e[this.orient.coord]);
     this.fixPointer(e.pointerId);
     this.emit(
@@ -46,7 +46,7 @@ export default class ButtonView extends View {
   }
 
   handleButtonLostPointer(): void {
-    this.toggleTrigger();
+    View.toggleTrigger();
     this.setDefaultShift();
   }
 

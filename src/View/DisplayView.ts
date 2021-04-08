@@ -50,7 +50,7 @@ export default class DisplayView extends View {
     const value = Math.min(
       Math.round(relativeBtnPos * ((max - min) / step)) * step + min,
       max
-    ).toFixed(this.defineDecimalPlaces(step));
+    ).toFixed(View.defineDecimalPlaces(step));
     this.component.innerHTML = parseFloat(value).toString();
   }
 }

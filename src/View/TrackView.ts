@@ -21,7 +21,7 @@ export default class TrackView extends View {
   }
 
   handleTrackPointerDown(e: PointerEvent): void {
-    this.toggleTrigger();
+    View.toggleTrigger();
     this.emit(
       'pointerDown', 
       e[this.orient.coord] + (
