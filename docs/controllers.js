@@ -134,8 +134,8 @@ class Interaction extends ISlider {
   }
 
   init() {
-    this.max.value = this.o.max.toString();
-    this.min.value = this.o.min.toString();
+    this.max.value = String(this.o.max);
+    this.min.value = String(this.o.min);
     this.step.value = this.o.step.toString();
     this.interval.checked = this.o.interval;
     this.vertical.checked = this.o.vertical;

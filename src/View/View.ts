@@ -9,19 +9,6 @@ export default class View extends EventEmitter {
     super();
   }
 
-  getRect(): DOMRect {
-    return this.component.getBoundingClientRect();
-  }
-
-  toggleVisibility(): void {
-    const defaultClass = (
-      [...this.component.classList].find((c) => (
-        !(c.match(/(?<!_)_(?!_)/) || [])[0]
-      ))
-    );
-    defaultClass && this.component.classList.toggle(`${defaultClass}_hide`);
-  }
-
   static toggleTrigger(): void {
     View.isTriggerd = !View.isTriggerd;
   }
@@ -33,6 +20,19 @@ export default class View extends EventEmitter {
     const ns = String(n);
     const lastDigits = (ns.match(/\d+$/) || [])[0];
     return ns.includes('e') ? +lastDigits : +lastDigits.length;
+  }
+
+  getRect(): DOMRect {
+    return this.component.getBoundingClientRect();
+  }
+
+  toggleVisibility(): void {
+    const defaultClass = (
+      [...this.component.classList].find((c) => (
+        !(c.match(/(?<!_)_(?!_)/) || [])[0]
+      ))
+    );
+    defaultClass && this.component.classList.toggle(`${defaultClass}_hide`);
   }
 }
 

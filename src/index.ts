@@ -42,7 +42,7 @@ interface Storage {
           .filter((args) => args)
           .map((args) => createComponent(args as string[]));
         components.reduce((place, e, idx) => {
-          [...e.classList].find((c) => c.includes('progress')) 
+          [...e.classList].find((c) => c.includes('progress'))
             && (place = components[4]);
           place.append(e);
           if (idx == 2) {
@@ -58,10 +58,10 @@ interface Storage {
           isVertical && c.classList.add(`${defaultClass}_vertical`);
         });
         const [
-          ,
+          foremostContainer,
           mainContainer,
           scale,
-          ,
+          _,
           track,
           buttonS,
           displayS,
@@ -70,8 +70,9 @@ interface Storage {
           displayE = false,
           progressBarE = false,
         ] = components;
+        foremostContainer.dataset.interval = String(isInterval);
         const buttonW = buttonS.getBoundingClientRect().width;
-        mainContainer.style.padding = isVertical 
+        mainContainer.style.padding = isVertical
           ? `${buttonW * (isInterval ? 1 : 0.5)}px 0`
           : `0 ${buttonW * (isInterval ? 1 : 0.5)}px`;
         storage[id] = new Presenter(
@@ -82,9 +83,9 @@ interface Storage {
               orient,
               buttonW * (isInterval ? -1 : -0.5),
               buttonW * ((
-                isInterval && isVertical 
+                isInterval && isVertical
                   ? 0
-                  : isInterval 
+                  : isInterval
                     ? 1 : 0.5
               )),
             ),
@@ -132,4 +133,3 @@ interface Storage {
     };
   })();
 })(jQuery);
-

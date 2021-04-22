@@ -1,6 +1,9 @@
 :root {
   --btn-size: 1.1rem;
   --track-min-size: cacl(var(--btn-size) * 2);
+  --track-color: #EFEFFC;
+  --track-shadow: 0 .4px 1.4px 0 rgba(0, 0, 0, .2) inset;
+  --progress-bar-color: linear-gradient(to left bottom, violet, snow);
 }
 
 .ui-slider__foremost-container {
@@ -146,5 +149,19 @@
 .ui-slider__progress-bar_vertical {
   width: 100%;
   height: 0;
+}
+
+.ui-slider__foremost-container[data-interval="true"] 
+.ui-slider__track {
+  background: var(--progress-bar-color);
+  box-shadow: none;
+}
+
+.ui-slider__foremost-container[data-interval="true"] 
+.ui-slider__progress-bar_start,
+.ui-slider__foremost-container[data-interval="true"] 
+.ui-slider__progress-bar_end {
+  background: var(--track-color);
+  box-shadow: var(--track-shadow);
 }
 
