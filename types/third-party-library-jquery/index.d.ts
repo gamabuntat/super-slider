@@ -2,6 +2,10 @@ interface JQuery {
   slider(o: Options | string, ...args: argsT): JQuery | Options
 }
 
+interface Storage {
+  [id: string]: Presenter
+}
+
 interface Options {
   interval?: boolean
   vertical?: boolean
