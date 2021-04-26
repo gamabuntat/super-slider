@@ -1,45 +1,39 @@
-// class Piped {
-//   pipe(...fns: Array<(a: any) => any>) {
-//     return fns.reduceRight((a, b) => (...args) => a(b(...args)));
-//   }
-// }
-
 type TElemType = 'div' | 'button'
 
-interface IData {
-  elemType: TElemType
+interface INodeData {
+  elementType: TElemType
   name: string
-  verticalMod?: boolean
+  isVertical?: boolean
 }
 
 class SNode {
   static prefix = 'ui-slider__'
   name: string
   elem: HTMLElement
-  childs: Node[] | []
-  parent: Node | null
-  constructor(data: IData) {
-    this.name = data.name;
+  childs: SNode[]
+  constructor(nodeData: INodeData) {
+    this.name = nodeData.name;
     this.childs = [];
-    this.parent = null;
     const defaultClass = SNode.getDefaultClass(this.name);
     const modClass = SNode.filterClass(
-      SNode.getIsMod(defaultClass),
-      SNode.getMod(this.name),
-      defaultClass
+      SNode.getIsMod(this.name), SNode.getMod(this.name), defaultClass
     );
     const verticalClass = SNode.filterClass(
-      data.verticalMod || false,
-      SNode.getVerticalMod,
-      defaultClass
+      nodeData.isVertical || false, SNode.getVerticalMod, defaultClass
     );
     this.elem = SNode.addClasses(
-      SNode.createNodeElem(data.elemType),
-      [modClass, verticalClass].reduce((acc, fn) => (
-        fn(acc)
-      ), [SNode.setPrefix(defaultClass)])
+      SNode.createNodeElem(nodeData.elementType),
+      [modClass, verticalClass].reduce(
+        (acc, fn) => fn(acc), [SNode.setPrefix(defaultClass)]
+      )
     );
   }
+
+  static getDefaultClass = (name: string) => (
+    (name.match(/\w+(?=Start|End)/) || [name])[0].replace(
+      /([A-Z])/g, (match: string) => `-${match.toLowerCase()}`
+    )
+  )
 
   static filterClass = (
     predicate: boolean,
@@ -49,42 +43,111 @@ class SNode {
     predicate ? [...acc, SNode.setPrefix(step(defaulClass))] : acc
   )
 
-  static getDefaultClass = (name: string) => (
-    (name.match(/\w+(?=Start|End)/) || [name])[0]
+  static getIsMod = (c: string) => (
+    !!(c.match(/Start|End/) || [])[0]
   )
-
-  static setPrefix(c: string): string {
-    return `${SNode.prefix}${c}`;
-  }
-
-  static getIsMod(c: string): boolean {
-    return ['button', 'display', 'progressBar'].includes(c);
-  }
 
   static getMod = (name: string) => (defaultClass: string): string => (
-    `${defaultClass}_${(name.match(/Start|End/) || ['whoops'])[0]}`
-      .toLowerCase()
+    `${defaultClass}_${
+      (name.match(/Start|End/) || ['whoops'])[0].toLowerCase()
+    }`
   )
 
-  static getVerticalMod(defaultClass: string): string {
-    return `${defaultClass}_vertical`;
-  }
+  static getVerticalMod = (defaultClass: string) => `${defaultClass}_vertical`
 
-  static addClasses(elem: HTMLElement, classes: string[]): HTMLElement {
+  static setPrefix = (c: string) => `${SNode.prefix}${c}`
+
+  static addClasses = (elem: HTMLElement, classes: string[]) => {
     elem.classList.add(...classes);
     return elem;
   }
 
-  static createNodeElem(elemType: TElemType): HTMLElement {
-    return document.createElement(elemType);
+  static createNodeElem = (elementType: TElemType) => (
+    document.createElement(elementType)
+  )
+}
+
+class Tree {
+  root: SNode | null
+  constructor(sNode: SNode | null = null) {
+    this.root = sNode;
+  }
+
+  findNode(
+    name: string, node: SNode | null = this.root
+  ): SNode | null {
+    if (!node) { return null; }
+    if (node.name === name) { return node; }
+    for (const n of node.childs) {
+      return (this.findNode(name, n));
+    }
+    return null;
+  }
+
+  addChilds(parentNode: SNode | null, ...node: SNode[]): Tree {
+    if (parentNode) {
+      node.forEach((n) => {
+        parentNode.childs.push(n);
+      });
+    }
+    return this;
+  }
+
+  add(parentName: string, ...nodeData: Array<INodeData | false>): Tree {
+    return this.addChilds(
+      this.findNode(parentName), 
+      ...nodeData.reduce((nodes, data) => (
+        data ? [...nodes, new SNode(data)] : nodes
+      ), [] as SNode[])
+    );
+  }
+
+  static create(nodeData: INodeData): Tree {
+    return new Tree(new SNode(nodeData));
   }
 }
 
-const data: IData = {
-  elemType: 'div',
-  name: 'buttonStart',
-  verticalMod: true
+const tree = (
+  Tree.create({
+    elementType: 'div',
+    name: 'foremostContainer'
+  })
+    .add(
+      'foremostContainer',
+      {elementType: 'div', name: 'mainContainer'},
+      {elementType: 'div', name: 'scale', isVertical: true},
+    )
+    .add(
+      'scale',
+      {elementType: 'div', name: 'inScale'},
+    )
+    .add(
+      'mainContainer',
+      {elementType: 'div', name: 'container'},
+    )
+    .add(
+      'container',
+      {elementType: 'div', name: 'track'},
+      {elementType: 'button', name: 'buttonStart'},
+      {elementType: 'button', name: 'buttonEnd'},
+      {elementType: 'div', name: 'displayStart'},
+      {elementType: 'div', name: 'displayEnd'},
+    )
+    .add(
+      'track',
+      {elementType: 'div', name: 'progressBarStart'},
+      {elementType: 'div', name: 'progressBarEnd'},
+    )
+);
+
+const createSlider = (elem: HTMLElement, node: SNode) => {
+  return node.childs.reduce((acc, child) => {
+    if (!child) { return acc; }
+    acc.insertAdjacentElement('beforeend', createSlider(child.elem, child));
+    return acc;
+  }, elem);
 };
 
-console.log(new SNode(data));
+console.log(tree.findNode('container'));
+console.log(createSlider(tree.root!.elem, tree.root!));
 
