@@ -79,7 +79,8 @@ class Tree {
     if (!node) { return null; }
     if (node.name === name) { return node; }
     for (const n of node.childs) {
-      return (this.findNode(name, n));
+      const isSuccsess = this.findNode(name, n);
+      if (isSuccsess) { return isSuccsess; }
     }
     return null;
   }
@@ -134,9 +135,8 @@ const tree = (
       {elementType: 'div', name: 'displayEnd'},
     )
     .add(
-      'track',
-      {elementType: 'div', name: 'progressBarStart'},
-      {elementType: 'div', name: 'progressBarEnd'},
+      'displayStart',
+      {elementType: 'div', name: 'qqqqqq'},
     )
 );
 
