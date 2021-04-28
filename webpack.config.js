@@ -5,7 +5,7 @@ module.exports = {
   mode: 'production',
   devtool: 'inline-source-map',
   entry: {
-    index: './src/index.ts',
+    index: './src/correctedIndex.ts',
   },
   output: {
     filename: 'slider.js',

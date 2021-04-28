@@ -151,16 +151,12 @@
   height: 0;
 }
 
-.ui-slider__foremost-container[data-interval="true"] 
-.ui-slider__track {
+.ui-slider__track_interval {
   background: var(--progress-bar-color);
   box-shadow: none;
 }
 
-.ui-slider__foremost-container[data-interval="true"] 
-.ui-slider__progress-bar_start,
-.ui-slider__foremost-container[data-interval="true"] 
-.ui-slider__progress-bar_end {
+.ui-slider__progress-bar_interval {
   background: var(--track-color);
   box-shadow: var(--track-shadow);
 }
