@@ -16,8 +16,8 @@ class SNode {
       nodeData.isVertical || false, SNode.getVerticalMod, defaultClass
     );
     const intervalClass = SNode.filterClass(
-      SNode.getIsInterval(this.name), SNode.getInterValMod, defaultClass
-    )
+      nodeData.isInterval || false, SNode.getInterValMod, defaultClass
+    );
     this.elem = SNode.addClasses(
       SNode.createNodeElem(nodeData.elementType),
       [modClass, verticalClass, intervalClass].reduce(
@@ -27,7 +27,7 @@ class SNode {
   }
 
   static getDefaultClass = (name: string): string => (
-    (name.match(/\w+(?=Start|End)/) || [name])[0].replace(
+    (name.match(/\w+(?=[S|s]tart|[E|e]nd)/) || [name])[0].replace(
       /([A-Z])/g, (s: string) => `-${s.toLowerCase()}`
     )
   )
@@ -52,10 +52,6 @@ class SNode {
 
   static getVerticalMod = (defaultClass: string): string => (
     `${defaultClass}_vertical`
-  )
-
-  static getIsInterval = (name: string): boolean => (
-    !!(name.match(/track|progress[B|b]ar/) || [])[0]
   )
 
   static getInterValMod = (defaulClass: string): string => (

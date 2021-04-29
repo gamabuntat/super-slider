@@ -4,10 +4,12 @@ import OrientationType from './OrientationType';
 export default class TrackView extends View {
   resizeObserver: ResizeObserver
   constructor(
-    track: HTMLElement, orient: OrientationType, private buttonW: number
+    track: HTMLElement,
+    orient: OrientationType,
+    private transformMultiplier: number
   ) {
     super(track, orient);
-    this.transform(this.buttonW / this.getRect()[this.orient.size]);
+    this.transform(this.transformMultiplier / this.getRect()[this.orient.size]);
     this.bindEventListeners();
     this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));
     this.resizeObserver.observe(this.component);
@@ -48,7 +50,7 @@ export default class TrackView extends View {
         this.orient.isVertical ? window.pageYOffset : window.pageXOffset
       )
     );
-    this.transform(this.buttonW / prevSize);
+    this.transform(this.transformMultiplier / prevSize);
   }
 }
 
