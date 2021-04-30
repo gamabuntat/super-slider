@@ -18,7 +18,7 @@
 <script>
   $(function() {
     $('#slider4').slider(
-      {interval: false, vertical: true, min: 0, max: 1, step: 0.001}
+      {interval: true, vertical: true, min: 0, max: 1, step: 0.011}
     );
   });
 </script>
@@ -28,8 +28,6 @@
     font-size: 26px;
   }
   body {
-    display: flex;
-    flex-wrap: wrap;
     min-height: 100vh;
     margin: 0;
     box-sizing: border-box;
@@ -48,7 +46,6 @@
   .slider {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     min-height: 10rem;
   }
   .controls {
@@ -84,7 +81,72 @@
 </style>
 <body>
   <div class="container">
-    <div id="slider4"></div>
+    <div id="slider1" class="slider">
+      aaaa
+      <br>
+      aaaaa
+      <br>
+      aaaaa
+      <br>
+      aaaaa
+      <br>
+      aaaaa
+      <br>
+      aaaaa
+      <br>
+      aaaaa
+      <br>
+      aaaaa
+      <br>
+      aaaaa
+      <br>
+      aaaaa
+      <br>
+      aaaaa
+      <br>
+      aaaaa
+      <br>
+      aaaaa
+      <br>
+      aaaaa
+      <br>
+      aaaaa
+      <br>
+      aaaaa
+      <br>
+      aaaaa
+    </div>
+  <div class="container">
+    <div id="slider4" class="slider"></div>
+    <form class="controls">
+      <label>
+        <span>start button</span>
+      </label>
+      <label>
+        <span>end button</span>
+      </label>
+      <label>
+        <span>max</span>
+      </label>
+      <label>
+        <span>min</span>
+      </label>
+      <label>
+        <span>step</span>
+      </label>
+      <label>
+        <span>interval</span>
+      </label>
+      <label>
+        <span>vertical</span>
+      </label>
+      <label>
+        <span>hide displays</span>
+      </label>
+      <label>
+        <span>hide scale</span>
+      </label>
+    </form>
   </div>
   <!-- <script src="controllers.js"></script> -->
 </body>

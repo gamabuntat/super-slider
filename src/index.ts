@@ -64,6 +64,9 @@ import Presenter from './Presenter/Presenter';
         const c = createComponents(sTree.root);
         const orient = new OrientationType(isVertical);
         const buttonW = c.buttonStart.getBoundingClientRect().width;
+        c.mainContainer.style.padding = isVertical
+          ? `${buttonW * (isInterval ? 1 : 0.5)}px 0`
+          : `0 ${buttonW * (isInterval ? 1 : 0.5)}px`;
         const offsets = {
           buttonS: {
             transformOffset: buttonW * (isInterval ? -1 : -0.5),
@@ -76,9 +79,6 @@ import Presenter from './Presenter/Presenter';
           displayS: buttonW * (isInterval ? -1 : -0.5),
           progress: isInterval ? 1 : 0,
         };
-        c.mainContainer.style.padding = isVertical
-          ? `${buttonW * (isInterval ? 1 : 0.5)}px 0`
-          : `0 ${buttonW * (isInterval ? 1 : 0.5)}px`;
         storage[id] = new Presenter(
           new ScaleView(c.scale, orient, buttonW),
           new PresenterStorage(
@@ -109,17 +109,8 @@ import Presenter from './Presenter/Presenter';
           )),
           new TrackView(c.track, orient, buttonW * (isInterval ? 1 : 0)),
         ).init();
+        window.onload = function () { storage[id].getTrackSizes(); };
       } else if (o == 'option') {
-        const map = {
-          get: () => storage[id].getOptions(),
-          toggleVisibility: () => {storage[id].updateVisibility(args[1]);},
-          move() {
-            setTimeout(() => (
-              storage[id].validateButtonPosition(args[1], args[2])
-            ), 0);
-          },
-        };
-        map[args[0]]();
       }
       return this;
     };

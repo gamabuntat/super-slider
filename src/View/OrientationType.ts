@@ -8,3 +8,4 @@ export default class OrientationType {
     this.size = isVertical ? 'height' : 'width';
   }
 }
+

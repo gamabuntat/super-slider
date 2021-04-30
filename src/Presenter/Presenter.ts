@@ -18,6 +18,7 @@ export default class Presenter {
 
   bindServiceListeners(): void {
     this.service
+      .on('getTrackSizes', this.getTrackSizes.bind(this))
       .on('sendButtonData', this.calcButtonPosition.bind(this))
       .on('sendButtonApi', this.calcButtonPositionApi.bind(this))
       .on('sendDisplayData', this.moveDisplay.bind(this))
@@ -53,6 +54,10 @@ export default class Presenter {
 
   getOptions(): Options {
     return this.service.getOptions();
+  }
+
+  getTrackSizes(): void {
+    this.track.handleResize();
   }
 
   validateButtonPosition(button: buttonT, pos: number): void {

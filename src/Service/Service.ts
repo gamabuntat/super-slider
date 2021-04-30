@@ -27,6 +27,7 @@ export default class Service extends EventEmitter {
     if (this.m.isInterval && this.activeButton[0] != button) {
       this.activeButton.reverse();
     }
+    this.getTrackSizes();
     this.emit(
       'sendButtonApi',
       Math.min(this.m.max, Math.max(pos, this.m.min)),
@@ -67,6 +68,7 @@ export default class Service extends EventEmitter {
   }
 
   sendButtonData(coord: number): void {
+    // this.getTrackSizes();
     this.emit(
       'sendButtonData',
       coord,
@@ -75,6 +77,10 @@ export default class Service extends EventEmitter {
       this.m.trackCoord,
       this.m.trackSize
     );
+  }
+
+  getTrackSizes(): void {
+    this.emit('getTrackSizes');
   }
 
   sendDisplayData(): void {
@@ -126,6 +132,8 @@ export default class Service extends EventEmitter {
   updateSizes(size: number, coord: number): void {
     this.m.trackSize = size;
     this.m.trackCoord = coord;
+    console.log('size: ' + size);
+    console.log('coord: ' + coord);
     this.m.relativeButtonW = this.m.buttonW / size;
     this.m.relativeDisplaySize = this.m.displaySize / size;
   }

@@ -1,5 +1,5 @@
-$('#slider1').slider(
-  {interval: true, vertical: false, min: 0, max: 1, step: 0.011}
+$('#slider4').slider(
+  {interval: true, vertical: true, min: 0, max: 1, step: 0.011}
 )
   .slider('option', 'move', 'buttonE', 0.8)
   .slider('option', 'move', 'buttonS', 1);
@@ -32,7 +32,9 @@ class ISlider {
   }
 
   getOptions() {
-    return $(`${this.rootID}`).slider('option', 'get');
+    const o = $(`${this.rootID}`).slider('option', 'get');
+    console.log(o);
+    return o;
   }
 
   moveButton(pos, button) {
