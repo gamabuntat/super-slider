@@ -16,7 +16,7 @@ export default class ProgressBarView extends View {
       Math.abs(this.referencePoint - btnPos) 
        - relBtnW * this.offset / 2
     );
-    this.component.style[this.orient.size] = `${value * 100}%`;
+    this.component.style.flexBasis = `${value * 100}%`;
   }
 }
 

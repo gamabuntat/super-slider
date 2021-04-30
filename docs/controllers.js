@@ -1,5 +1,5 @@
-$('#slider4').slider(
-  {interval: true, vertical: true, min: 0, max: 1, step: 0.011}
+$('#slider1').slider(
+  {interval: true, vertical: false, min: 0, max: 1, step: 0.011}
 )
   .slider('option', 'move', 'buttonE', 0.8)
   .slider('option', 'move', 'buttonS', 1);

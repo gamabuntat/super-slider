@@ -19,6 +19,7 @@ import Presenter from './Presenter/Presenter';
       const id = this.attr('id');
       if (!id) { return this; }
       if (typeof o == 'object') {
+        this[0].innerHTML = '';
         const isInterval = !!o.interval;
         const isVertical = !!o.vertical;
         const sTree = STree.create({
@@ -109,8 +110,16 @@ import Presenter from './Presenter/Presenter';
           )),
           new TrackView(c.track, orient, buttonW * (isInterval ? 1 : 0)),
         ).init();
-        window.onload = function () { storage[id].getTrackSizes(); };
       } else if (o == 'option') {
+        if (args[0] == 'get') {
+          return storage[id].getOptions();
+        } else if (args[0] == 'move') {
+          setTimeout(() => (
+            storage[id].validateButtonPosition(args[1], args[2])
+          ), 0);
+        } else if (args[0] == 'toggleVisibility') {
+          storage[id].updateVisibility(args[1]);
+        }
       }
       return this;
     };

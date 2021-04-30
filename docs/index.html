@@ -17,9 +17,6 @@
 </head>
 <script>
   $(function() {
-    $('#slider4').slider(
-      {interval: true, vertical: true, min: 0, max: 1, step: 0.011}
-    );
   });
 </script>
 <style>
@@ -28,8 +25,11 @@
     font-size: 26px;
   }
   body {
+    display: flex;
+    flex-wrap: wrap;
     min-height: 100vh;
     margin: 0;
+    padding: 0;
     box-sizing: border-box;
   }
   .container {
@@ -46,6 +46,7 @@
   .slider {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     min-height: 10rem;
   }
   .controls {
@@ -81,73 +82,169 @@
 </style>
 <body>
   <div class="container">
-    <div id="slider1" class="slider">
-      aaaa
-      <br>
-      aaaaa
-      <br>
-      aaaaa
-      <br>
-      aaaaa
-      <br>
-      aaaaa
-      <br>
-      aaaaa
-      <br>
-      aaaaa
-      <br>
-      aaaaa
-      <br>
-      aaaaa
-      <br>
-      aaaaa
-      <br>
-      aaaaa
-      <br>
-      aaaaa
-      <br>
-      aaaaa
-      <br>
-      aaaaa
-      <br>
-      aaaaa
-      <br>
-      aaaaa
-      <br>
-      aaaaa
-    </div>
+    <div id="slider1" class="slider"></div>
+    <form class="controls">
+      <label>
+        <span>start button</span>
+        <input type="number" name="btnS" min="" max="" step="">
+      </label>
+      <label>
+        <span>end button</span>
+        <input type="number" name="btnE" min="" max="" step="">
+      </label>
+      <label>
+        <span>max</span>
+        <input type="number" name="max">
+      </label>
+      <label>
+        <span>min</span>
+        <input type="number" name="min">
+      </label>
+      <label>
+        <span>step</span>
+        <input type="number" name="step" step="0.1" min="0.1">
+      </label>
+      <label>
+        <span>interval</span>
+        <input type="checkbox" name="interval" value="0">
+      </label>
+      <label>
+        <span>vertical</span>
+        <input type="checkbox" name="vertical">
+      </label>
+      <label>
+        <span>hide displays</span>
+        <input type="checkbox" name="displays">
+      </label>
+      <label>
+        <span>hide scale</span>
+        <input type="checkbox" name="scale">
+      </label>
+    </form>
+  </div>
+  <div class="container">
+    <div id="slider2" class="slider"></div>
+    <form class="controls">
+      <label>
+        <span>start button</span>
+        <input type="number" name="btnS" min="" max="" step="">
+      </label>
+      <label>
+        <span>end button</span>
+        <input type="number" name="btnE" min="" max="" step="">
+      </label>
+      <label>
+        <span>max</span>
+        <input type="number" name="max">
+      </label>
+      <label>
+        <span>min</span>
+        <input type="number" name="min">
+      </label>
+      <label>
+        <span>step</span>
+        <input type="number" name="step" step="0.1" min="0.1">
+      </label>
+      <label>
+        <span>interval</span>
+        <input type="checkbox" name="interval" value="0">
+      </label>
+      <label>
+        <span>vertical</span>
+        <input type="checkbox" name="vertical">
+      </label>
+      <label>
+        <span>hide displays</span>
+        <input type="checkbox" name="displays">
+      </label>
+      <label>
+        <span>hide scale</span>
+        <input type="checkbox" name="scale">
+      </label>
+    </form>
+  </div>
+  <div class="container">
+    <div id="slider3" class="slider"></div>
+    <form class="controls">
+      <label>
+        <span>start button</span>
+        <input type="number" name="btnS" min="" max="" step="">
+      </label>
+      <label>
+        <span>end button</span>
+        <input type="number" name="btnE" min="" max="" step="">
+      </label>
+      <label>
+        <span>max</span>
+        <input type="number" name="max">
+      </label>
+      <label>
+        <span>min</span>
+        <input type="number" name="min">
+      </label>
+      <label>
+        <span>step</span>
+        <input type="number" name="step" step="0.1" min="0.1">
+      </label>
+      <label>
+        <span>interval</span>
+        <input type="checkbox" name="interval" value="0">
+      </label>
+      <label>
+        <span>vertical</span>
+        <input type="checkbox" name="vertical">
+      </label>
+      <label>
+        <span>hide displays</span>
+        <input type="checkbox" name="displays">
+      </label>
+      <label>
+        <span>hide scale</span>
+        <input type="checkbox" name="scale">
+      </label>
+    </form>
+  </div>
   <div class="container">
     <div id="slider4" class="slider"></div>
     <form class="controls">
       <label>
         <span>start button</span>
+        <input type="number" name="btnS" min="" max="" step="">
       </label>
       <label>
         <span>end button</span>
+        <input type="number" name="btnE" min="" max="" step="">
       </label>
       <label>
         <span>max</span>
+        <input type="number" name="max">
       </label>
       <label>
         <span>min</span>
+        <input type="number" name="min">
       </label>
       <label>
         <span>step</span>
+        <input type="number" name="step" step="0.1" min="0.1">
       </label>
       <label>
         <span>interval</span>
+        <input type="checkbox" name="interval" value="0">
       </label>
       <label>
         <span>vertical</span>
+        <input type="checkbox" name="vertical">
       </label>
       <label>
         <span>hide displays</span>
+        <input type="checkbox" name="displays">
       </label>
       <label>
         <span>hide scale</span>
+        <input type="checkbox" name="scale">
       </label>
     </form>
   </div>
-  <!-- <script src="controllers.js"></script> -->
+  <script src="controllers.js"></script>
 </body>
 </html>
