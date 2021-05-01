@@ -9,8 +9,8 @@ import DisplayView from './View/DisplayView';
 import ProgressBarView from './View/ProgressBarView';
 import ScaleView from './View/ScaleView';
 import OrientationType from './View/OrientationType';
-import PresenterStorage from './Presenter/PresenterStorage';
 import Presenter from './Presenter/Presenter';
+import PresenterStorage from './Presenter/PresenterStorage';
 
 (function ($) {
   const storage: Storage = {} as Storage;

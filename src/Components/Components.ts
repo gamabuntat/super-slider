@@ -28,8 +28,8 @@ class SNode {
 
   static getDefaultClass = (name: string): string => (
     (name.match(/\w+(?=[S|s]tart|[E|e]nd)/) || [name])[0].replace(
-      /([A-Z])/g, (s: string) => `-${s.toLowerCase()}`
-    )
+      /((?<=.)[A-Z])/g, '-$&'
+    ).toLowerCase()
   )
 
   static filterClass = (
