@@ -27,9 +27,9 @@ class SNode {
   }
 
   static getDefaultClass = (name: string): string => (
-    (name.match(/\w+(?=[S|s]tart|[E|e]nd)/) || [name])[0].replace(
-      /((?<=.)[A-Z])/g, '-$&'
-    ).toLowerCase()
+    (name.match(/\w+(?=(Start|End)$)/) || [name])[0]
+      .replace(/((?<=.)[A-Z])/g, '-$&')
+      .toLowerCase()
   )
 
   static filterClass = (
@@ -41,12 +41,12 @@ class SNode {
   )
 
   static getIsMod = (name: string): boolean => (
-    !!(name.match(/[S|s]tart|[E|e]nd/) || [])[0]
+    !!(name.match(/(Start|End)$/) || [])[0]
   )
 
   static getMod = (name: string) => (defaultClass: string): string => (
     `${defaultClass}_${
-      (name.match(/Start|End/) || ['whoops'])[0].toLowerCase()
+      (name.match(/(Start|End)$/) || ['whoops'])[0].toLowerCase()
     }`
   )
 
