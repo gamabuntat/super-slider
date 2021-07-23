@@ -31,7 +31,6 @@
 .ui-slider__main-container_vertical {
   flex-direction: row;
   align-items: center;
-  /* height: 100%; */
 }
 
 .ui-slider__container {
@@ -87,8 +86,7 @@
   flex-direction: column-reverse;
 }
 
-.ui-slider__button_start, 
-.ui-slider__button_end {
+.ui-slider__button {
   position: absolute;
   margin: auto;
   padding: 0;
@@ -104,12 +102,11 @@
   z-index: 10;
 }
 
-.ui-slider__button_vertical, .ui-slider__button_vertical {
+.ui-slider__button_vertical {
   left: 0; right: 0;
 }
 
-.ui-slider__display_start,
-.ui-slider__display_end {
+.ui-slider__display {
   position: absolute;
   top: -1.2rem;
   display: flex;

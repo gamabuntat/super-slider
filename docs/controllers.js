@@ -33,7 +33,6 @@ class ISlider {
 
   getOptions() {
     const o = $(`${this.rootID}`).slider('option', 'get');
-    console.log(o);
     return o;
   }
 

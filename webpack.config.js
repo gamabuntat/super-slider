@@ -9,14 +9,15 @@ module.exports = {
   },
   output: {
     filename: 'slider.js',
-    path: path.resolve(__dirname, 'docs'),
+    path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
     extensions: [ '.ts', '.js' ],
   },
   devServer: {
-    contentBase: path.join(__dirname, 'docs'),
+    noInfo: true,
     compress: true,
+    open: false,
     port: 9000,
   },
   module: {

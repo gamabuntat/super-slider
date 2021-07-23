@@ -9,6 +9,7 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "strict": true,
+    "strictNullChecks": true,
     "declaration": true,
     "typeRoots": ["./types", "./node_modules/@types"],
     "baseUrl": "./src",
