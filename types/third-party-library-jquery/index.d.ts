@@ -1,5 +1,5 @@
 interface JQuery {
-  slider(o: Options | 'option', ...args: argsT): JQuery | Options
+  slider(): JQuery
 }
 
 interface Storage {

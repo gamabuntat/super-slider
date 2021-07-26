@@ -1,5 +1,7 @@
+type elementType = 'div' | 'button'
+
 interface INodeData {
-  elementType: string
+  elementType: elementType
   name: string
   isVertical?: boolean
   isInterval?: boolean
