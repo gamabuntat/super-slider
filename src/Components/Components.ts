@@ -79,7 +79,7 @@ class SNode implements INode {
 }
 
 class STree {
-  constructor(private root: INode) {}
+  constructor(public root: INode) {}
 
   findNode(name: string, node: INode = this.root): INode | null {
     if (node.name === name) { return node; }
@@ -90,29 +90,16 @@ class STree {
     return null;
   }
 
-  addChilds(parentNode: SNode | null, ...node: SNode[]): STree {
-    if (parentNode) { node.forEach((n) => parentNode.childs.push(n)); }
-    return this;
+  addChilds(parentNode: INode, nodes: INode[]): void {
+    nodes.forEach((n) => parentNode.childs.push(n));
   }
 
-  add(parentName: string, ...nodeData: Array<INodeData | false>): STree {
-    return this.addChilds(
-      this.findNode(parentName),
-      ...nodeData.reduce((nodes, data) => (
-        data ? [...nodes, new SNode(data)] : nodes
-      ), [] as SNode[])
-    );
+  public add(parentName: string, ...nodes: INode[]): STree {
+    const parentNode = this.findNode(parentName);
+    if (parentNode) { this.addChilds(parentNode, nodes); }
+    return this;
   }
 }
 
-const fnode = new STree(
-  new SNode({elementType: 'button', name: 'cont'})
-)
-  .add(
-    'cont',
-    {elementType: 'div', name: 'hihe'},
-    {elementType: 'button', name: 'hihebtnn'},
-  );
-
-export {SNode, STree, fnode};
+export {SNode, STree};
 

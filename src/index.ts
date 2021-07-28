@@ -1,5 +1,5 @@
 import './slider/style/slider.sass';
-import {fnode} from './Components/Components';
+import {STree, SNode} from './Components/Components';
 // import createSlider from './createSlider/createSlider';
 // import createComponents from './createComponents/createComponents';
 // import Service from './Service/Service';
@@ -15,7 +15,19 @@ import {fnode} from './Components/Components';
 
 (function ($) {
   $.fn.slider = function () {
-    console.log(fnode);
+    const tree = new STree(
+      new SNode({elementType: 'div', name: 'container'})
+    )
+      .add(
+        'container', 
+        new SNode({elementType: 'button', name: 'ccc'}),
+        new SNode({elementType: 'div', name: 'sss'})
+      )
+      .add(
+        'ccc',
+        new SNode({elementType: 'div', name: 'qqq'})
+      );
+    console.log(tree.findNode('container'));
     return this;
   };
 })(jQuery || {});
