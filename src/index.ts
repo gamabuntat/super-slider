@@ -1,5 +1,5 @@
 import './slider/style/slider.sass';
-// import {STree} from './Components/Components';
+import {fnode} from './Components/Components';
 // import createSlider from './createSlider/createSlider';
 // import createComponents from './createComponents/createComponents';
 // import Service from './Service/Service';
@@ -15,11 +15,10 @@ import './slider/style/slider.sass';
 
 (function ($) {
   $.fn.slider = function () {
-    console.log('hiSlider');
+    console.log(fnode);
     return this;
   };
-})(jQuery);
+})(jQuery || {});
 
 $('.js-slider').slider();
-
 

@@ -1,25 +1,31 @@
 import INodeData from './INodeData';
+import INode from './INode';
 
-class SNode {
+class SNode implements INode {
   static prefix = 'ui-slider__'
   name: string
   elem: HTMLElement
   childs: SNode[]
-  constructor(nodeData: INodeData) {
-    this.name = nodeData.name;
+  constructor({
+    elementType,
+    name,
+    isVertical = false,
+    isInterval = false
+  }: INodeData) {
+    this.name = name;
     this.childs = [];
     const defaultClass = SNode.getDefaultClass(this.name);
     const modClass = SNode.filterClass(
       SNode.getIsMod(this.name), SNode.getMod(this.name), defaultClass
     );
     const verticalClass = SNode.filterClass(
-      nodeData.isVertical || false, SNode.getVerticalMod, defaultClass
+      isVertical, SNode.getVerticalMod, defaultClass
     );
     const intervalClass = SNode.filterClass(
-      nodeData.isInterval || false, SNode.getInterValMod, defaultClass
+      isInterval, SNode.getInterValMod, defaultClass
     );
     this.elem = SNode.addClasses(
-      SNode.createNodeElem(nodeData.elementType),
+      SNode.createNodeElem(elementType),
       [modClass, verticalClass, intervalClass].reduce(
         (acc, fn) => fn(acc), [SNode.setPrefix(defaultClass)]
       )
@@ -73,13 +79,9 @@ class SNode {
 }
 
 class STree {
-  root: SNode
-  constructor(sNode: SNode) {
-    this.root = sNode;
-  }
+  constructor(private root: INode) {}
 
-  findNode(name: string, node: SNode = this.root): SNode | null {
-    if (!node) { return null; }
+  findNode(name: string, node: INode = this.root): INode | null {
     if (node.name === name) { return node; }
     for (const n of node.childs) {
       const isSuccsess = this.findNode(name, n);
@@ -101,11 +103,16 @@ class STree {
       ), [] as SNode[])
     );
   }
-
-  static create(nodeData: INodeData): STree {
-    return new STree(new SNode(nodeData));
-  }
 }
 
-export {SNode, STree};
+const fnode = new STree(
+  new SNode({elementType: 'button', name: 'cont'})
+)
+  .add(
+    'cont',
+    {elementType: 'div', name: 'hihe'},
+    {elementType: 'button', name: 'hihebtnn'},
+  );
+
+export {SNode, STree, fnode};
 

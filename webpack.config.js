@@ -18,6 +18,9 @@ module.exports = (env, argv) => {
     resolve: {
       extensions: [ '.ts', '.js' ],
     },
+    externals: {
+      jquery: 'jQuery',
+    },
     devServer: {
       noInfo: true,
       compress: true,

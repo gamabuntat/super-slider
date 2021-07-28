@@ -1,5 +1,5 @@
 interface JQuery {
-  slider(): JQuery
+  slider(): JQuery<HTMLElement>
 }
 
 interface Storage {
