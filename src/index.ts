@@ -24,7 +24,7 @@ import {Tree, SNode} from './Components/Components';
         )
         .add(
           'button',
-          {elementType: 'button', name: 'Adsa StartHihe dlska'}
+          {elementType: 'button', name: 'Adsa tARtEnDHihe dlska'}
         )
     );
     return this;

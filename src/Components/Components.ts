@@ -17,7 +17,6 @@ class SNode extends Node {
     super(name);
     this.elem = document.createElement(elementType);
     const defaultClass = SNode.addPrefix(this.getDefaultClass());
-    console.log(defaultClass);
     this.setMod(defaultClass, this.spotMod());
     this.setVerticalMod(defaultClass, isVertical);
     this.setIntervalMod(defaultClass, isInterval);
@@ -39,10 +38,10 @@ class SNode extends Node {
 
   getDefaultClass(): string {
     return this.name
-      .replace(/([S|s]tart|[E|e]nd)/, '')
-      .replace(/(?<=.)[A-Z]/, '-$&')
-      .replace(/\s(?!-)/, '-')
-      .replace(/\s/, '')
+      .replace(/([S|s][T|t][A|a][R|r][T|t])|([E|e][N|n][D|d])/, '')
+      .replace(/(?<=.)[A-Z]/g, '-$&')
+      .replace(/\s(?!-)/g, '-')
+      .replace(/\s/g, '')
       .toLowerCase();
   }
 
