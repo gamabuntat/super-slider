@@ -1,11 +1,11 @@
 type elementType = 'div' | 'button'
 
-interface INodeData {
+interface ISNodeData {
   elementType: elementType
   name: string
   isVertical?: boolean
   isInterval?: boolean
 }
 
-export default INodeData;
+export default ISNodeData;
 
