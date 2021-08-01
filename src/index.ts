@@ -16,15 +16,15 @@ import {Tree, SNode} from './Components/Components';
 (function ($) {
   $.fn.slider = function () {
     console.log(
-      new Tree(SNode, {elementType: 'div', name: 'root'})
+      new Tree(SNode, {elementType: 'div', name: 'rootstart'})
         .add(
-          'root',
-          {elementType: 'button', name: 'button'},
-          {elementType: 'div', name: 'div'}
+          'rootstart',
+          {elementType: 'button', name: 'button', isInterval: true},
+          {elementType: 'div', name: 'div', isVertical: true}
         )
         .add(
           'button',
-          {elementType: 'button', name: 'another button'}
+          {elementType: 'button', name: 'Adsa StartHihe dlska'}
         )
     );
     return this;
