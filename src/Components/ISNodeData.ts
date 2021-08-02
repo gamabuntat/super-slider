@@ -1,10 +1,11 @@
-type elementType = 'div' | 'button'
-
-interface ISNodeData {
-  elementType: elementType
+type ISNodeDataBasic = {
+  elementType: 'div' | 'button'
   name: string
-  isVertical?: boolean
+}
+
+interface ISNodeData extends ISNodeDataBasic {
   isInterval?: boolean
+  isVertical?: boolean
 }
 
 export default ISNodeData;

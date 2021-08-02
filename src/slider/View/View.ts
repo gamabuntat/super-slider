@@ -1,22 +1,11 @@
-interface IView {
-  a: number
-  ping(a: number): void
-}
+// import Tree from '../../Components/Tree';
+// import SNode from '../../Components/SNode';
+// import ISNodeData from '../../Components/ISNodeData';
+import IResponse from '../interfaces/IResponse';
 
-class View implements IView {
-  a: number
-  name: string
-  constructor() {
-    this.name = 'hihe';
-    this.a = 42;
-  }
-
-  log(s: string): void {
-    console.log(s);
-  }
-
-  ping(a: number): void {
-    console.log(`${a}ms`);
+class View {
+  static createSingleView({isInterval, isVertical}: IResponse): void {
+    console.log(isInterval, isInterval);
   }
 }
 

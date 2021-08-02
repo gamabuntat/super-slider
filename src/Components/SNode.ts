@@ -1,14 +1,5 @@
+import Node from './Node';
 import ISNodeData from './ISNodeData';
-import INode from './INode';
-
-class Node implements INode {
-  name: string
-  childs: INode[]
-  constructor(name: string) {
-    this.name = name;
-    this.childs = [];
-  }
-}
 
 class SNode extends Node {
   static prefix = 'ui-slider__'
@@ -58,32 +49,5 @@ class SNode extends Node {
   }
 }
 
-class Tree<A> {
-  private root: INode
-  constructor(
-    private NodeCreator: new (...args: A[]) => INode, 
-    nodeArg: A,
-  ) {
-    this.root = new NodeCreator(nodeArg);
-  }
-
-  findNode(name: string, node: INode = this.root): INode | null {
-    if (node.name === name) { return node; }
-    for (const n of node.childs) {
-      const foundNode = this.findNode(name, n);
-      if (foundNode) { return foundNode; }
-    }
-    return null;
-  }
-
-  add(parentName: string, ...nodeArgs: A[]): Tree<A> {
-    const parentNode = this.findNode(parentName);
-    if (parentNode) {
-      parentNode.childs.push(...nodeArgs.map((a) => new this.NodeCreator(a)));
-    }
-    return this;
-  }
-}
-
-export {SNode, Tree};
+export default SNode;
 
