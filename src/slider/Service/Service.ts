@@ -14,16 +14,24 @@ class Service {
     return Service.instance; 
   }
 
-  findModelIndex(id: string): number {
-    return this.lastIndex = this.models.findIndex((m) => m.id === id);
+  updateModel<K extends keyof Model>(
+    id: string,
+    field: K,
+    value: Model[K]
+  ): void {
+    this.models[this.findModelIndex(id)][field] = value;
   }
 
-  addModel(id: string, options: Options): void {
+  addModel(id: string, model: Model): void {
     this.models.splice(
       this.findModelIndex(id),
       this.lastIndex === -1 ? 0 : 1,
-      this.createModel(id, options)
+      model
     );
+  }
+
+  findModelIndex(id: string): number {
+    return this.lastIndex = this.models.findIndex((m) => m.id === id);
   }
 
   createModel(id: string, options: Options): Model {
