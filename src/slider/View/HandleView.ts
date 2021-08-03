@@ -1,25 +1,7 @@
 class HandleView {
-  private styles: CSSStyleDeclaration
   private offset: number
-  constructor(
-    private handle: HTMLElement,
-  ) {
-    this.styles = getComputedStyle(this.handle);
+  constructor(private handle: HTMLElement) {
     this.offset = this.getOffset();
-  }
-
-  static calcShift(
-    pointerCoord: number,
-    containerCoord: number,
-    containerWidth: number,
-    handlePosition: number,
-  ): number {
-    return (pointerCoord - containerCoord) / containerWidth - handlePosition;
-  }
-
-  getOffset(): number {
-    const matrix = new DOMMatrix(this.styles.transform);
-    return matrix.e || matrix.f;
   }
 
   calcPosition(
@@ -42,6 +24,24 @@ class HandleView {
 
   moveHandle(position: number): void {
     this.handle.style.left = `${position * 100}%`;
+  }
+
+  handleHandlePointerdown = (e: PointerEvent): void => {
+    this.fixPointer(e.pointerId);
+  }
+
+  private bindEventListeners(): void {
+    this.handle
+      .addEventListener('pointerdown', this.handleHandlePointerdown);
+  }
+
+  private fixPointer(pointerID: number): void {
+    this.handle.setPointerCapture(pointerID);
+  }
+
+  private getOffset(): number {
+    const matrix = new DOMMatrix(getComputedStyle(this.handle).transform);
+    return matrix.e || matrix.f;
   }
 }
 
