@@ -1,7 +1,11 @@
-class HandleView {
+import EventBinder from '../EventBinder/EventBinder';
+
+class HandleView extends EventBinder {
   private offset: number
-  constructor(private handle: HTMLElement) {
+  constructor(component: HTMLElement) {
+    super(component);
     this.offset = this.getOffset();
+    this.bind('pointerdown', this.handleComponentPointerdown);
   }
 
   calcPosition(
@@ -9,7 +13,7 @@ class HandleView {
     max: number,
     min: number,
     containerCoord: number,
-    containerWidth: number,
+    containerSize: number,
     shift: number
   ): number {
     return Math.min(
@@ -17,30 +21,25 @@ class HandleView {
       Math.max(
         min,
         (pointerCoord - containerCoord - shift + this.offset) 
-          / containerWidth
+          / containerSize
       )
     );
   }
 
   moveHandle(position: number): void {
-    this.handle.style.left = `${position * 100}%`;
+    this.component.style.left = `${position * 100}%`;
   }
 
-  handleHandlePointerdown = (e: PointerEvent): void => {
-    this.fixPointer(e.pointerId);
-  }
-
-  private bindEventListeners(): void {
-    this.handle
-      .addEventListener('pointerdown', this.handleHandlePointerdown);
+  handleComponentPointerdown = (ev: PointerEvent): void => {
+    this.fixPointer(ev.pointerId);
   }
 
   private fixPointer(pointerID: number): void {
-    this.handle.setPointerCapture(pointerID);
+    this.component.setPointerCapture(pointerID);
   }
 
   private getOffset(): number {
-    const matrix = new DOMMatrix(getComputedStyle(this.handle).transform);
+    const matrix = new DOMMatrix(getComputedStyle(this.component).transform);
     return matrix.e || matrix.f;
   }
 }
