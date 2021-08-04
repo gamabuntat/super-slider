@@ -1,6 +1,7 @@
-import EventBinder from '../EventBinder/EventBinder';
+import {IHandleView, ICalcPositionArgs} from './IHandleView';
+import EventBinder from '../../../EventBinder/EventBinder';
 
-class HandleView extends EventBinder {
+class HandleView extends EventBinder implements IHandleView {
   private offset: number
   constructor(component: HTMLElement) {
     super(component);
@@ -8,14 +9,14 @@ class HandleView extends EventBinder {
     this.bind('pointerdown', this.handleComponentPointerdown);
   }
 
-  calcPosition(
-    pointerCoord: number,
-    max: number,
-    min: number,
-    containerCoord: number,
-    containerSize: number,
-    shift: number
-  ): number {
+  calcPosition({
+    pointerCoord,
+    max,
+    min,
+    containerCoord,
+    containerSize,
+    shift
+  }: ICalcPositionArgs): number {
     return Math.min(
       max, 
       Math.max(
@@ -26,11 +27,15 @@ class HandleView extends EventBinder {
     );
   }
 
-  moveHandle(position: number): void {
+  moveX(position: number): void {
     this.component.style.left = `${position * 100}%`;
   }
 
-  handleComponentPointerdown = (ev: PointerEvent): void => {
+  moveY(position: number): void {
+    this.component.style.top = `${position * 100}%`;
+  }
+
+  private handleComponentPointerdown = (ev: PointerEvent): void => {
     this.fixPointer(ev.pointerId);
   }
 

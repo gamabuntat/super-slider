@@ -1,4 +1,6 @@
-class EventBinder {
+import IEventBinder from './EventBinder';
+
+class EventBinder implements IEventBinder {
   constructor(protected component: HTMLElement) {}
 
   bind<K extends keyof HTMLElementEventMap>(
