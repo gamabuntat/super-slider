@@ -2,6 +2,10 @@ interface JQuery {
   slider(): JQuery<HTMLElement>
 }
 
+interface IApp {
+  create(): JQuery | undefined
+}
+
 interface Storage {
   [id: string]: Presenter
 }

@@ -1,6 +1,7 @@
-import INode from './INode';
+import INode from './interfaces/INode';
+import ITree from './interfaces/ITree';
 
-class Tree {
+class Tree implements ITree {
   constructor(public root: INode) {}
 
   findNode(name: string, node: INode = this.root): INode | null {

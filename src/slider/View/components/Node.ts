@@ -1,4 +1,4 @@
-import INode from './INode';
+import INode from './interfaces/INode';
 
 class Node implements INode {
   name: string

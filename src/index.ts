@@ -1,5 +1,5 @@
 import './slider/styles/slider.sass';
-import HandleView from './slider/View/HandleView';
+import HandleView from './slider/View/components/HandleView/HandleView';
 
 (function ($) {
   $.fn.slider = function () {

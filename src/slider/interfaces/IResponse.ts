@@ -1,9 +1,8 @@
 import IHandle from './IHandle';
 
 interface IResponse {
-  isInterval: boolean
   isVertical: boolean
-  handleStart: IHandle
+  positions: IHandle[]
 }
 
 export default IResponse;

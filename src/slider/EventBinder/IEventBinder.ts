@@ -3,13 +3,13 @@ interface IEventBinder {
     type: K, 
     listener: (ev: HTMLElementEventMap[K]) => void,
     options?: boolean | AddEventListenerOptions
-  ): void
+  ): this
 
   unbind<K extends keyof HTMLElementEventMap>(
     type: K, 
     listener: (ev: HTMLElementEventMap[K]) => void,
     options?: boolean | AddEventListenerOptions
-  ): void
+  ): this
 }
 
 export default IEventBinder;
