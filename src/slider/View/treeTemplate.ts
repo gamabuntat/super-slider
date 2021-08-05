@@ -1,4 +1,4 @@
-import IViewTreeTemplate from './View/interfaces/IViewTreeTemplate';
+import IViewTreeTemplate from './interfaces/IViewTreeTemplate';
 
 const treeTemplate: IViewTreeTemplate = {
   name: 'ui-slider',
