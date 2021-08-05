@@ -9,10 +9,10 @@ interface IComponents {
 }
 
 class View {
-  components: IComponents = {}
-  blockName = ''
-  slider: HTMLElement
-  handles: IHandleView[]
+  private components: IComponents = {}
+  private blockName = ''
+  private slider: HTMLElement
+  private handles: IHandleView[]
 
   constructor(tree: IViewTreeTemplate) {
     this.slider = this.createSlider(tree);
@@ -20,7 +20,6 @@ class View {
       new HandleView(this.components.handleStart),
       new HandleView(this.components.handleEnd)
     ];
-    document.body.insertAdjacentElement('beforeend', this.slider);
   }
 
   private createSlider(
