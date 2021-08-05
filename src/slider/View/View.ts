@@ -1,3 +1,4 @@
+import treeTemplate from './treeTemplate';
 import HandleView from './UI/HandleView/HandleView';
 import {IHandleView} from './UI/HandleView/IHandleView';
 import IViewTreeTemplate from './interfaces/IViewTreeTemplate';
@@ -9,35 +10,44 @@ interface IComponents {
 }
 
 class View {
+  private static tree: IViewTreeTemplate = treeTemplate
   private components: IComponents = {}
   private blockName = ''
   private slider: HTMLElement
   private handles: IHandleView[]
 
-  constructor(tree: IViewTreeTemplate) {
-    this.slider = this.createSlider(tree);
+  constructor() {
+    this.slider = this.createSlider(View.tree);
     this.handles = [
-      new HandleView(this.components.handleStart),
+      new HandleView(this.components.handleStart)
+        .bind('pointerdown', () => console.log('hi'))
+        .bind('lostpointercapture', () => console.log('bye')),
       new HandleView(this.components.handleEnd)
     ];
+    this.renderSleder();
   }
 
   private createSlider(
-    tree: IViewTreeTemplate, parent?: HTMLElement
+    { name, elementType, childs = [] }: IViewTreeTemplate,
+    parent?: HTMLElement
   ): HTMLElement {
-    const elem = document.createElement(tree.elementType);
+    const elem = document.createElement(elementType);
     this.saveComponent(
-      parent ? tree.name : this.setBlockName(tree.name),
+      parent ? name : this.setBlockName(name),
       elem
     );
-    elem.classList.add(this.getClass(tree.name));
+    elem.classList.add(this.getClass(name));
     if (parent) { parent.insertAdjacentElement('beforeend', elem); }
-    (tree.childs || []).forEach((node) => this.createSlider(node, elem));
+    childs.forEach((node) => this.createSlider(node, elem));
     return elem;
   }
 
   private setBlockName(blockName: string): string {
     return this.blockName = blockName;
+  }
+
+  private saveComponent(name: string, elem: HTMLElement): void {
+    this.components[name] = elem;
   }
 
   private getClass(name: string): string {
@@ -50,8 +60,8 @@ class View {
       );
   }
 
-  private saveComponent(name: string, elem: HTMLElement): void {
-    this.components[name] = elem;
+  private renderSleder(): void {
+    document.body.insertAdjacentElement('beforeend', this.slider);
   }
 }
 

@@ -1,12 +1,11 @@
 import './styles/slider.sass';
 
-import treeTemplate from './slider/treeTemplate';
 import View from './slider/View/View';
 
 (function ($) {
   $.fn.slider = function () {
     console.log(
-      new View(treeTemplate)
+      new View()
     );
     return this;
   };
