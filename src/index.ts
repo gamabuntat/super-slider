@@ -1,10 +1,13 @@
 import './slider/styles/slider.sass';
-import HandleView from './slider/View/components/HandleView/HandleView';
+
+import treeTemplate from './slider/treeTemplate';
+import View from './slider/View/View';
 
 (function ($) {
   $.fn.slider = function () {
-    const handle: HTMLElement | null = document.querySelector('.js-slider');
-    if (handle) { new HandleView(handle); }
+    console.log(
+      new View(treeTemplate)
+    );
     return this;
   };
 })(jQuery || {});
