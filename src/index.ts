@@ -5,7 +5,7 @@ import View from './slider/View/View';
 (function ($) {
   $.fn.slider = function () {
     console.log(
-      new View()
+      new View({ isVertical: false })
     );
     return this;
   };
