@@ -3,6 +3,10 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
+const alias = {
+  'slider': path.resolve(__dirname, './src/slider'),
+};
+
 module.exports = (env, argv) => {
   const isProd = argv.mode === 'production';
   return {
@@ -17,6 +21,7 @@ module.exports = (env, argv) => {
     },
     resolve: {
       extensions: [ '.ts', '.js' ],
+      alias
     },
     externals: {
       jquery: 'jQuery',
