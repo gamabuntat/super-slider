@@ -6,7 +6,7 @@ import ISliderView from './UI/SliderView/ISliderView';
 import HandleView from './UI/HandleView/HandleView';
 import { IHandleView } from './UI/HandleView/IHandleView';
 
-import {IResponse} from '../helpers/IResponse';
+import { IResponse } from '../helpers/IResponse';
 
 interface IComponents {
   [k: string]: HTMLElement
@@ -32,7 +32,7 @@ class View implements IView {
 
   constructor(response: IResponse) {
     this.sliderHTML = this.createSlider(View.tree);
-    this.slider = new SliderView(this.components.blockName);
+    this.slider = new SliderView(this.components[this.blockName]);
     this.handles = this.getHandles();
     this.handlesHandlePointerdown = this.getHadlesHandlePointerdown();
     this.parseResponse(response);
