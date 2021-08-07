@@ -7,7 +7,6 @@ abstract class HandleView extends EventBinder {
 
   constructor(component: HTMLElement) {
     super(component);
-    this.bind('pointerdown', this.handleComponentPointerdown);
   }
 
   calcPosition({
@@ -22,9 +21,19 @@ abstract class HandleView extends EventBinder {
     ));
   }
 
+  bindListeners(): IHandleView {
+    return this
+      .bind('pointerdown', this.handleComponentPointerdown)
+      .bind('pointermove', this.handleComponentPointermove);
+  }
+
   private handleComponentPointerdown = (ev: PointerEvent): void => {
     this.setShift(ev);
     this.fixPointer(ev.pointerId);
+  }
+
+  private handleComponentPointermove = (ev: PointerEvent): void => {
+    this.setPointerCoord(ev);
   }
 
   private fixPointer(pointerID: number): void {
@@ -35,7 +44,7 @@ abstract class HandleView extends EventBinder {
 
   abstract swap(): IHandleView
 
-  abstract setPointerCoord(ev: PointerEvent): void
+  protected abstract setPointerCoord(ev: PointerEvent): void
 
   protected abstract setShift(ev: PointerEvent): void
 
@@ -51,7 +60,7 @@ class HorizontalHandleView extends HandleView implements IHandleView {
     return new VerticalHandleView(this.component);
   }
 
-  setPointerCoord(ev: PointerEvent): void {
+  protected setPointerCoord(ev: PointerEvent): void {
     this.pointerCoord = ev.x;
   }
 
@@ -73,7 +82,7 @@ class VerticalHandleView extends HandleView implements IHandleView {
     return new HorizontalHandleView(this.component);
   }
 
-  setPointerCoord(ev: PointerEvent): void {
+  protected setPointerCoord(ev: PointerEvent): void {
     this.pointerCoord =  ev.y;
   }
 

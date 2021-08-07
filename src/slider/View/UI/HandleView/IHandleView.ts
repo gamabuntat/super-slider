@@ -8,7 +8,7 @@ interface ICalcPositionArgs {
 }
 
 interface IHandleView extends IEventBinder {
-  setPointerCoord(ev: PointerEvent): void
+  bindListeners(): IHandleView
   calcPosition<A extends ICalcPositionArgs>(arg: A): number
   move(position: number): void
   swap(): IHandleView
