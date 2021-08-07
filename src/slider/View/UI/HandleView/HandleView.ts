@@ -1,12 +1,9 @@
-import {IHandleView, ICalcPositionArgs} from './IHandleView';
-import EventBinder from '../../../EventBinder/EventBinder';
+import { IHandleView, ICalcPositionArgs } from './IHandleView';
+import EventBinder from 'slider/EventBinder/EventBinder';
 
-class HandleView extends EventBinder implements IHandleView {
-  private offset: number
-
+abstract class HandleView extends EventBinder implements IHandleView {
   constructor(component: HTMLElement) {
     super(component);
-    this.offset = this.getOffset();
     this.bind('pointerdown', this.handleComponentPointerdown);
   }
 
@@ -19,17 +16,9 @@ class HandleView extends EventBinder implements IHandleView {
     shift
   }: ICalcPositionArgs): number {
     return Math.min(max, Math.max(min,
-      (pointerCoord - containerCoord - shift + this.offset) 
+      (pointerCoord - containerCoord - shift + this.getOffset()) 
         / containerSize
     ));
-  }
-
-  moveX(position: number): void {
-    this.component.style.left = `${position * 100}%`;
-  }
-
-  moveY(position: number): void {
-    this.component.style.top = `${position * 100}%`;
   }
 
   private handleComponentPointerdown = (ev: PointerEvent): void => {
@@ -44,7 +33,31 @@ class HandleView extends EventBinder implements IHandleView {
     const matrix = new DOMMatrix(getComputedStyle(this.component).transform);
     return matrix.e || matrix.f;
   }
+
+  abstract move(position: number): void
+
+  abstract swap(): IHandleView
 }
 
-export default HandleView;
+class HorizontalHandleView extends HandleView {
+  move(position: number): void {
+    this.component.style.left = `${position * 100}%`;
+  }
+
+  swap(): IHandleView {
+    return new VerticalHandleView(this.component);
+  }
+}
+
+class VerticalHandleView extends HandleView {
+  move(position: number): void {
+    this.component.style.top = `${(1 - position) * 100}%`;
+  }
+
+  swap(): IHandleView {
+    return new HorizontalHandleView(this.component);
+  }
+}
+
+export { HorizontalHandleView, VerticalHandleView };
 

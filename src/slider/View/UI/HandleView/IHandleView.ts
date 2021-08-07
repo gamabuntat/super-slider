@@ -11,8 +11,8 @@ interface ICalcPositionArgs {
 
 interface IHandleView extends IEventBinder {
   calcPosition<A extends ICalcPositionArgs>(arg: A): number
-  moveX(position: number): void
-  moveY(position: number): void
+  move(position: number): void
+  swap(): IHandleView
 }
 
 export {IHandleView, ICalcPositionArgs};
