@@ -1,9 +1,10 @@
 import IView from './interfaces/IView';
 import treeTemplate from './treeTemplate';
 import IViewTreeTemplate from './interfaces/IViewTreeTemplate';
+import SliderView from './UI/SliderView/SliderView';
+import ISliderView from './UI/SliderView/ISliderView';
 import HandleView from './UI/HandleView/HandleView';
-import {IHandleView} from './UI/HandleView/IHandleView';
-import { ViewState, ViewVerticalState, ViewHorizontalState } from './ViewState';
+import { IHandleView } from './UI/HandleView/IHandleView';
 
 import {IResponse} from '../helpers/IResponse';
 
@@ -14,33 +15,50 @@ interface IComponents {
 class View implements IView {
   private static tree: IViewTreeTemplate = treeTemplate
   private static defaultBEMBlockName = 'ui-slider'
-  private states: ViewState[]
-  private currentState: ViewState
+  private currentResponse: IResponse = { 
+    isVertical: false,
+    isInterval: false,
+    positions: [{ max: 1, min: 0 }, { max: 1, min: 0 }]
+  }
   private components: IComponents = {}
   private blockName = ''
   private isTriggered = false
+  private shift = 0
   private handleActiveIdx = 0
-  private slider: HTMLElement
+  private sliderHTML: HTMLElement
+  private slider: ISliderView
   private handles: IHandleView[]
   private handlesHandlePointerdown: Array<(ev: PointerEvent) => void>
 
-  constructor(private currentResponse: IResponse) {
-    this.states = [
-      new ViewHorizontalState(this), new ViewVerticalState(this)
-    ];
-    this.currentState = this.states[+this.currentResponse.isVertical];
-    this.slider = this.createSlider(View.tree);
-    this.handles = [
-      new HandleView(this.components.handleStart),
-      new HandleView(this.components.handleEnd)
-    ];
+  constructor(response: IResponse) {
+    this.sliderHTML = this.createSlider(View.tree);
+    this.slider = new SliderView(this.components.blockName);
+    this.handles = this.getHandles();
     this.handlesHandlePointerdown = this.getHadlesHandlePointerdown();
+    this.parseResponse(response);
     this.bindListeners();
     this.renderSleder();
   }
-  
+
   getCurrentResponse(): IResponse {
     return this.currentResponse;
+  }
+
+  private getHandles(): IHandleView[] {
+    return [
+      new HandleView(this.components.handleStart),
+      new HandleView(this.components.handleEnd)
+    ];
+  }
+
+  private parseResponse(response: IResponse): void {
+    if (this.currentResponse.isVertical !== response.isVertical) {
+      this.updateViewOrientation();
+    }
+  }
+
+  private updateViewOrientation(): void {
+    this.slider.toggleVerticalMod();
   }
 
   private createSlider(
@@ -80,10 +98,8 @@ class View implements IView {
 
   private makeHandleHandlePointerdown = (idx: number) => (ev: PointerEvent) => {
     this.isTriggered = true;
-    this.handleActiveIdx = idx;
-    this.currentState.handleHandlePointerdown();
-    console.log(this.isTriggered);
-    console.log(ev.offsetX);
+    console.log(ev);
+    console.log(idx);
   }
 
   private bindListeners(): void {
@@ -95,11 +111,8 @@ class View implements IView {
     });
   }
 
-  private handleHandlePointermove = (ev: PointerEvent) => {
-    if (!this.isTriggered) { return; }
-    console.log(ev.x);
-    console.log('idx: ' + this.handleActiveIdx);
-    this.currentState.handleHandlePointermove();
+  private handleHandlePointermove = (ev: PointerEvent): void => {
+    console.log(ev);
   }
 
   private handleHandleLostpointercapture = (): void => {
@@ -107,7 +120,7 @@ class View implements IView {
   }
 
   private renderSleder(): void {
-    document.body.insertAdjacentElement('beforeend', this.slider);
+    document.body.insertAdjacentElement('beforeend', this.sliderHTML);
   }
 }
 
