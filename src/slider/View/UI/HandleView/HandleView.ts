@@ -1,27 +1,29 @@
 import { IHandleView, ICalcPositionArgs } from './IHandleView';
 import EventBinder from 'slider/EventBinder/EventBinder';
 
-abstract class HandleView extends EventBinder implements IHandleView {
+abstract class HandleView extends EventBinder {
+  protected shift = 0
+  protected pointerCoord = 0
+
   constructor(component: HTMLElement) {
     super(component);
     this.bind('pointerdown', this.handleComponentPointerdown);
   }
 
   calcPosition({
-    pointerCoord,
     max,
     min,
     containerCoord,
     containerSize,
-    shift
   }: ICalcPositionArgs): number {
     return Math.min(max, Math.max(min,
-      (pointerCoord - containerCoord - shift + this.getOffset()) 
-        / containerSize
+      (this.pointerCoord - containerCoord - this.shift + this.getOffset()) 
+      / containerSize
     ));
   }
 
   private handleComponentPointerdown = (ev: PointerEvent): void => {
+    this.setShift(ev);
     this.fixPointer(ev.pointerId);
   }
 
@@ -29,17 +31,18 @@ abstract class HandleView extends EventBinder implements IHandleView {
     this.component.setPointerCapture(pointerID);
   }
 
-  private getOffset(): number {
-    const matrix = new DOMMatrix(getComputedStyle(this.component).transform);
-    return matrix.e || matrix.f;
-  }
-
   abstract move(position: number): void
 
   abstract swap(): IHandleView
+
+  abstract setPointerCoord(ev: PointerEvent): void
+
+  protected abstract setShift(ev: PointerEvent): void
+
+  protected abstract getOffset(): number
 }
 
-class HorizontalHandleView extends HandleView {
+class HorizontalHandleView extends HandleView implements IHandleView {
   move(position: number): void {
     this.component.style.left = `${position * 100}%`;
   }
@@ -47,15 +50,39 @@ class HorizontalHandleView extends HandleView {
   swap(): IHandleView {
     return new VerticalHandleView(this.component);
   }
+
+  setPointerCoord(ev: PointerEvent): void {
+    this.pointerCoord = ev.x;
+  }
+
+  protected setShift(ev: PointerEvent): void {
+    this.shift = ev.offsetX;
+  }
+
+  protected getOffset(): number {
+    return new DOMMatrix(getComputedStyle(this.component).transform).e;
+  }
 }
 
-class VerticalHandleView extends HandleView {
+class VerticalHandleView extends HandleView implements IHandleView {
   move(position: number): void {
     this.component.style.top = `${(1 - position) * 100}%`;
   }
 
   swap(): IHandleView {
     return new HorizontalHandleView(this.component);
+  }
+
+  setPointerCoord(ev: PointerEvent): void {
+    this.pointerCoord =  ev.y;
+  }
+
+  protected setShift(ev: PointerEvent): void {
+    this.shift = ev.offsetY;
+  }
+
+  protected getOffset(): number {
+    return new DOMMatrix(getComputedStyle(this.component).transform).f;
   }
 }
 
