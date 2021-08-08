@@ -1,31 +1,22 @@
-type TypeAnyFunc = (...args: unknown[]) => unknown;
+import { IResponse } from 'slider/helpers/IResponse';
 
-type TypeHandler<
-  H extends TypeAnyFunc
-> = (...args: Parameters<H>) => ReturnType<H>;
+type TypeResponseHandler = (response: IResponse) => void;
 
-interface IEvents<H extends TypeAnyFunc> {
-  [k: string]: TypeHandler<H>[]
+interface IEventEmitter {
+  on({ id }: IResponse, listener: TypeResponseHandler): this
 }
 
-interface IEventEmitter<H extends TypeAnyFunc> {
-   events: IEvents<H>
-}
+class EventEmitter implements IEventEmitter {
+  protected events: { [id: string]: TypeResponseHandler[] } = {}
 
-class EventEmitter<H extends TypeAnyFunc> implements IEventEmitter<H> {
-  events: IEvents<H>
-  constructor() {
-    this.events = {};
-  }
-
-  on(evt: string, listener: TypeHandler<H>): EventEmitter<H> {
-    (this.events[evt] || (this.events[evt] = [])).push(listener);
+  on({ id }: IResponse, handler: TypeResponseHandler): this {
+    (this.events[id] || (this.events[id] = [])).push(handler);
     return this;
   }
 
-  emit(evt: string, ...args: Parameters<H>): void {
-    (this.events[evt] || [])
-      .forEach((lsn: TypeHandler<H>) => lsn(...args));
+  protected emit(arg: IResponse): void {
+    (this.events[arg.id] || [])
+      .forEach((handler: TypeResponseHandler) => handler(arg));
   }
 }
 
