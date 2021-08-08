@@ -3,7 +3,9 @@ import treeTemplate from './treeTemplate';
 import IViewTreeTemplate from './interfaces/IViewTreeTemplate';
 import SliderView from './UI/SliderView/SliderView';
 import ISliderView from './UI/SliderView/ISliderView';
-import HandleView from './UI/HandleView/HandleView';
+import { HorizontalContainerView } from './UI/ContainerView/ContainerView';
+import IContainerView from './UI/ContainerView/IContainerView';
+import { HorizontalHandleView } from './UI/HandleView/HandleView';
 import { IHandleView } from './UI/HandleView/IHandleView';
 
 import { IResponse } from '../helpers/IResponse';
@@ -14,51 +16,51 @@ interface IComponents {
 
 class View implements IView {
   private static tree: IViewTreeTemplate = treeTemplate
-  private static defaultBEMBlockName = 'ui-slider'
   private currentResponse: IResponse = { 
     isVertical: false,
     isInterval: false,
     positions: [{ max: 1, min: 0 }, { max: 1, min: 0 }]
   }
   private components: IComponents = {}
-  private blockName = ''
+  private sliderBEMBlockName = 'ui-slider'
   private isTriggered = false
-  private shift = 0
   private handleActiveIdx = 0
   private sliderHTML: HTMLElement
   private slider: ISliderView
+  private container: IContainerView
   private handles: IHandleView[]
   private handlesHandlePointerdown: Array<(ev: PointerEvent) => void>
 
   constructor(response: IResponse) {
     this.sliderHTML = this.createSlider(View.tree);
-    this.slider = new SliderView(this.components[this.blockName]);
+    this.renderSleder();
+    this.slider = new SliderView(this.components[this.sliderBEMBlockName]);
+    this.container = new HorizontalContainerView(this.components.container);
     this.handles = this.getHandles();
     this.handlesHandlePointerdown = this.getHadlesHandlePointerdown();
     this.parseResponse(response);
     this.bindListeners();
-    this.renderSleder();
   }
 
-  getCurrentResponse(): IResponse {
-    return this.currentResponse;
+  parseResponse(response: IResponse): void {
+    if (this.currentResponse.isVertical !== response.isVertical) {
+      this.updateViewOrientation();
+    }
+    this.currentResponse = response;
   }
 
   private getHandles(): IHandleView[] {
     return [
-      new HandleView(this.components.handleStart),
-      new HandleView(this.components.handleEnd)
+      new HorizontalHandleView(this.components.handleStart),
+      new HorizontalHandleView(this.components.handleEnd)
     ];
-  }
-
-  private parseResponse(response: IResponse): void {
-    if (this.currentResponse.isVertical !== response.isVertical) {
-      this.updateViewOrientation();
-    }
   }
 
   private updateViewOrientation(): void {
     this.slider.toggleVerticalMod();
+    this.container = this.container.swap();
+    this.handles = this.handles.map((hv) => hv.swap());
+    this.rebindListeners();
   }
 
   private createSlider(
@@ -67,10 +69,10 @@ class View implements IView {
   ): HTMLElement {
     const elem = document.createElement(elementType);
     this.saveComponent(
-      parent ? name : this.blockName = name || View.defaultBEMBlockName,
+      parent ? name : this.sliderBEMBlockName = name || this.sliderBEMBlockName,
       elem
     );
-    elem.classList.add(parent ? this.getClass(name) : this.blockName);
+    elem.classList.add(parent ? this.getClass(name) : this.sliderBEMBlockName);
     if (parent) { parent.insertAdjacentElement('beforeend', elem); }
     childs.forEach((node) => this.createSlider(node, elem));
     return elem;
@@ -81,7 +83,7 @@ class View implements IView {
   }
 
   private getClass(name: string): string {
-    return this.blockName + (name && '__') + name
+    return this.sliderBEMBlockName + '__' + name
       .replace(/(?<=.)[A-Z]/g, '-$&')
       .toLowerCase()
       .replace(
@@ -96,18 +98,31 @@ class View implements IView {
       .map((i, idx) => this.makeHandleHandlePointerdown(idx));
   }
 
-  private makeHandleHandlePointerdown = (idx: number) => (ev: PointerEvent) => {
+  private makeHandleHandlePointerdown = (idx: number) => () => {
+    this.handles[idx].logShift();
     this.isTriggered = true;
-    console.log(ev);
-    console.log(idx);
+    console.log('pointer down from View');
+    console.log('idx = ' + idx);
+  }
+
+  private rebindListeners(): void {
+    this.unbindListeners();
+    this.bindListeners();
   }
 
   private bindListeners(): void {
     this.handles.forEach((h, idx) => {
       h
         .bind('pointerdown', this.handlesHandlePointerdown[idx])
-        .bind('pointermove', this.handleHandlePointermove)
         .bind('lostpointercapture', this.handleHandleLostpointercapture);
+    });
+  }
+
+  private unbindListeners(): void {
+    this.handles.forEach((h, idx) => {
+      h
+        .unbind('pointerdown', this.handlesHandlePointerdown[idx])
+        .unbind('lostpointercapture', this.handleHandleLostpointercapture);
     });
   }
 
