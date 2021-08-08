@@ -1,11 +1,32 @@
-$handle-start-offset: 20px
+$handle-width: 10px
+$handle-heigth: 30px
 
-@function get-random-color()
-  @return rgb(random(255), random(255), random(255))
+.ui-slider
 
-.slider
-  background-color: get-random-color()
-  color: get-random-color()
-  transform: translate(0px, 0px)
+  display: flex
+  flex-direction: column
+  padding: 0 $handle-width
 
+  &__container
+    position: relative
+    height: $handle-heigth
+
+  &__handle
+    position: absolute
+    margin: 0
+    padding: 0
+    width: $handle-width
+    height: $handle-heigth
+    border: none
+    background-color: #615C70
+    touch-action: none
+    cursor: pointer
+  
+  &__handle--start
+    @extend .ui-slider__handle
+    transform: translate(-$handle-width)
+
+  &__handle--end
+    @extend .ui-slider__handle
+    left: 100%
 
