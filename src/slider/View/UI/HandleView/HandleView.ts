@@ -9,6 +9,7 @@ abstract class HandleView extends EventBinder {
 
   constructor(component: HTMLElement) {
     super(component);
+    this.bindListeners();
   }
 
   logShift(): void {
@@ -21,19 +22,30 @@ abstract class HandleView extends EventBinder {
     containerCoord,
     containerSize,
   }: ICalcPositionArgs): number {
+    console.log(this.component);
+    console.log({max, min, containerCoord, containerSize});
+    console.log('pointerCoord = ' + this.getPointerCoord());
+    console.log('shift = ' + this.getShift());
+    console.log('offset = ' + this.getOffset());
     return Math.min(max, Math.max(min,
       (
         this.getPointerCoord() 
-        - containerCoord - this.getShift() + this.getOffset()
+        - containerCoord - this.getShift() - this.getOffset()
       ) 
       / containerSize
     ));
   }
 
-  bindListeners(): IHandleView {
-    return this
+  private bindListeners(): void {
+    this
       .bind('pointerdown', this.handleComponentPointerdown)
       .bind('pointermove', this.handleComponentPointermove);
+  }
+
+  protected unbindListeners(): void {
+    this
+      .unbind('pointerdown', this.handleComponentPointerdown)
+      .unbind('pointermove', this.handleComponentPointermove);
   }
 
   private handleComponentPointerdown = (ev: PointerEvent): void => {
@@ -46,6 +58,8 @@ abstract class HandleView extends EventBinder {
   }
 
   private setShifts(ev: PointerEvent): void {
+    console.log('set shiftX = ' + ev.offsetX);
+    console.log('set shiftY = ' + ev.offsetY);
     this.shiftX = ev.offsetX;
     this.shiftY = ev.offsetY;
   }
@@ -76,6 +90,7 @@ class HorizontalHandleView extends HandleView implements IHandleView {
   }
 
   swap(): IHandleView {
+    this.unbindListeners();
     return new VerticalHandleView(this.component);
   }
 
@@ -84,11 +99,14 @@ class HorizontalHandleView extends HandleView implements IHandleView {
   }
 
   protected getShift(): number {
-    console.log('horizontal shift');
+    console.log('this shift X: ' + this.shiftX);
     return this.shiftX;
   }
 
   protected getOffset(): number {
+    console.log(
+      'matrix = ' + new DOMMatrix(getComputedStyle(this.component).transform)
+    );
     return new DOMMatrix(getComputedStyle(this.component).transform).e;
   }
 }
@@ -99,6 +117,7 @@ class VerticalHandleView extends HandleView implements IHandleView {
   }
 
   swap(): IHandleView {
+    this.unbindListeners();
     return new HorizontalHandleView(this.component);
   }
 
@@ -107,11 +126,14 @@ class VerticalHandleView extends HandleView implements IHandleView {
   }
 
   protected getShift(): number {
-    console.log('vertical shift');
+    console.log('this shift Y: ' + this.shiftY);
     return this.shiftY;
   }
 
   protected getOffset(): number {
+    console.log(
+      'matrix = ' + new DOMMatrix(getComputedStyle(this.component).transform)
+    );
     return new DOMMatrix(getComputedStyle(this.component).transform).f;
   }
 }

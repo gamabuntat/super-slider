@@ -3,6 +3,7 @@ import ISliderView from './ISliderView';
 class SliderView implements ISliderView {
   private BEMVerticalMod: string
   private BEMIntervalMod: string
+
   constructor(protected component: HTMLElement) {
     const BEMBlockName = this.component.classList[0];
     this.BEMVerticalMod =  BEMBlockName + '--vertical';

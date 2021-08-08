@@ -1,4 +1,4 @@
-import IEventBinder from '../../../EventBinder/IEventBinder';
+import IEventBinder from 'slider/EventBinder/IEventBinder';
 
 interface ICalcPositionArgs {
   max: number
@@ -9,7 +9,6 @@ interface ICalcPositionArgs {
 
 interface IHandleView extends IEventBinder {
   logShift(): void
-  bindListeners(): IHandleView
   calcPosition<A extends ICalcPositionArgs>(arg: A): number
   move(position: number): void
   swap(): IHandleView

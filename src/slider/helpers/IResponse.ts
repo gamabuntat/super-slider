@@ -5,8 +5,8 @@ interface IHandlePosition {
 
 interface IResponse {
   isVertical: boolean
-  isInterval?: boolean
-  positions?: IHandlePosition[]
+  isInterval: boolean
+  positions: IHandlePosition[]
 }
 
 export {IResponse, IHandlePosition};

@@ -1,6 +1,6 @@
 import IContainerView from './IContainerView';
 
-abstract class ContainerView implements IContainerView {
+abstract class ContainerView {
   constructor(protected component: HTMLElement) {}
 
   abstract getCoord(): number
@@ -10,7 +10,7 @@ abstract class ContainerView implements IContainerView {
   abstract swap(): IContainerView
 }
 
-class HorizontalContainerView extends ContainerView {
+class HorizontalContainerView extends ContainerView implements IContainerView {
   getCoord(): number {
     return this.component.getBoundingClientRect().x;
   }
@@ -24,7 +24,7 @@ class HorizontalContainerView extends ContainerView {
   }
 }
 
-class VerticalContainerView extends ContainerView {
+class VerticalContainerView extends ContainerView implements IContainerView {
   getCoord(): number {
     return this.component.getBoundingClientRect().y;
   }

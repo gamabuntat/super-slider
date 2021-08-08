@@ -33,13 +33,13 @@ class View implements IView {
 
   constructor(response: IResponse) {
     this.sliderHTML = this.createSlider(View.tree);
-    this.renderSleder();
     this.slider = new SliderView(this.components[this.sliderBEMBlockName]);
     this.container = new HorizontalContainerView(this.components.container);
     this.handles = this.getHandles();
     this.handlesHandlePointerdown = this.getHadlesHandlePointerdown();
     this.parseResponse(response);
     this.bindListeners();
+    this.renderSleder();
   }
 
   parseResponse(response: IResponse): void {
@@ -50,6 +50,8 @@ class View implements IView {
   }
 
   private getHandles(): IHandleView[] {
+    console.log(this.components.handleStart);
+    console.log(this.components.handleEnd);
     return [
       new HorizontalHandleView(this.components.handleStart),
       new HorizontalHandleView(this.components.handleEnd)
@@ -101,6 +103,7 @@ class View implements IView {
   private makeHandleHandlePointerdown = (idx: number) => () => {
     this.handles[idx].logShift();
     this.isTriggered = true;
+    this.handleActiveIdx = idx;
     console.log('pointer down from View');
     console.log('idx = ' + idx);
   }
@@ -114,6 +117,7 @@ class View implements IView {
     this.handles.forEach((h, idx) => {
       h
         .bind('pointerdown', this.handlesHandlePointerdown[idx])
+        .bind('pointermove', this.handleHandlePointermove)
         .bind('lostpointercapture', this.handleHandleLostpointercapture);
     });
   }
@@ -122,12 +126,30 @@ class View implements IView {
     this.handles.forEach((h, idx) => {
       h
         .unbind('pointerdown', this.handlesHandlePointerdown[idx])
+        .unbind('pointermove', this.handleHandlePointermove)
         .unbind('lostpointercapture', this.handleHandleLostpointercapture);
     });
   }
 
-  private handleHandlePointermove = (ev: PointerEvent): void => {
-    console.log(ev);
+  private handleHandlePointermove = (): void => {
+    if (!this.isTriggered) { return; }
+    console.log(this.handleActiveIdx);
+    const max = this.currentResponse.positions[this.handleActiveIdx].max;
+    const min = this.currentResponse.positions[this.handleActiveIdx].min;
+    const containerCoord = this.container.getCoord();
+    const containerSize = this.container.getSize();
+    const args = {
+      max,
+      min,
+      containerCoord,
+      containerSize
+    };
+
+    const position = this.handles[this.handleActiveIdx].calcPosition(args);
+    console.log(args);
+    console.log('position = ' + position);
+
+    this.handles[this.handleActiveIdx].move(position);
   }
 
   private handleHandleLostpointercapture = (): void => {

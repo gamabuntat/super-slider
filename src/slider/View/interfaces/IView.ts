@@ -2,7 +2,7 @@ import { IResponse } from 'slider/helpers/IResponse';
 
 
 interface IView {
-  getCurrentResponse(): IResponse
+  parseResponse(response: IResponse): void
 }
 
 export default IView;

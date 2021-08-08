@@ -5,7 +5,7 @@ const treeTemplate: IViewTreeTemplate = {
   elementType: 'div',
   childs: [
     {
-      name: 'foremostContainer',
+      name: 'container',
       elementType: 'div',
       childs: [
         {
@@ -19,7 +19,16 @@ const treeTemplate: IViewTreeTemplate = {
         {
           name: 'track',
           elementType: 'div',
-          childs: []
+          childs: [
+            {
+              name: 'progressBarStart',
+              elementType: 'div'
+            },
+            {
+              name: 'progressBarEnd',
+              elementType: 'div'
+            }
+          ]
         }
       ]
     },
