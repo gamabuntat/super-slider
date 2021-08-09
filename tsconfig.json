@@ -13,7 +13,7 @@
     "declaration": true,
     "typeRoots": ["./types", "./node_modules/@types"],
     "baseUrl": "./src",
-    "outDir": "./docs",
+    "outDir": "./dist",
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "slider": ["slider/*"]

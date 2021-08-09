@@ -17,7 +17,7 @@ module.exports = (env, argv) => {
     },
     output: {
       filename: 'slider.js',
-      path: path.resolve(__dirname, 'docs'),
+      path: path.resolve(__dirname, 'dist'),
     },
     resolve: {
       extensions: [ '.ts', '.js' ],

@@ -2,29 +2,23 @@ interface JQuery {
   slider(): JQuery<HTMLElement>
 }
 
-interface IApp {
-  create(): JQuery | undefined
+interface JQuery<HTMLElement> {
+  hi(): JQuery<HTMLElement>
 }
 
-interface Storage {
-  [id: string]: Presenter
-}
-
-interface Options {
-  interval?: boolean
-  vertical?: boolean
-  displayVisibility?: boolean
-  scaleVisibility?: boolean
+interface IOptions {
   min?: number
   max?: number
+  from?: number
+  to?: number
   step?: number
+  interval?: boolean
+  vertical?: boolean
+  isLabel?: boolean
+  isScale?: boolean
 }
 
-type buttonT = 'buttonS' | 'buttonE'
-type visibilityT = 'scale' | 'display'
-type argsT = (
-  ['move', buttonT, number] 
-  | ['get'] 
-  | ['toggleVisibility', visibilityT]
-)
+type TypeRequiredOptions = {
+  [K in keyof IOptions]-?: IOptions[K]
+}
 
