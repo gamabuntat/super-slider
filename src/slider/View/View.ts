@@ -6,17 +6,19 @@ import ISliderView from './UI/SliderView/ISliderView';
 import { HorizontalContainerView } from './UI/ContainerView/ContainerView';
 import IContainerView from './UI/ContainerView/IContainerView';
 import { HorizontalHandleView } from './UI/HandleView/HandleView';
-import { IHandleView } from './UI/HandleView/IHandleView';
+import { IHandleView, ICalcPositionArgs } from './UI/HandleView/IHandleView';
 
-import { IResponse } from '../helpers/IResponse';
+import EventEmitter from 'slider/EventEmitter/EventEmitter';
+import { IResponse } from 'slider/helpers/IResponse';
 
 interface IComponents {
   [k: string]: HTMLElement
 }
 
-class View implements IView {
+class View extends EventEmitter implements IView {
   private static tree: IViewTreeTemplate = treeTemplate
   private currentResponse: IResponse = { 
+    id: '',
     isVertical: false,
     isInterval: false,
     positions: [{ max: 1, min: 0 }, { max: 1, min: 0 }]
@@ -25,13 +27,15 @@ class View implements IView {
   private sliderBEMBlockName = 'ui-slider'
   private isTriggered = false
   private handleActiveIdx = 0
+  private lastPosition = 0
   private sliderHTML: HTMLElement
   private slider: ISliderView
   private container: IContainerView
   private handles: IHandleView[]
   private handlesHandlePointerdown: Array<(ev: PointerEvent) => void>
 
-  constructor(response: IResponse) {
+  constructor(response: IResponse, root: HTMLElement) {
+    super();
     this.sliderHTML = this.createSlider(View.tree);
     this.slider = new SliderView(this.components[this.sliderBEMBlockName]);
     this.container = new HorizontalContainerView(this.components.container);
@@ -39,7 +43,7 @@ class View implements IView {
     this.handlesHandlePointerdown = this.getHadlesHandlePointerdown();
     this.parseResponse(response);
     this.bindListeners();
-    this.renderSleder();
+    this.renderSleder(root);
   }
 
   parseResponse(response: IResponse): void {
@@ -47,15 +51,6 @@ class View implements IView {
       this.updateViewOrientation();
     }
     this.currentResponse = response;
-  }
-
-  private getHandles(): IHandleView[] {
-    console.log(this.components.handleStart);
-    console.log(this.components.handleEnd);
-    return [
-      new HorizontalHandleView(this.components.handleStart),
-      new HorizontalHandleView(this.components.handleEnd)
-    ];
   }
 
   private updateViewOrientation(): void {
@@ -94,6 +89,13 @@ class View implements IView {
       );
   }
 
+  private getHandles(): IHandleView[] {
+    return [
+      new HorizontalHandleView(this.components.handleStart),
+      new HorizontalHandleView(this.components.handleEnd)
+    ];
+  }
+
   private getHadlesHandlePointerdown(): Array<(ev: PointerEvent) => void> {
     return Array
       .from({ length: 2 })
@@ -101,11 +103,8 @@ class View implements IView {
   }
 
   private makeHandleHandlePointerdown = (idx: number) => () => {
-    this.handles[idx].logShift();
     this.isTriggered = true;
     this.handleActiveIdx = idx;
-    console.log('pointer down from View');
-    console.log('idx = ' + idx);
   }
 
   private rebindListeners(): void {
@@ -134,30 +133,34 @@ class View implements IView {
   private handleHandlePointermove = (): void => {
     if (!this.isTriggered) { return; }
     console.log(this.handleActiveIdx);
-    const max = this.currentResponse.positions[this.handleActiveIdx].max;
-    const min = this.currentResponse.positions[this.handleActiveIdx].min;
-    const containerCoord = this.container.getCoord();
-    const containerSize = this.container.getSize();
-    const args = {
-      max,
-      min,
-      containerCoord,
-      containerSize
-    };
+    this.lastPosition = this.handles[this.handleActiveIdx]
+      .calcPosition(this.getMoveArgs());
+    this.handles[this.handleActiveIdx].move(this.lastPosition);
+    this.updateResponseExtremum();
+    this.emit(this.currentResponse);
+  }
 
-    const position = this.handles[this.handleActiveIdx].calcPosition(args);
-    console.log(args);
-    console.log('position = ' + position);
+  private getMoveArgs(): ICalcPositionArgs {
+    return {
+      ...this.currentResponse.positions[this.handleActiveIdx],
+      containerCoord: this.container.getCoord(),
+      containerSize: this.container.getSize(),
+    }
+  }
 
-    this.handles[this.handleActiveIdx].move(position);
+  private updateResponseExtremum(): void {
+    [
+      (p: number) => this.currentResponse.positions[1].min = p,
+      (p: number) => this.currentResponse.positions[0].max = p
+    ][this.handleActiveIdx](this.lastPosition);
   }
 
   private handleHandleLostpointercapture = (): void => {
     this.isTriggered = false;
   }
 
-  private renderSleder(): void {
-    document.body.insertAdjacentElement('beforeend', this.sliderHTML);
+  private renderSleder(root: HTMLElement): void {
+    root.insertAdjacentElement('beforeend', this.sliderHTML);
   }
 }
 

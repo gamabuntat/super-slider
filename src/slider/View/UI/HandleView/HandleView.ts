@@ -12,17 +12,12 @@ abstract class HandleView extends EventBinder {
     this.bindListeners();
   }
 
-  logShift(): void {
-    this.getShift();
-  }
-
   calcPosition({
     max,
     min,
     containerCoord,
     containerSize,
   }: ICalcPositionArgs): number {
-    console.log(this.component);
     console.log({max, min, containerCoord, containerSize});
     console.log('pointerCoord = ' + this.getPointerCoord());
     console.log('shift = ' + this.getShift());
@@ -104,9 +99,6 @@ class HorizontalHandleView extends HandleView implements IHandleView {
   }
 
   protected getOffset(): number {
-    console.log(
-      'matrix = ' + new DOMMatrix(getComputedStyle(this.component).transform)
-    );
     return new DOMMatrix(getComputedStyle(this.component).transform).e;
   }
 }
@@ -131,9 +123,6 @@ class VerticalHandleView extends HandleView implements IHandleView {
   }
 
   protected getOffset(): number {
-    console.log(
-      'matrix = ' + new DOMMatrix(getComputedStyle(this.component).transform)
-    );
     return new DOMMatrix(getComputedStyle(this.component).transform).f;
   }
 }

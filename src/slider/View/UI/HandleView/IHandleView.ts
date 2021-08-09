@@ -8,7 +8,6 @@ interface ICalcPositionArgs {
 }
 
 interface IHandleView extends IEventBinder {
-  logShift(): void
   calcPosition<A extends ICalcPositionArgs>(arg: A): number
   move(position: number): void
   swap(): IHandleView

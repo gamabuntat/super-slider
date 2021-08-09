@@ -1,7 +1,8 @@
+import EventEmitter from 'slider/EventEmitter/EventEmitter';
 import { IResponse } from 'slider/helpers/IResponse';
 
 
-interface IView {
+interface IView extends EventEmitter {
   parseResponse(response: IResponse): void
 }
 
