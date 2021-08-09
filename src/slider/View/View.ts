@@ -1,5 +1,5 @@
-import IView from './interfaces/IView';
 import treeTemplate from './treeTemplate';
+import IView from './interfaces/IView';
 import IViewTreeTemplate from './interfaces/IViewTreeTemplate';
 import SliderView from './UI/SliderView/SliderView';
 import ISliderView from './UI/SliderView/ISliderView';
@@ -145,7 +145,7 @@ class View extends EventEmitter implements IView {
       ...this.currentResponse.positions[this.handleActiveIdx],
       containerCoord: this.container.getCoord(),
       containerSize: this.container.getSize(),
-    }
+    };
   }
 
   private updateResponseExtremum(): void {

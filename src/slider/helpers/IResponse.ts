@@ -4,10 +4,11 @@ interface IHandlePosition {
 }
 
 interface IResponse {
+  id: string
   isVertical: boolean
   isInterval: boolean
   positions: IHandlePosition[]
 }
 
-export {IResponse, IHandlePosition};
+export { IResponse, IHandlePosition };
 
