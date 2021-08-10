@@ -5,6 +5,7 @@ interface ICalcPositionArgs {
   min: number
   containerCoord: number
   containerSize: number
+  divisionNumber?: number
 }
 
 interface IHandleView extends IEventBinder {

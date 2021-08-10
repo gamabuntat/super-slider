@@ -17,18 +17,18 @@ abstract class HandleView extends EventBinder {
     min,
     containerCoord,
     containerSize,
+    divisionNumber = 3
   }: ICalcPositionArgs): number {
     console.log({max, min, containerCoord, containerSize});
     console.log('pointerCoord = ' + this.getPointerCoord());
     console.log('shift = ' + this.getShift());
     console.log('offset = ' + this.getOffset());
-    return Math.min(max, Math.max(min,
-      (
-        this.getPointerCoord() 
+    return Math.min(max, Math.max(min, 1 / divisionNumber * Math.round(
+      (this.getPointerCoord() 
         - containerCoord - this.getShift() - this.getOffset()
-      ) 
-      / containerSize
-    ));
+      ) / containerSize * divisionNumber
+    )))
+    ;
   }
 
   private bindListeners(): void {
