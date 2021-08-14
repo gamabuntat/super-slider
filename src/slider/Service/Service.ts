@@ -22,12 +22,6 @@ class Service extends EventEmitter {
     return Service.instance; 
   }
 
-  sendResponse(id: string): void {
-    this.findModelIndex(id);
-    if (this.lastIndex == -1) { return; }
-    this.emit({ ...this.models[this.lastIndex] });
-  }
-
   updateModel(response: IModel): void {
     this.addModel({ ...response });
   }
@@ -35,6 +29,7 @@ class Service extends EventEmitter {
   add(id = this.generateID(), o: IOptions): IModel {
     const model: IModel = { ...this.modelDefaultOptions, ...o, id };
     this.addModel(model);
+    this.emit({ ...model });
     return { ...model };
   }
 
