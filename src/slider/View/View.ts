@@ -6,24 +6,32 @@ import ISliderView from './UI/SliderView/ISliderView';
 import { HorizontalContainerView } from './UI/ContainerView/ContainerView';
 import IContainerView from './UI/ContainerView/IContainerView';
 import { HorizontalHandleView } from './UI/HandleView/HandleView';
-import { IHandleView, ICalcPositionArgs } from './UI/HandleView/IHandleView';
+import IHandleView from './UI/HandleView/IHandleView';
 
 import EventEmitter from 'slider/EventEmitter/EventEmitter';
-import { IResponse } from 'slider/helpers/IResponse';
+import IResponse from 'slider/helpers/IResponse';
 
-interface IComponents {
-  [k: string]: HTMLElement
+interface IConfig {
+  divisionNumber: number
+  positions: { max: number, min: number }[]
 }
 
 class View extends EventEmitter implements IView {
   private static tree: IViewTreeTemplate = treeTemplate
   private currentResponse: IResponse = { 
     id: '',
+    max: 10,
+    min: 0,
+    from: 0,
+    to: 10,
+    step: 1,
     isVertical: false,
     isInterval: false,
-    positions: [{ max: 1, min: 0 }, { max: 1, min: 0 }]
+    isLabel: true,
+    isScale: true,
   }
-  private components: IComponents = {}
+  private config: IConfig = { divisionNumber: 10, positions: [] }
+  private components: { [k: string]: HTMLElement } = {}
   private sliderBEMBlockName = 'ui-slider'
   private isTriggered = false
   private handleActiveIdx = 0
@@ -51,6 +59,7 @@ class View extends EventEmitter implements IView {
       this.updateViewOrientation();
     }
     this.currentResponse = response;
+    this.createConfig();
   }
 
   private updateViewOrientation(): void {
@@ -58,6 +67,25 @@ class View extends EventEmitter implements IView {
     this.container = this.container.swap();
     this.handles = this.handles.map((hv) => hv.swap());
     this.rebindListeners();
+  }
+
+  private createConfig(
+    { max, min, step, from, to }: IResponse = this.currentResponse
+  ): void {
+    const diff = max - min;
+    this.config = {
+      divisionNumber: diff / step,
+      positions: [
+        {
+          max: to / diff,
+          min: 0
+        },
+        {
+          max: 1,
+          min: from / diff
+        }
+      ],
+    };
   }
 
   private createSlider(
@@ -133,25 +161,28 @@ class View extends EventEmitter implements IView {
   private handleHandlePointermove = (): void => {
     if (!this.isTriggered) { return; }
     console.log(this.handleActiveIdx);
-    this.lastPosition = this.handles[this.handleActiveIdx]
-      .calcPosition(this.getMoveArgs());
+    this.lastPosition = this.makePositionDiscrete(
+      this.handles[this.handleActiveIdx].calcPosition(
+        this.config.positions[this.handleActiveIdx].max,
+        this.config.positions[this.handleActiveIdx].min,
+        this.container.getCoord(),
+        this.container.getSize(),
+      )
+    );
     this.handles[this.handleActiveIdx].move(this.lastPosition);
     this.updateResponseExtremum();
     this.emit(this.currentResponse);
   }
 
-  private getMoveArgs(): ICalcPositionArgs {
-    return {
-      ...this.currentResponse.positions[this.handleActiveIdx],
-      containerCoord: this.container.getCoord(),
-      containerSize: this.container.getSize(),
-    };
+  private makePositionDiscrete(position: number): number {
+    return 1 / this.config.divisionNumber
+      * Math.round(position * this.config.divisionNumber);
   }
 
   private updateResponseExtremum(): void {
     [
-      (p: number) => this.currentResponse.positions[1].min = p,
-      (p: number) => this.currentResponse.positions[0].max = p
+      (p: number) => this.config.positions[1].min = p,
+      (p: number) => this.config.positions[0].max = p
     ][this.handleActiveIdx](this.lastPosition);
   }
 
