@@ -113,14 +113,19 @@ class Service extends EventEmitter {
       step: () => clamp(
         1, step, +(max - min).toFixed(numberDecimalPlaces(step))
       ),
-      from: () => (
-        +(Math.round((clamp(min, from, Math.min(to, max)) - min) / step) * step)
-          .toFixed(numberDecimalPlaces(step))
-      ),
-      to: () => (
-        +(Math.round((clamp(Math.max(from, min), to, max) - min) / step) * step)
-          .toFixed(numberDecimalPlaces(step))
-      ),
+      from: () => (Math.min(
+        max,
+        +(Math.round(
+          (clamp(min, from, Math.min(to, max)) - min) / step
+        ) * step + min).toFixed(numberDecimalPlaces(step))
+      )),
+      to: () => (Math.min(
+        max,
+        +(Math.round(
+          (clamp(Math.max(from, min), to, max) - min) / step
+        ) * step + min).toFixed(numberDecimalPlaces(step))
+      )),
+
     }[key]();
   }
 }
