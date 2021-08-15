@@ -1,17 +1,19 @@
 import EventEmitter from 'slider/EventEmitter/EventEmitter';
 import IResponse from 'slider/helpers/IResponse';
-import { clamp } from 'slider/helpers/clamp';
+import clamp from 'slider/helpers/clamp';
+import numberDecimalPlaces from 'slider/helpers/numberDecimalPlaces';
 
 interface IValidatedOptions {
   min?: number
   max?: number
   from?: number
   to?: number
+  step?: number
 }
 
 type TypeValidateOptionsKeys = (
   keyof { [K in keyof IValidatedOptions]-?: IValidatedOptions[K] }
-)[];
+);
 
 class Service extends EventEmitter {
   private static instance: Service
@@ -19,7 +21,7 @@ class Service extends EventEmitter {
     id: '',
     min: 0,
     max: 10,
-    from: 8,
+    from: 1,
     to: 10,
     step: 1,
     isInterval: false,
@@ -45,7 +47,7 @@ class Service extends EventEmitter {
       ...this.selectedModel = (
         this.models[this.findModelIndex(id)] || { ...this.defaultModel, id }
       ),
-      ...this.getValedatedOptions(o),
+      ...this.getValedatedOptions(this.getCorrectKeyOrder(o), o),
     };
     this.addModel(model);
     const copy = { ...model };
@@ -69,37 +71,57 @@ class Service extends EventEmitter {
     return String(Math.floor(Math.random() * Date.now()));
   }
 
-  private getValedatedOptions(o: IOptions): IOptions {
+  private getCorrectKeyOrder(
+    { min, max, from, to }: IOptions
+  ): (TypeValidateOptionsKeys)[] {
+    const extremumsKeys: (TypeValidateOptionsKeys)[] = ['min', 'max'];
+    const positionsKeys: (TypeValidateOptionsKeys)[] = ['from', 'to'];
+    const step: TypeValidateOptionsKeys = 'step';
+    return [
+      ...(
+        typeof min != 'number' && typeof max == 'number' 
+          ? extremumsKeys.reverse() : extremumsKeys
+      ),
+      step,
+      ...(
+        typeof from != 'number' && typeof to == 'number'
+          ? positionsKeys.reverse() : positionsKeys
+      )
+    ];
+  }
+
+  private getValedatedOptions(
+    keys: (TypeValidateOptionsKeys)[],
+    o: IOptions
+  ): IOptions {
     const copy = { ...o };
-    const extremums: TypeValidateOptionsKeys = ['min', 'max'];
-    const positions: TypeValidateOptionsKeys = ['from', 'to'];
-    [
-      ...(!copy.min && copy.max ? extremums.reverse() : extremums),
-      ...(!copy.from && copy.to ? positions.reverse() : positions)
-    ].forEach((k) => {
-      const v = copy[k] || this.selectedModel[k];
-      copy[k] = this.validateConcreteOption(k, v, copy);
-    });
+    keys.forEach((k) => copy[k] = this.validateConcreteOption(k, copy));
     return copy;
   }
 
   private validateConcreteOption<K extends keyof IValidatedOptions>(
-    key: K,
-    v: number,
-    o: IOptions,
-    max = o.max ?? this.selectedModel.max,
-    min = o.min ?? this.selectedModel.min
+    key: K, o: IOptions,
   ): number {
+    const max = o.max ?? this.selectedModel.max;
+    const min = o.min ?? this.selectedModel.min;
+    const step = o.step || this.selectedModel.step;
+    const from = o.from ?? this.selectedModel.from;
+    const to = o.to ?? this.selectedModel.to;
     return {
-      min: (v: number) => Math.min(v, max),
-      max: (v: number) => Math.max(v, min),
-      from: (v: number) => clamp(min, v, Math.min(
-        o.to ?? this.selectedModel.to, max
-      )),
-      to: (v: number) => clamp(Math.max(
-        o.from ?? this.selectedModel.from, min
-      ), v, max)
-    }[key](v);
+      min: () => Math.min(min, max),
+      max: () => Math.max(max, min),
+      step: () => clamp(
+        1, step, +(max - min).toFixed(numberDecimalPlaces(step))
+      ),
+      from: () => (
+        +(Math.round((clamp(min, from, Math.min(to, max)) - min) / step) * step)
+          .toFixed(numberDecimalPlaces(step))
+      ),
+      to: () => (
+        +(Math.round((clamp(Math.max(from, min), to, max) - min) / step) * step)
+          .toFixed(numberDecimalPlaces(step))
+      ),
+    }[key]();
   }
 }
 

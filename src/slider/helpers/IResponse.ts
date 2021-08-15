@@ -1,14 +1,6 @@
-interface IHandlePosition {
-  max: number
-  min: number
-}
-
-interface IResponse {
+interface IResponse extends TypeRequiredOptions {
   id: string
-  isVertical: boolean
-  isInterval: boolean
-  positions: IHandlePosition[]
 }
 
-export { IResponse, IHandlePosition };
+export default IResponse;
 
