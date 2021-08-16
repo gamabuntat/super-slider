@@ -108,10 +108,10 @@ class Service extends EventEmitter {
     const from = o.from ?? this.selectedModel.from;
     const to = o.to ?? this.selectedModel.to;
     return {
-      min: () => Math.min(min, max),
-      max: () => Math.max(max, min),
-      step: () => clamp(
-        1, step, +(max - min).toFixed(numberDecimalPlaces(step))
+      min: () => +Math.min(min, max).toFixed(numberDecimalPlaces(step)),
+      max: () => +Math.max(max, min).toFixed(numberDecimalPlaces(step)),
+      step: () => Math.min(
+        Math.abs(step), +(max - min).toFixed(numberDecimalPlaces(step))
       ),
       from: () => (Math.min(
         max, +(Math.ceil((clamp(min, from, Math.min(to, max)) - min) / step) 
