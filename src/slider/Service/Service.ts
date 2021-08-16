@@ -95,6 +95,8 @@ class Service extends EventEmitter {
     o: IOptions
   ): IOptions {
     const copy = { ...o };
+    const isInterval = copy.isInterval ?? this.selectedModel.isInterval;
+    if (isInterval === false) { copy.to = copy.max || this.selectedModel.max; }
     keys.forEach((k) => copy[k] = this.validateConcreteOption(k, copy));
     return copy;
   }
@@ -106,22 +108,22 @@ class Service extends EventEmitter {
     const min = o.min ?? this.selectedModel.min;
     const step = o.step || this.selectedModel.step;
     const from = o.from ?? this.selectedModel.from;
-    const to = o.to ?? this.selectedModel.to;
+    const to = Math.min(o.to ?? this.selectedModel.to, max);
+    const n = numberDecimalPlaces(step);
     return {
-      min: () => +Math.min(min, max).toFixed(numberDecimalPlaces(step)),
-      max: () => +Math.max(max, min).toFixed(numberDecimalPlaces(step)),
+      min: () => +min.toFixed(n),
+      max: () => +Math.max(max, min).toFixed(n),
       step: () => Math.min(
-        Math.abs(step), +(max - min).toFixed(numberDecimalPlaces(step))
+        Math.abs(step), +(max - min).toFixed(n)
       ),
       from: () => (Math.min(
-        max, +(Math.ceil((clamp(min, from, Math.min(to, max)) - min) / step) 
-          * step + min).toFixed(numberDecimalPlaces(step))
+        max, +(Math.ceil((Math.max(min, from) - min) / step) 
+          * step + min).toFixed(n)
       )),
       to: () => (Math.min(
         max, +(Math.ceil((clamp(Math.max(from, min), to, max) - min) / step)
-          * step + min).toFixed(numberDecimalPlaces(step))
-      )),
-
+          * step + min).toFixed(n)
+      ))
     }[key]();
   }
 }
