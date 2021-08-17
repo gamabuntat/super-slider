@@ -11,25 +11,24 @@ interface IValidatedOptions {
   step?: number
 }
 
-type TypeValidateOptionsKeys = (
-  keyof { [K in keyof IValidatedOptions]-?: IValidatedOptions[K] }
-);
+type TypeValidateOptionsKeys = keyof {
+  [K in keyof IValidatedOptions]-?: IValidatedOptions[K] 
+};
 
 class Service extends EventEmitter {
   private static instance: Service
-  private readonly defaultModel: IResponse = {
-    id: '',
+  private readonly defaultOptions: TypeRequiredOptions = {
     min: 0,
     max: 10,
-    from: 1,
-    to: 10,
+    from: -Infinity,
+    to: Infinity,
     step: 1,
     isInterval: false,
     isVertical: false,
     isLabel: true,
     isScale: true,
   }
-  private selectedModel: IResponse = this.defaultModel
+  private selectedModel: IResponse = { ...this.defaultOptions, id: '' }
   private models: IResponse[] = []
   private selectedIndex = -1
 
@@ -45,9 +44,9 @@ class Service extends EventEmitter {
   add(id = this.generateID(), o: IOptions): IResponse {
     const model: IResponse = { 
       ...this.selectedModel = (
-        this.models[this.findModelIndex(id)] || { ...this.defaultModel, id }
+        this.models[this.findModelIndex(id)] || { ...this.defaultOptions, id }
       ),
-      ...this.getValedatedOptions(this.getCorrectKeyOrder(o), o),
+      ...this.getValedatedOptions(o),
     };
     this.addModel(model);
     const copy = { ...model };
@@ -71,38 +70,19 @@ class Service extends EventEmitter {
     return String(Math.floor(Math.random() * Date.now()));
   }
 
-  private getCorrectKeyOrder(
-    { min, max, from, to }: IOptions
-  ): (TypeValidateOptionsKeys)[] {
-    const extremumsKeys: (TypeValidateOptionsKeys)[] = ['min', 'max'];
-    const positionsKeys: (TypeValidateOptionsKeys)[] = ['from', 'to'];
-    const step: TypeValidateOptionsKeys = 'step';
-    return [
-      ...(
-        typeof min != 'number' && typeof max == 'number' 
-          ? extremumsKeys.reverse() : extremumsKeys
-      ),
-      step,
-      ...(
-        typeof from != 'number' && typeof to == 'number'
-          ? positionsKeys.reverse() : positionsKeys
-      )
-    ];
-  }
-
-  private getValedatedOptions(
-    keys: (TypeValidateOptionsKeys)[],
-    o: IOptions
-  ): IOptions {
+  private getValedatedOptions(o: IOptions): IOptions {
     const copy = { ...o };
-    const isInterval = copy.isInterval ?? this.selectedModel.isInterval;
-    if (isInterval === false) { copy.to = copy.max || this.selectedModel.max; }
+    const keys: (TypeValidateOptionsKeys)[] = [
+      'step', 'min', 'max', 'from', 'to'
+    ];
     keys.forEach((k) => copy[k] = this.validateConcreteOption(k, copy));
+    const isInterval = o.isInterval ?? this.selectedModel.isInterval;
+    if (isInterval === false) { copy.to = copy.max || this.selectedModel.max; }
     return copy;
   }
 
-  private validateConcreteOption<K extends keyof IValidatedOptions>(
-    key: K, o: IOptions,
+  private validateConcreteOption<K extends keyof IValidatedOptions> (
+    key: K, o: IOptions
   ): number {
     const max = o.max ?? this.selectedModel.max;
     const min = o.min ?? this.selectedModel.min;
@@ -111,19 +91,17 @@ class Service extends EventEmitter {
     const to = Math.min(o.to ?? this.selectedModel.to, max);
     const n = numberDecimalPlaces(step);
     return {
+      step: () => Math.abs(step),
       min: () => +min.toFixed(n),
-      max: () => +Math.max(max, min).toFixed(n),
-      step: () => Math.min(
-        Math.abs(step), +(max - min).toFixed(n)
-      ),
+      max: () => +Math.max(max, min + step).toFixed(n),
       from: () => (Math.min(
         max, +(Math.ceil((Math.max(min, from) - min) / step) 
           * step + min).toFixed(n)
       )),
       to: () => (Math.min(
-        max, +(Math.ceil((clamp(Math.max(from, min), to, max) - min) / step)
+        max, +(Math.ceil((clamp(from, to, max) - min) / step)
           * step + min).toFixed(n)
-      ))
+      )),
     }[key]();
   }
 }
