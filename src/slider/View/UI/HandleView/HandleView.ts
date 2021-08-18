@@ -13,15 +13,11 @@ abstract class HandleView extends EventBinder {
   }
 
   calcPosition(
-    max: number,
     min: number,
+    max: number,
     containerCoord: number,
     containerSize: number,
   ): number {
-    console.log({max, min, containerCoord, containerSize});
-    console.log('pointerCoord = ' + this.getPointerCoord());
-    console.log('shift = ' + this.getShift());
-    console.log('offset = ' + this.getOffset());
     return Math.min(max, Math.max(min, (
       this.getPointerCoord() 
       - containerCoord - this.getShift() - this.getOffset()
@@ -50,8 +46,6 @@ abstract class HandleView extends EventBinder {
   }
 
   private setShifts(ev: PointerEvent): void {
-    console.log('set shiftX = ' + ev.offsetX);
-    console.log('set shiftY = ' + ev.offsetY);
     this.shiftX = ev.offsetX;
     this.shiftY = ev.offsetY;
   }
@@ -91,7 +85,6 @@ class HorizontalHandleView extends HandleView implements IHandleView {
   }
 
   protected getShift(): number {
-    console.log('this shift X: ' + this.shiftX);
     return this.shiftX;
   }
 
@@ -102,7 +95,7 @@ class HorizontalHandleView extends HandleView implements IHandleView {
 
 class VerticalHandleView extends HandleView implements IHandleView {
   move(position: number): void {
-    this.component.style.top = `${(1 - position) * 100}%`;
+    this.component.style.top = `${position * 100}%`;
   }
 
   swap(): IHandleView {
@@ -115,7 +108,6 @@ class VerticalHandleView extends HandleView implements IHandleView {
   }
 
   protected getShift(): number {
-    console.log('this shift Y: ' + this.shiftY);
     return this.shiftY;
   }
 
