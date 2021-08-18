@@ -1,4 +1,4 @@
-import { IHandleView, ICalcPositionArgs } from './IHandleView';
+import IHandleView from './IHandleView';
 import EventBinder from 'slider/EventBinder/EventBinder';
 
 abstract class HandleView extends EventBinder {
@@ -12,23 +12,20 @@ abstract class HandleView extends EventBinder {
     this.bindListeners();
   }
 
-  calcPosition({
-    max,
-    min,
-    containerCoord,
-    containerSize,
-    divisionNumber = 3
-  }: ICalcPositionArgs): number {
+  calcPosition(
+    max: number,
+    min: number,
+    containerCoord: number,
+    containerSize: number,
+  ): number {
     console.log({max, min, containerCoord, containerSize});
     console.log('pointerCoord = ' + this.getPointerCoord());
     console.log('shift = ' + this.getShift());
     console.log('offset = ' + this.getOffset());
-    return Math.min(max, Math.max(min, 1 / divisionNumber * Math.round(
-      (this.getPointerCoord() 
-        - containerCoord - this.getShift() - this.getOffset()
-      ) / containerSize * divisionNumber
-    )))
-    ;
+    return Math.min(max, Math.max(min, (
+      this.getPointerCoord() 
+      - containerCoord - this.getShift() - this.getOffset()
+    ) / containerSize));
   }
 
   private bindListeners(): void {

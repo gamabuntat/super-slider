@@ -1,3 +1,5 @@
+import EventEmitter from 'slider/EventEmitter/EventEmitter';
+import IResponse from 'slider/interfaces/IResponse';
 import treeTemplate from './treeTemplate';
 import IView from './interfaces/IView';
 import IViewTreeTemplate from './interfaces/IViewTreeTemplate';
@@ -8,29 +10,10 @@ import IContainerView from './UI/ContainerView/IContainerView';
 import { HorizontalHandleView } from './UI/HandleView/HandleView';
 import IHandleView from './UI/HandleView/IHandleView';
 
-import EventEmitter from 'slider/EventEmitter/EventEmitter';
-import IResponse from 'slider/helpers/IResponse';
-
-interface IConfig {
-  divisionNumber: number
-  positions: { max: number, min: number }[]
-}
-
 class View extends EventEmitter implements IView {
   private static tree: IViewTreeTemplate = treeTemplate
-  private currentResponse: IResponse = { 
-    id: '',
-    max: 10,
-    min: 0,
-    from: 0,
-    to: 10,
-    step: 1,
-    isVertical: false,
-    isInterval: false,
-    isLabel: true,
-    isScale: true,
-  }
-  private config: IConfig = { divisionNumber: 10, positions: [] }
+  private currentResponse: IResponse
+  private config: IConfig = {} as IConfig
   private components: { [k: string]: HTMLElement } = {}
   private sliderBEMBlockName = 'ui-slider'
   private isTriggered = false
@@ -49,6 +32,7 @@ class View extends EventEmitter implements IView {
     this.container = new HorizontalContainerView(this.components.container);
     this.handles = this.getHandles();
     this.handlesHandlePointerdown = this.getHadlesHandlePointerdown();
+    this.currentResponse = { ...response, isVertical: false, };
     this.parseResponse(response);
     this.bindListeners();
     this.renderSleder(root);
@@ -59,7 +43,7 @@ class View extends EventEmitter implements IView {
       this.updateViewOrientation();
     }
     this.currentResponse = response;
-    this.createConfig();
+    this.updateConfig();
   }
 
   private updateViewOrientation(): void {
@@ -69,23 +53,26 @@ class View extends EventEmitter implements IView {
     this.rebindListeners();
   }
 
-  private createConfig(
+  private updateConfig(
     { max, min, step, from, to }: IResponse = this.currentResponse
   ): void {
     const diff = max - min;
+    const divisionNumber = Math.ceil(diff / step);
+    const unrealMax = divisionNumber * step + min;
     this.config = {
-      divisionNumber: diff / step,
-      positions: [
-        {
-          max: to / diff,
-          min: 0
-        },
-        {
-          max: 1,
-          min: from / diff
-        }
+      extremums: [
+        { max: (to - min) / diff, min: 0 },
+        { max: 1, min: (from - min) / diff }
       ],
+      diff,
+      divisionNumber,
+      unrealMax,
     };
+  }
+
+  private updateResponse(): void {
+    this.currentResponse.from = this.config.extremums[1].min * this.config.diff;
+    this.currentResponse.to = this.config.extremums[0].max * this.config.diff;
   }
 
   private createSlider(
@@ -163,26 +150,35 @@ class View extends EventEmitter implements IView {
     console.log(this.handleActiveIdx);
     this.lastPosition = this.makePositionDiscrete(
       this.handles[this.handleActiveIdx].calcPosition(
-        this.config.positions[this.handleActiveIdx].max,
-        this.config.positions[this.handleActiveIdx].min,
+        this.config.extremums[this.handleActiveIdx].max,
+        this.config.extremums[this.handleActiveIdx].min,
         this.container.getCoord(),
         this.container.getSize(),
       )
     );
-    this.handles[this.handleActiveIdx].move(this.lastPosition);
-    this.updateResponseExtremum();
+    this.moveHandle();
+    this.updateConfigExtremum();
+    this.updateResponse();
     this.emit(this.currentResponse);
   }
 
   private makePositionDiscrete(position: number): number {
-    return 1 / this.config.divisionNumber
+    return 1 / this.config.divisionNumber 
       * Math.round(position * this.config.divisionNumber);
   }
 
-  private updateResponseExtremum(): void {
+  private moveHandle(): void {
+    this.handles[this.handleActiveIdx].move(this.lastPosition);
+  }
+
+  private getConfigPositions(): number[] {
+    return [this.config.extremums[1].min, this.config.extremums[0].max];
+  }
+
+  private updateConfigExtremum(): void {
     [
-      (p: number) => this.config.positions[1].min = p,
-      (p: number) => this.config.positions[0].max = p
+      (p: number) => this.config.extremums[1].min = p,
+      (p: number) => this.config.extremums[0].max = p
     ][this.handleActiveIdx](this.lastPosition);
   }
 
