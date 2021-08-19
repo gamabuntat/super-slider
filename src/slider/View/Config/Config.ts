@@ -19,7 +19,7 @@ abstract class Config {
     this.diff = +(max - min).toFixed(this.n);
     this.divisionNumber = Math.ceil(this.diff / step);
     this.fakeDiff = +(this.divisionNumber * step).toFixed(this.n);
-    this.positions = this.calcPositions();
+    this.positions = [from, to].map(this.calcPosition, this);
     console.log(this.positions);
     this.extremums = this.calcExtremums();
     console.log(this.extremums);
@@ -31,10 +31,6 @@ abstract class Config {
 
   getPositions(): number[] {
     return [...this.positions];
-  }
-
-  getOrientation(): boolean {
-    return this.response.isVertical;
   }
 
   getExtremums(): typeExtremums {
@@ -61,11 +57,11 @@ abstract class Config {
 
   abstract swap(): void
 
+  abstract calcPosition(ap: number): number
+
   abstract calcAbsolutePosition(p: number): number
 
   protected abstract updateExtremums(): void
-
-  protected abstract calcPositions(): number[]
 
   protected abstract calcExtremums(): typeExtremums
 }
@@ -73,6 +69,11 @@ abstract class Config {
 class HorizontalConfig extends Config implements IConfig {
   swap(): IConfig {
     return new VerticalConfig(this.response);
+  }
+
+  calcPosition(ap: number): number {
+    return Math.ceil((ap - this.response.min) / this.response.step) 
+      * this.response.step / this.fakeDiff;
   }
 
   calcAbsolutePosition(p: number): number {
@@ -88,13 +89,6 @@ class HorizontalConfig extends Config implements IConfig {
     this.extremums[1].min = this.positions[0];
   }
 
-  protected calcPositions(): number[] {
-    return [
-      this.sampling((this.response.from - this.response.min) / this.fakeDiff),
-      this.sampling((this.response.to - this.response.min) / this.fakeDiff)
-    ];
-  }
-
   protected calcExtremums(): typeExtremums {
     return [
       { min: 0, max: this.positions[1] }, { min: this.positions[0], max: 1 }
@@ -105,6 +99,11 @@ class HorizontalConfig extends Config implements IConfig {
 class VerticalConfig extends Config implements IConfig {
   swap(): IConfig {
     return new HorizontalConfig(this.response);
+  }
+
+  calcPosition(ap: number): number {
+    return 1 - Math.ceil((ap - this.response.min) / this.response.step) 
+      * this.response.step / this.fakeDiff;
   }
 
   calcAbsolutePosition(p: number): number {
@@ -118,15 +117,6 @@ class VerticalConfig extends Config implements IConfig {
   protected updateExtremums(): void {
     this.extremums[0].min = this.positions[1];
     this.extremums[1].max = this.positions[0];
-  }
-
-  protected calcPositions(): number[] {
-    return [
-      this.sampling(1 - (this.response.from - this.response.min) 
-        / this.diff),
-      this.sampling(1 - (this.response.to - this.response.min) 
-        / this.diff)
-    ];
   }
 
   protected calcExtremums(): typeExtremums {

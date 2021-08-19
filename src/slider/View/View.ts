@@ -41,14 +41,14 @@ class View extends EventEmitter implements IView {
   }
 
   parseResponse(response: IResponse): void {
-    if (this.config.getOrientation() !== response.isVertical) {
-      this.config = this.config.swap();
+    if (this.config.getResponse().isVertical !== response.isVertical) {
       this.updateViewOrientation();
     }
     this.moveHandles();
   }
 
   private updateViewOrientation(): void {
+    this.config = this.config.swap();
     this.slider.toggleVerticalMod();
     this.container = this.container.swap();
     this.handles = this.handles.map((hv) => hv.swap());
