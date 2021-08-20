@@ -22,6 +22,9 @@ class Service extends EventEmitter implements IService {
   private selectedModel: IResponse = { ...this.defaultOptions, id: '' }
   private models: IResponse[] = []
   private selectedIndex = -1
+  private validatedKeys:(TypeValidateOptionsKeys)[] = [
+    'step', 'min', 'max', 'from', 'to'
+  ]
 
   static getInstance(): Service {
     if (!Service.instance) { Service.instance = new Service(); }
@@ -62,10 +65,9 @@ class Service extends EventEmitter implements IService {
 
   private getValedatedOptions(o: IOptions): IOptions {
     const copy = { ...o };
-    const keys: (TypeValidateOptionsKeys)[] = [
-      'step', 'min', 'max', 'from', 'to'
-    ];
-    keys.forEach((k) => copy[k] = this.validateConcreteOption(k, copy));
+    this.validatedKeys.forEach((k) => (
+      copy[k] = this.validateConcreteOption(k, copy))
+    );
     const isInterval = o.isInterval ?? this.selectedModel.isInterval;
     if (isInterval === false) { copy.to = copy.max; }
     return copy;
@@ -74,11 +76,9 @@ class Service extends EventEmitter implements IService {
   private validateConcreteOption<K extends keyof IValidatedOptions> (
     key: K, o: IOptions
   ): number {
-    const step = o.step || this.selectedModel.step;
-    const min = o.min ?? this.selectedModel.min;
-    const max = o.max ?? this.selectedModel.max;
-    const from = o.from ?? this.selectedModel.from;
-    const to = Math.min(o.to ?? this.selectedModel.to, max);
+    const [ step, min, max, from, to ] = [
+      o.step || this.selectedModel.step, o.min, o.max, o.from, o.to
+    ].map(this.preValidate, this);
     const n = numberDecimalPlaces(step);
     return {
       step: () => Math.abs(step),
@@ -93,6 +93,12 @@ class Service extends EventEmitter implements IService {
           * step + min).toFixed(n)
       )),
     }[key]();
+  }
+
+  // eslint-disable-next-line
+  private preValidate(v: any, idx: number): number {
+    if (typeof v == 'number' && isFinite(v)) { return v; }
+    return this.selectedModel[this.validatedKeys[idx]];
   }
 }
 
