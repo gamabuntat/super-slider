@@ -1,17 +1,23 @@
+import { IService } from 'slider/Service/IService';
 import IView from 'slider/View/interfaces/IView';
-import { IResponse } from 'slider/helpers/IResponse';
+import IResponse from 'slider/interfaces/IResponse';
 
 class Presenter {
   constructor(
+    private service: IService,
     private view: IView,
-    private model: { update(r: IResponse): void, sendRs(): IResponse }
+    response: IResponse
   ) {
-    this.view.on(this.model.sendRs(), this.handleViewUpdate.bind(this));
+    service.on(response.id, this.handleModelUpdate);
+    view.on(response.id, this.handleViewUpdate);
   }
 
-  handleViewUpdate(response: IResponse): void {
-    console.log(response);
-    this.model.update(response);
+  private handleModelUpdate = (response: IResponse): void => {
+    this.view.parseResponse(response);
+  }
+
+  private handleViewUpdate = (response: IResponse): void  => {
+    this.service.updateModel(response);
   }
 }
 

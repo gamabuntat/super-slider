@@ -4,7 +4,6 @@ import { IConfig, typeExtremums } from './IConfig';
 
 abstract class Config {
   protected n!: number
-  protected diff!: number
   protected divisionNumber!: number
   protected fakeDiff!: number
   protected positions!: number[]
@@ -16,8 +15,7 @@ abstract class Config {
 
   update({ min, max, step, from, to }: IResponse = this.response): void {
     this.n = numberDecimalPlaces(step);
-    this.diff = +(max - min).toFixed(this.n);
-    this.divisionNumber = Math.ceil(this.diff / step);
+    this.divisionNumber = Math.ceil(+(max - min).toFixed(this.n) / step);
     this.fakeDiff = +(this.divisionNumber * step).toFixed(this.n);
     this.positions = [from, to].map(this.calcPosition, this);
     console.log(this.positions);

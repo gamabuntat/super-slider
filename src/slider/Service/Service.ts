@@ -1,21 +1,12 @@
-import EventEmitter from 'slider/EventEmitter/EventEmitter';
-import IResponse from 'slider/helpers/IResponse';
+import { EventEmitter } from 'slider/EventEmitter/EventEmitter';
+import IResponse from 'slider/interfaces/IResponse';
 import clamp from 'slider/helpers/clamp';
 import numberDecimalPlaces from 'slider/helpers/numberDecimalPlaces';
+import { 
+  IService, IValidatedOptions, TypeValidateOptionsKeys 
+} from './IService';
 
-interface IValidatedOptions {
-  min?: number
-  max?: number
-  from?: number
-  to?: number
-  step?: number
-}
-
-type TypeValidateOptionsKeys = keyof {
-  [K in keyof IValidatedOptions]-?: IValidatedOptions[K] 
-};
-
-class Service extends EventEmitter {
+class Service extends EventEmitter implements IService {
   private static instance: Service
   private readonly defaultOptions: TypeRequiredOptions = {
     min: 0,
@@ -42,16 +33,15 @@ class Service extends EventEmitter {
   }
 
   add(id = this.generateID(), o: IOptions): IResponse {
-    const model: IResponse = { 
+    this.selectedModel = { 
       ...this.selectedModel = (
         this.models[this.findModelIndex(id)] || { ...this.defaultOptions, id }
       ),
       ...this.getValedatedOptions(o),
     };
-    this.addModel(model);
-    const copy = { ...model };
-    this.emit(copy);
-    return copy;
+    this.addModel(this.selectedModel);
+    this.emit({ ...this.selectedModel });
+    return { ...this.selectedModel };
   }
 
   private addModel(model: IResponse): void {
@@ -77,16 +67,16 @@ class Service extends EventEmitter {
     ];
     keys.forEach((k) => copy[k] = this.validateConcreteOption(k, copy));
     const isInterval = o.isInterval ?? this.selectedModel.isInterval;
-    if (isInterval === false) { copy.to = copy.max || this.selectedModel.max; }
+    if (isInterval === false) { copy.to = copy.max; }
     return copy;
   }
 
   private validateConcreteOption<K extends keyof IValidatedOptions> (
     key: K, o: IOptions
   ): number {
-    const max = o.max ?? this.selectedModel.max;
-    const min = o.min ?? this.selectedModel.min;
     const step = o.step || this.selectedModel.step;
+    const min = o.min ?? this.selectedModel.min;
+    const max = o.max ?? this.selectedModel.max;
     const from = o.from ?? this.selectedModel.from;
     const to = Math.min(o.to ?? this.selectedModel.to, max);
     const n = numberDecimalPlaces(step);

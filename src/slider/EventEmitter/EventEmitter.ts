@@ -1,15 +1,15 @@
-import { IResponse } from 'slider/helpers/IResponse';
+import IResponse from 'slider/interfaces/IResponse';
 
 type TypeResponseHandler = (response: IResponse) => void;
 
 interface IEventEmitter {
-  on({ id }: IResponse, listener: TypeResponseHandler): this
+  on(ev: string, listener: TypeResponseHandler): this
 }
 
 class EventEmitter implements IEventEmitter {
   protected events: { [id: string]: TypeResponseHandler[] } = {}
 
-  on({ id }: IResponse, handler: TypeResponseHandler): this {
+  on(id: string, handler: TypeResponseHandler): this {
     (this.events[id] || (this.events[id] = [])).push(handler);
     return this;
   }
@@ -20,5 +20,5 @@ class EventEmitter implements IEventEmitter {
   }
 }
 
-export default EventEmitter;
+export { EventEmitter, IEventEmitter };
 

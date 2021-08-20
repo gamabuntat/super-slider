@@ -1,4 +1,4 @@
-import EventEmitter from 'slider/EventEmitter/EventEmitter';
+import { EventEmitter } from 'slider/EventEmitter/EventEmitter';
 import IResponse from 'slider/interfaces/IResponse';
 import treeTemplate from './treeTemplate';
 import IView from './interfaces/IView';
