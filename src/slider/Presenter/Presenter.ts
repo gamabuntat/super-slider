@@ -6,10 +6,10 @@ class Presenter {
   constructor(
     private service: IService,
     private view: IView,
-    response: IResponse
+    id: string
   ) {
-    service.on(response.id, this.handleModelUpdate);
-    view.on(response.id, this.handleViewUpdate);
+    service.on(id, this.handleModelUpdate);
+    view.on(id, this.handleViewUpdate);
   }
 
   private handleModelUpdate = (response: IResponse): void => {

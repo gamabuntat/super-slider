@@ -13,14 +13,14 @@ abstract class Config {
     this.update(response);
   }
 
-  update({ min, max, step, from, to }: IResponse = this.response): void {
+  update(response: IResponse = this.response): void {
+    const { min, max, step, from, to } = response;
     this.n = numberDecimalPlaces(step);
     this.divisionNumber = Math.ceil(+(max - min).toFixed(this.n) / step);
     this.fakeDiff = +(this.divisionNumber * step).toFixed(this.n);
     this.positions = [from, to].map(this.calcPosition, this);
-    console.log(this.positions);
     this.extremums = this.calcExtremums();
-    console.log(this.extremums);
+    this.response = response;
   }
 
   getResponse(): IResponse {

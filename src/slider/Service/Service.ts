@@ -31,11 +31,20 @@ class Service extends EventEmitter implements IService {
     return Service.instance; 
   }
 
+  removeModel(id: string): void {
+    this.events[id] = [];
+    this.models.splice(this.findModelIndex(id), +(this.selectedIndex !== -1));
+  }
+
   updateModel(response: IResponse): void {
     this.addModel({ ...response });
   }
 
-  add(id = this.generateID(), o: IOptions): IResponse {
+  add(preID: string, o: IOptions): { 
+    model: IResponse, isNew: boolean 
+  } {
+    const id = preID || this.generateID();
+    const prevLength = this.models.length;
     this.selectedModel = { 
       ...this.selectedModel = (
         this.models[this.findModelIndex(id)] || { ...this.defaultOptions, id }
@@ -44,7 +53,10 @@ class Service extends EventEmitter implements IService {
     };
     this.addModel(this.selectedModel);
     this.emit({ ...this.selectedModel });
-    return { ...this.selectedModel };
+    return {
+      model: { ...this.selectedModel },
+      isNew: prevLength !== this.models.length
+    };
   }
 
   private addModel(model: IResponse): void {

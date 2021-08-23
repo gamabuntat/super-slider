@@ -38,13 +38,18 @@ class View extends EventEmitter implements IView {
     this.parseResponse(response);
     this.bindListeners();
     root.insertAdjacentElement('beforeend', this.sliderHTML);
+    root.id = response.id;
   }
 
   parseResponse(response: IResponse): void {
     if (this.config.getResponse().isVertical !== response.isVertical) {
       this.updateViewOrientation();
     }
-    this.moveHandles();
+    if (this.config.getResponse().isInterval !== response.isInterval) {
+      this.slider.toggleIntervalMod();
+    }
+    this.config.update(response);
+    this.moveComponents();
   }
 
   private updateViewOrientation(): void {
@@ -137,11 +142,11 @@ class View extends EventEmitter implements IView {
         this.container.getSize()
       );
     this.config.setPositions(lastPositions);
-    this.moveHandles();
+    this.moveComponents();
     this.emit(this.config.getResponse());
   }
 
-  private moveHandles(): void {
+  private moveComponents(): void {
     this.handles.forEach((h, idx) => h.move(this.config.getPositions()[idx]));
   }
 

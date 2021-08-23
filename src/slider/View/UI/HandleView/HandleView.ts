@@ -24,6 +24,11 @@ abstract class HandleView extends EventBinder {
     ) / containerSize));
   }
 
+  protected resetPositions(): void {
+    this.component.style.left = '';
+    this.component.style.top = '';
+  }
+
   private bindListeners(): void {
     this
       .bind('pointerdown', this.handleComponentPointerdown)
@@ -77,6 +82,7 @@ class HorizontalHandleView extends HandleView implements IHandleView {
 
   swap(): IHandleView {
     this.unbindListeners();
+    this.resetPositions();
     return new VerticalHandleView(this.component);
   }
 
@@ -100,6 +106,7 @@ class VerticalHandleView extends HandleView implements IHandleView {
 
   swap(): IHandleView {
     this.unbindListeners();
+    this.resetPositions();
     return new HorizontalHandleView(this.component);
   }
 
