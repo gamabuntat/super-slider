@@ -1,5 +1,6 @@
-import { IEventEmitter } from 'slider/EventEmitter/EventEmitter';
-import IResponse from 'slider/interfaces/IResponse';
+import {
+  IEventEmitter, TypeResponseHandler 
+} from 'slider/EventEmitter/EventEmitter';
 
 interface IValidatedOptions {
   min?: number
@@ -14,6 +15,7 @@ type TypeValidateOptionsKeys = keyof {
 };
 
 interface IService extends IEventEmitter {
+  subscribe(id: string, cb: TypeResponseHandler): void
   removeModel(id: string): void
   updateModel(response: IResponse): void
   add(id: string, o: IOptions): { model: IResponse, isNew: boolean }

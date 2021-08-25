@@ -1,5 +1,6 @@
-import { EventEmitter } from 'slider/EventEmitter/EventEmitter';
-import IResponse from 'slider/interfaces/IResponse';
+import { 
+  EventEmitter, TypeResponseHandler 
+} from 'slider/EventEmitter/EventEmitter';
 import clamp from 'slider/helpers/clamp';
 import numberDecimalPlaces from 'slider/helpers/numberDecimalPlaces';
 import { 
@@ -31,13 +32,19 @@ class Service extends EventEmitter implements IService {
     return Service.instance; 
   }
 
+  subscribe(id: string, cb: TypeResponseHandler): void {
+    this.on('sub' + id, cb);
+  }
+
   removeModel(id: string): void {
     this.events[id] = [];
+    this.events['sub' + id] = [];
     this.models.splice(this.findModelIndex(id), +(this.selectedIndex !== -1));
   }
 
   updateModel(response: IResponse): void {
     this.addModel({ ...response });
+    this.emit({ ...response, id: 'sub' + response.id });
   }
 
   add(preID: string, o: IOptions): { 

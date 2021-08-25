@@ -12,6 +12,10 @@ import Service from './slider/Service/Service';
       return this;
     };
 
+    this.subscribe = (cb: (r: IResponse) => void) => {
+      Service.getInstance().subscribe(this[0].id, cb);
+    };
+
     if (o) {
       const { isNew, model } = Service.getInstance().add(this[0].id, o);
       if (isNew) {
@@ -29,16 +33,22 @@ import Service from './slider/Service/Service';
 
 // $('#slider1').slider({ step: 2, max: 10, to: -12 });
 // $('#slider2').slider({ isVertical: true });
-// $('#slider3').slider({ isInterval: true });
+// const cb = (i: IResponse) => (
+//   console.log('\n'), console.log(i), console.log('\n')
+// );
+
+$('#slider3')
+  .slider({ isInterval: true, isVertical: true, min: -10, max: -2, step: 2 })
+;
 
 const $s = $('.js-hihe');
 $s
   .slider({ isVertical: true, isInterval: true })
-  .slider({ isVertical: true, max: 4, from: 5, step: 2 })
+  .slider({ isVertical: true, min: -10, max: 0, from: 5, step: 2 })
   .slider({ isVertical: false })
 ;
 
 $s.destroy();
 
-$s.slider({from: 10});
+$s.slider({from: 10, step: 1000});
 
