@@ -1,5 +1,4 @@
 import { EventEmitter } from 'slider/EventEmitter/EventEmitter';
-import IResponse from 'slider/interfaces/IResponse';
 import treeTemplate from './treeTemplate';
 import IView from './interfaces/IView';
 import IViewTreeTemplate from './interfaces/IViewTreeTemplate';
@@ -9,6 +8,10 @@ import { HorizontalContainerView } from './UI/ContainerView/ContainerView';
 import IContainerView from './UI/ContainerView/IContainerView';
 import { HorizontalHandleView } from './UI/HandleView/HandleView';
 import IHandleView from './UI/HandleView/IHandleView';
+import { 
+  StartProgressBarView, EndProgressBarView 
+} from './UI/ProgressBarView/ProgressBarView';
+import IProgressBarView from './UI/ProgressBarView/IProgressBarView';
 import { HorizontalConfig } from './Config/Config';
 import { IConfig } from './Config/IConfig';
 
@@ -22,6 +25,7 @@ class View extends EventEmitter implements IView {
   private slider: ISliderView
   private container: IContainerView
   private handles: IHandleView[]
+  private progressBars: IProgressBarView[]
   private handlesHandlePointerdown: Array<(ev: PointerEvent) => void>
   private activeIDX = 0
 
@@ -34,6 +38,10 @@ class View extends EventEmitter implements IView {
     this.slider = new SliderView(this.components[this.sliderBEMBlockName]);
     this.container = new HorizontalContainerView(this.components.container);
     this.handles = this.getHandles();
+    this.progressBars = [
+      new StartProgressBarView(this.components.progressBarStart),
+      new EndProgressBarView(this.components.progressBarEnd)
+    ];
     this.handlesHandlePointerdown = this.getHadlesHandlePointerdown();
     this.parseResponse(response);
     this.bindListeners();
@@ -57,6 +65,7 @@ class View extends EventEmitter implements IView {
     this.slider.toggleVerticalMod();
     this.container = this.container.swap();
     this.handles = this.handles.map((hv) => hv.swap());
+    this.progressBars.reverse();
     this.rebindListeners();
   }
 
@@ -148,6 +157,8 @@ class View extends EventEmitter implements IView {
 
   private moveComponents(): void {
     this.handles.forEach((h, idx) => h.move(this.config.getPositions()[idx]));
+    this.progressBars
+      .forEach((pb, idx) => pb.resize(this.config.getPositions()[idx]));
   }
 
   private handleHandleLostpointercapture = (): void => {
