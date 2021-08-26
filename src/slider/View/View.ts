@@ -12,6 +12,8 @@ import {
   StartProgressBarView, EndProgressBarView 
 } from './UI/ProgressBarView/ProgressBarView';
 import IProgressBarView from './UI/ProgressBarView/IProgressBarView';
+import LableView from './UI/LableView/LableView';
+import ILabelView from './UI/LableView/ILableView';
 import { HorizontalConfig } from './Config/Config';
 import { IConfig } from './Config/IConfig';
 
@@ -26,6 +28,7 @@ class View extends EventEmitter implements IView {
   private container: IContainerView
   private handles: IHandleView[]
   private progressBars: IProgressBarView[]
+  private labels: ILabelView[]
   private handlesHandlePointerdown: Array<(ev: PointerEvent) => void>
   private activeIDX = 0
 
@@ -42,6 +45,8 @@ class View extends EventEmitter implements IView {
       new StartProgressBarView(this.components.progressBarStart),
       new EndProgressBarView(this.components.progressBarEnd)
     ];
+    this.labels = [this.components.labelStart, this.components.labelEnd]
+      .map((c) => new LableView(c));
     this.handlesHandlePointerdown = this.getHadlesHandlePointerdown();
     this.parseResponse(response);
     this.bindListeners();
@@ -159,6 +164,8 @@ class View extends EventEmitter implements IView {
     this.handles.forEach((h, idx) => h.move(this.config.getPositions()[idx]));
     this.progressBars
       .forEach((pb, idx) => pb.resize(this.config.getPositions()[idx]));
+    const { from, to } = this.config.getResponse();
+    [from , to].forEach((v, idx) => this.labels[idx].updateValue(String(v)));
   }
 
   private handleHandleLostpointercapture = (): void => {

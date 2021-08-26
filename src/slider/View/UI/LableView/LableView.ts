@@ -1,8 +1,12 @@
-abstract class LableView {
+import ILabelView from './ILableView';
+
+class LableView implements ILabelView {
   constructor(protected component: HTMLElement) {}
 
-  abstract move(): void
+  updateValue(v: string): void {
+    this.component.innerText = v;
+  }
 }
 
-
+export default LableView;
 

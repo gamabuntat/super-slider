@@ -3,8 +3,8 @@
 $double-vertical: '.ui-slider--vertical.ui-slider--interval'
 $handle-width: 8px
 $handle-heigth: 20px
-$lable-height: 18px
-$lable-gap: 2px
+$label-height: 18px
+$label-gap: 2px
 $track-size: 6px
 $color-main: #615C70
 $color-accent: #afacb9
@@ -16,13 +16,13 @@ $color-accent: #afacb9
   display: flex
   flex-direction: column
   justify-content: center
-  padding: $lable-height + $lable-gap 0 0
+  padding: $label-height + $label-gap 0 0
 
   &--vertical
     flex-direction: row
     align-items: center
     justify-content: flex-end
-    padding: math.div($lable-height - $handle-width, 2) 0
+    padding: math.div($label-height - $handle-width, 2) 0
     height: 35vh
 
   &__main-container
@@ -143,32 +143,32 @@ $color-accent: #afacb9
     &--end
       transform: translate(0, -$handle-width)
 
-  &__lable
+  &__label
     display: inline-flex
     position: absolute
     overflow: auto
-    top: -$lable-height - $lable-gap
+    top: -$label-height - $label-gap
     min-width: 25px
     width: max-content
-    height: $lable-height
+    height: $label-height
     transform: translate(-50%)
     background-color: $color-main
     color: white
     pointer-events: none
 
     &--start
-      @extend .ui-slider__lable
+      @extend .ui-slider__label
 
     &--end
-      @extend .ui-slider__lable
+      @extend .ui-slider__label
 
     &--hidden
       display: none
 
-  &--vertical &__lable
+  &--vertical &__label
     margin: auto
     transform: translate(0, -50%)
-    right: calc(100% + #{$lable-gap})
+    right: calc(100% + #{$label-gap})
     top: unset
 
   &__track

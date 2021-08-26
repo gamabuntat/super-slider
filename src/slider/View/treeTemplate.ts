@@ -21,7 +21,7 @@ const treeTemplate: IViewTreeTemplate = {
               elementType: 'button',
               childs: [
                 {
-                  name: 'lableStart',
+                  name: 'labelStart',
                   elementType: 'div'
                 }
               ]
@@ -31,7 +31,7 @@ const treeTemplate: IViewTreeTemplate = {
               elementType: 'button',
               childs: [
                 {
-                  name: 'lableEnd',
+                  name: 'labelEnd',
                   elementType: 'div'
                 }
               ]
