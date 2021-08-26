@@ -13,10 +13,11 @@ module.exports = (env, argv) => {
     mode: 'development',
     devtool: isProd ? false : 'inline-source-map',
     entry: {
-      index: './src/index.ts',
+      slider: './src/index.ts',
+      demo: './src/demo/demo.js',
     },
     output: {
-      filename: 'slider.js',
+      filename: '[name].js',
       path: path.resolve(__dirname, 'dist'),
     },
     resolve: {
@@ -32,6 +33,16 @@ module.exports = (env, argv) => {
       open: false,
       port: 9000,
     },
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          defaultVendors: {
+            test: /[\\/]node_modules[\\/]/,
+            chunks: 'all',
+          },
+        },
+      }
+    },
     module: {
       rules: [
         {
@@ -42,7 +53,7 @@ module.exports = (env, argv) => {
           exclude: /node_modules/,
         },
         {
-          test: /slider\.sass/i,
+          test: /\.sass/i,
           use: [
             MiniCssExtractPlugin.loader,
             'css-loader',
@@ -51,13 +62,7 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.pug$/,
-          use: 
-          {
-            loader: 'pug3-loader',
-            options: {
-              root: path.resolve(__dirname, 'src/library.blocks')
-            },
-          }
+          use: 'pug3-loader',
         }
       ],
     },
@@ -68,16 +73,16 @@ module.exports = (env, argv) => {
         }
       }),
       new HtmlWebpackPlugin({
-        filename: 'index.html',
+        filename: 'demo.html',
         template: './src/demo/demo.pug',
         minify: false,
         meta: {
           viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no'
         },
-        inject: 'body'
+        inject: 'body',
       }),
       new MiniCssExtractPlugin({
-        filename: 'slider.css'
+        filename: '[name].css',
       }),
     ]
   };

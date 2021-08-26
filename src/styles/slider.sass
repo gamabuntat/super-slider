@@ -145,16 +145,20 @@ $color-accent: #afacb9
 
   &__label
     display: inline-flex
+    align-items: center
     position: absolute
     overflow: auto
     top: -$label-height - $label-gap
-    min-width: 25px
+    padding: 0 2px
     width: max-content
     height: $label-height
     transform: translate(-50%)
     background-color: $color-main
     color: white
     pointer-events: none
+    font
+      family: monospace
+      size: 2rem
 
     &--start
       @extend .ui-slider__label
@@ -166,7 +170,6 @@ $color-accent: #afacb9
       display: none
 
   &--vertical &__label
-    margin: auto
     transform: translate(0, -50%)
     right: calc(100% + #{$label-gap})
     top: unset
