@@ -1,5 +1,3 @@
-import IResponse from 'slider/interfaces/IResponse';
-
 type typeExtremums = { min: number, max: number }[]
 
 interface IConfig {

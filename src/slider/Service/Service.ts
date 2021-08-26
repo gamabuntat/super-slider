@@ -44,7 +44,8 @@ class Service extends EventEmitter implements IService {
 
   updateModel(response: IResponse): void {
     this.addModel({ ...response });
-    this.emit({ ...response, id: 'sub' + response.id });
+    console.log(response);
+    this.emit({ ...response }, 'sub' + response.id);
   }
 
   add(preID: string, o: IOptions): { 
@@ -60,6 +61,7 @@ class Service extends EventEmitter implements IService {
     };
     this.addModel(this.selectedModel);
     this.emit({ ...this.selectedModel });
+    this.emit({ ...this.selectedModel }, 'sub' + this.selectedModel.id);
     return {
       model: { ...this.selectedModel },
       isNew: prevLength !== this.models.length

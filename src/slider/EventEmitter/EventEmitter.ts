@@ -1,5 +1,3 @@
-import IResponse from 'slider/interfaces/IResponse';
-
 type TypeResponseHandler = (response: IResponse) => void;
 
 interface IEventEmitter {
@@ -14,11 +12,11 @@ class EventEmitter implements IEventEmitter {
     return this;
   }
 
-  protected emit(arg: IResponse): void {
-    (this.events[arg.id] || [])
+  protected emit(arg: IResponse, id: string = arg.id): void {
+    (this.events[id] || [])
       .forEach((handler: TypeResponseHandler) => handler(arg));
   }
 }
 
-export { EventEmitter, IEventEmitter };
+export { EventEmitter, IEventEmitter, TypeResponseHandler };
 

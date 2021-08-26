@@ -3,36 +3,99 @@
 $double-vertical: '.ui-slider--vertical.ui-slider--interval'
 $handle-width: 8px
 $handle-heigth: 20px
+$lable-height: 18px
+$lable-gap: 2px
+$track-size: 6px
+$color-main: #615C70
+$color-accent: #afacb9
+
+.ui-slider
+  border: .5px dashed pink
 
 .ui-slider
   display: flex
   flex-direction: column
-  padding: 0 math.div($handle-width, 2)
-  box-sizing: border-box
-  background-color: lightgreen
+  justify-content: center
+  padding: $lable-height + $lable-gap 0 0
 
   &--vertical
     flex-direction: row
+    align-items: center
+    justify-content: flex-end
+    padding: math.div($lable-height - $handle-width, 2) 0
+    height: 35vh
+
+  &__main-container
+    position: relative
+    padding: 0 math.div($handle-width, 2)
+    display: flex
+    flex-direction: column
     justify-content: center
-    height: 50vh
+    height: $handle-heigth
+    box-sizing: border-box
+
+  &--vertical &__main-container
     padding: math.div($handle-width, 2) 0
     align-items: center
+    height: 100%
 
-  &--interval
+  &--interval &__main-container
     padding: 0 $handle-width
 
-  @at-root #{$double-vertical}
+  #{$double-vertical} &__main-container
     padding: $handle-width 0
+
+  %sub-giglet
+    content: ''
+    display: block
+    flex-basis: 50%
+
+  &__giglet
+    display: flex
+    position: absolute
+    left: 0
+    width: 100%
+    height: $track-size
+    background-color: $color-main
+
+    &::before
+      @extend %sub-giglet
+      background-color: $color-main
+
+    &::after
+      @extend %sub-giglet
+      background-color: $color-accent
+
+  &--vertical &__giglet
+    flex-direction: column
+    width: $track-size
+    height: 100%
+    left: unset
+
+    &::before
+      background-color: $color-accent
+
+    &::after
+      background-color: $color-main
+
+  &--interval &__giglet
+
+    &::before
+      background-color: $color-accent
+
+  #{$double-vertical} &__giglet
+    
+    &::after
+      background-color: $color-accent
 
   &__container
     display: flex
     justify-content: center
     align-items: center
+    flex-basis: 100%
     position: relative
-    height: $handle-heigth
 
   &--vertical &__container
-    height: 100%
     width: $handle-heigth
 
   &__handle
@@ -42,7 +105,7 @@ $handle-heigth: 20px
     width: $handle-width
     height: $handle-heigth
     border: none
-    background-color: #615C70
+    background-color: $color-main
     touch-action: none
     cursor: pointer
   
@@ -84,14 +147,14 @@ $handle-heigth: 20px
     display: inline-flex
     position: absolute
     overflow: auto
-    top: -12px
+    top: -$lable-height - $lable-gap
     min-width: 25px
     width: max-content
-    height: 10px
-    background-color: white
+    height: $lable-height
     transform: translate(-50%)
+    background-color: $color-main
+    color: white
     pointer-events: none
-    border: 1px solid black
 
     &--start
       @extend .ui-slider__lable
@@ -102,24 +165,44 @@ $handle-heigth: 20px
     &--hidden
       display: none
 
+  &--vertical &__lable
+    margin: auto
+    transform: translate(0, -50%)
+    right: calc(100% + #{$lable-gap})
+    top: unset
+
   &__track
     display: flex
     justify-content: space-between
-    background-color: #afacb9
+    background-color: $color-accent
     width: 100%
-    height: 6px
+    height: $track-size
 
   &--vertical &__track
     flex-direction: column
-    width: 6px
+    width: $track-size
     height: 100%
 
+  &--interval &__track
+    background-color: $color-main
+
   &__progress-bar
-    background-color: #615C70
+    background-color: $color-main
 
     &--start
       @extend .ui-slider__progress-bar
 
     &--end
       @extend .ui-slider__progress-bar
+
+  &--interval &__progress-bar
+    background-color: $color-accent
+
+  &__scale
+    height: 20px
+    background-color: lightgreen
+
+  &--vertical &__scale
+    width: 20px
+    height: 100%
 

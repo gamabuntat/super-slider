@@ -5,40 +5,50 @@ const treeTemplate: IViewTreeTemplate = {
   elementType: 'div',
   childs: [
     {
-      name: 'container',
+      name: 'mainContainer',
       elementType: 'div',
       childs: [
         {
-          name: 'handleStart',
-          elementType: 'button',
-          childs: [
-            {
-              name: 'lableStart',
-              elementType: 'div'
-            }
-          ]
+          name: 'giglet',
+          elementType: 'div',
         },
         {
-          name: 'handleEnd',
-          elementType: 'button',
-          childs: [
-            {
-              name: 'lableEnd',
-              elementType: 'div'
-            }
-          ]
-        },
-        {
-          name: 'track',
+          name: 'container',
           elementType: 'div',
           childs: [
             {
-              name: 'progressBarStart',
-              elementType: 'div'
+              name: 'handleStart',
+              elementType: 'button',
+              childs: [
+                {
+                  name: 'lableStart',
+                  elementType: 'div'
+                }
+              ]
             },
             {
-              name: 'progressBarEnd',
-              elementType: 'div'
+              name: 'handleEnd',
+              elementType: 'button',
+              childs: [
+                {
+                  name: 'lableEnd',
+                  elementType: 'div'
+                }
+              ]
+            },
+            {
+              name: 'track',
+              elementType: 'div',
+              childs: [
+                {
+                  name: 'progressBarStart',
+                  elementType: 'div'
+                },
+                {
+                  name: 'progressBarEnd',
+                  elementType: 'div'
+                }
+              ]
             }
           ]
         }

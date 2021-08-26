@@ -26,15 +26,13 @@ abstract class HandleView extends EventBinder {
     ) / containerSize));
   }
 
-
   protected resetPositions(): void {
     this.component.style.left = '';
     this.component.style.top = '';
   }
 
   private getFrontMod(): string {
-    return `${this.component.classList[0]}--front`
-      .replace(/--(?!front$).*/, '--front');
+    return `${this.component.classList[0].replace(/--.*/, '')}--front`;
   }
 
   private bindListeners(): void {

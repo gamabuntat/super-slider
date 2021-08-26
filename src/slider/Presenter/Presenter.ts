@@ -1,6 +1,5 @@
 import { IService } from 'slider/Service/IService';
 import IView from 'slider/View/interfaces/IView';
-import IResponse from 'slider/interfaces/IResponse';
 
 class Presenter {
   constructor(

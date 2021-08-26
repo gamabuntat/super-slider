@@ -1,5 +1,4 @@
 import numberDecimalPlaces from 'slider/helpers/numberDecimalPlaces';
-import IResponse from 'slider/interfaces/IResponse';
 import { IConfig, typeExtremums } from './IConfig';
 
 abstract class Config {
@@ -38,7 +37,6 @@ abstract class Config {
   setPositions(positions: number[]): void {
     this.positions = positions.map(this.sampling, this);
     this.updateExtremums();
-    console.log(this.extremums);
     this.updateResponse();
   }
 
@@ -49,8 +47,6 @@ abstract class Config {
   private updateResponse(): void {
     this.response.from = this.calcAbsolutePosition(this.positions[0]);
     this.response.to = this.calcAbsolutePosition(this.positions[1]);
-    console.log(this.response.from);
-    console.log(this.response.to);
   }
 
   abstract swap(): void
