@@ -53,6 +53,9 @@ $handle-heigth: 20px
     &--end
       @extend .ui-slider__handle
       display: none
+
+    &--front
+      z-index: 1
       
   &--vertical &__handle
     width: $handle-heigth
@@ -76,6 +79,28 @@ $handle-heigth: 20px
     
     &--end
       transform: translate(0, -$handle-width)
+
+  &__lable
+    display: inline-flex
+    position: absolute
+    overflow: auto
+    top: -12px
+    min-width: 25px
+    width: max-content
+    height: 10px
+    background-color: white
+    transform: translate(-50%)
+    pointer-events: none
+    border: 1px solid black
+
+    &--start
+      @extend .ui-slider__lable
+
+    &--end
+      @extend .ui-slider__lable
+
+    &--hidden
+      display: none
 
   &__track
     display: flex

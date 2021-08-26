@@ -10,11 +10,23 @@ const treeTemplate: IViewTreeTemplate = {
       childs: [
         {
           name: 'handleStart',
-          elementType: 'button'
+          elementType: 'button',
+          childs: [
+            {
+              name: 'lableStart',
+              elementType: 'div'
+            }
+          ]
         },
         {
           name: 'handleEnd',
-          elementType: 'button'
+          elementType: 'button',
+          childs: [
+            {
+              name: 'lableEnd',
+              elementType: 'div'
+            }
+          ]
         },
         {
           name: 'track',

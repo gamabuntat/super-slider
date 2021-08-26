@@ -6,9 +6,11 @@ abstract class HandleView extends EventBinder {
   protected shiftY = 0
   protected pointerCoordX = 0
   protected pointerCoordY = 0
+  private frontMod: string
 
   constructor(component: HTMLElement) {
     super(component);
+    this.frontMod = this.getFrontMod();
     this.bindListeners();
   }
 
@@ -24,30 +26,45 @@ abstract class HandleView extends EventBinder {
     ) / containerSize));
   }
 
+
   protected resetPositions(): void {
     this.component.style.left = '';
     this.component.style.top = '';
   }
 
+  private getFrontMod(): string {
+    return `${this.component.classList[0]}--front`
+      .replace(/--(?!front$).*/, '--front');
+  }
+
   private bindListeners(): void {
     this
       .bind('pointerdown', this.handleComponentPointerdown)
-      .bind('pointermove', this.handleComponentPointermove);
+      .bind('pointermove', this.handleComponentPointermove)
+      .bind('lostpointercapture', this.handleComponentLostpointercapture)
+    ;
   }
 
   protected unbindListeners(): void {
     this
       .unbind('pointerdown', this.handleComponentPointerdown)
-      .unbind('pointermove', this.handleComponentPointermove);
+      .unbind('pointermove', this.handleComponentPointermove)
+      .unbind('lostpointercapture', this.handleComponentLostpointercapture)
+    ;
   }
 
   private handleComponentPointerdown = (ev: PointerEvent): void => {
     this.setShifts(ev);
     this.fixPointer(ev.pointerId);
+    this.component.classList.toggle(this.frontMod);
   }
 
   private handleComponentPointermove = (ev: PointerEvent): void => {
     this.setPointerCoords(ev);
+  }
+
+  private handleComponentLostpointercapture = (): void => {
+    this.component.classList.toggle(this.frontMod);
   }
 
   private setShifts(ev: PointerEvent): void {
