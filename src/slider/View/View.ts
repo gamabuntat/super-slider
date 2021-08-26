@@ -12,8 +12,8 @@ import {
   StartProgressBarView, EndProgressBarView 
 } from './UI/ProgressBarView/ProgressBarView';
 import IProgressBarView from './UI/ProgressBarView/IProgressBarView';
-import LableView from './UI/LableView/LableView';
-import ILabelView from './UI/LableView/ILableView';
+import LabelView from './UI/LabelView/LabelView';
+import ILabelView from './UI/LabelView/ILabelView';
 import { HorizontalConfig } from './Config/Config';
 import { IConfig } from './Config/IConfig';
 
@@ -46,7 +46,7 @@ class View extends EventEmitter implements IView {
       new EndProgressBarView(this.components.progressBarEnd)
     ];
     this.labels = [this.components.labelStart, this.components.labelEnd]
-      .map((c) => new LableView(c));
+      .map((c) => new LabelView(c));
     this.handlesHandlePointerdown = this.getHadlesHandlePointerdown();
     this.parseResponse(response);
     this.bindListeners();

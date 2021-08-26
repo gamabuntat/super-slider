@@ -31,12 +31,12 @@ import Service from './slider/Service/Service';
   };
 })(jQuery);
 
-// $('#slider1').slider({ step: 2, max: 10, to: -12 });
-// $('#slider2').slider({ isVertical: true });
 // const cb = (i: IResponse) => (
 //   console.log('\n'), console.log(i), console.log('\n')
 // );
 
+$('#slider1').slider({ step: 2, max: 10, to: -12, isInterval: true });
+$('#slider2').slider({ isVertical: true });
 $('#slider3')
   .slider({ isInterval: true, isVertical: true, min: -10, max: -2, step: 2 })
 ;
@@ -50,5 +50,5 @@ $s
 
 $s.destroy();
 
-$s.slider({from: 10, step: 1000});
+$s.slider({from: 10, step: 10});
 

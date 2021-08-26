@@ -1,6 +1,6 @@
-import ILabelView from './ILableView';
+import ILabelView from './ILabelView';
 
-class LableView implements ILabelView {
+class LabelView implements ILabelView {
   constructor(protected component: HTMLElement) {}
 
   updateValue(v: string): void {
@@ -8,5 +8,5 @@ class LableView implements ILabelView {
   }
 }
 
-export default LableView;
+export default LabelView;
 
