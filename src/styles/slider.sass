@@ -1,15 +1,39 @@
-$handle-width: 10px
-$handle-heigth: 30px
+@use 'sass:math'
+
+$double-vertical: '.ui-slider--vertical.ui-slider--interval'
+$handle-width: 8px
+$handle-heigth: 20px
 
 .ui-slider
-
   display: flex
   flex-direction: column
-  padding: 0 $handle-width
+  padding: 0 math.div($handle-width, 2)
+  box-sizing: border-box
+  background-color: lightgreen
+
+  &--vertical
+    flex-direction: row
+    justify-content: center
+    height: 50vh
+    padding: math.div($handle-width, 2) 0
+    align-items: center
+
+  &--interval
+    padding: 0 $handle-width
+
+  @at-root #{$double-vertical}
+    padding: $handle-width 0
 
   &__container
+    display: flex
+    justify-content: center
+    align-items: center
     position: relative
     height: $handle-heigth
+
+  &--vertical &__container
+    height: 100%
+    width: $handle-heigth
 
   &__handle
     position: absolute
@@ -22,11 +46,55 @@ $handle-heigth: 30px
     touch-action: none
     cursor: pointer
   
-  &__handle--start
-    @extend .ui-slider__handle
-    transform: translate(-$handle-width)
+    &--start
+      @extend .ui-slider__handle
+      transform: translate(math.div(-$handle-width, 2))
 
-  &__handle--end
-    @extend .ui-slider__handle
-    left: 100%
+    &--end
+      @extend .ui-slider__handle
+      display: none
+      
+  &--vertical &__handle
+    width: $handle-heigth
+    height: $handle-width
+
+    &--start
+      transform: translate(0, math.div(-$handle-width, 2))
+
+  &--interval &__handle
+
+    &--start
+      transform: translate(-$handle-width)
+
+    &--end
+      display: unset
+
+  #{$double-vertical} &__handle
+
+    &--start
+      transform: translate(0)
+    
+    &--end
+      transform: translate(0, -$handle-width)
+
+  &__track
+    display: flex
+    justify-content: space-between
+    background-color: #afacb9
+    width: 100%
+    height: 6px
+
+  &--vertical &__track
+    flex-direction: column
+    width: 6px
+    height: 100%
+
+  &__progress-bar
+    background-color: #615C70
+
+    &--start
+      @extend .ui-slider__progress-bar
+
+    &--end
+      @extend .ui-slider__progress-bar
 
