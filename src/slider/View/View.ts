@@ -28,7 +28,6 @@ class View extends EventEmitter implements IView {
   private handles: IHandleView[]
   private progressBars: IProgressBarView[]
   private labels: ILabelView[]
-  private activeIDX = 0
 
   constructor(response: IResponse, root: HTMLElement) {
     super();
@@ -115,7 +114,6 @@ class View extends EventEmitter implements IView {
   private bindListeners(): void {
     this.handles.forEach((h) => {
       h
-        .bind('pointerdown', this.handleHandlePointerdown)
         .bind('pointermove', this.handleHandlePointermove)
         .bind('keydown', this.handleHandleKeydown);
     });
@@ -124,42 +122,39 @@ class View extends EventEmitter implements IView {
   private unbindListeners(): void {
     this.handles.forEach((h) => {
       h
-        .unbind('pointerdown', this.handleHandlePointerdown)
         .unbind('pointermove', this.handleHandlePointermove)
         .unbind('keydown', this.handleHandleKeydown);
     });
   }
 
-  private handleHandlePointerdown = () => {
-    this.activeIDX = this.handles.findIndex((h) => h.getCaptureStatus());
+  private handleHandlePointermove = (): void => {
+    if (this.checkCaptureStatus()) { 
+      this.config.setPositions(this.config.getPositions().map((p, idx) => {
+        if (!this.handles[idx].getCaptureStatus()) { return p; }
+        return this.handles[idx].calcPosition(
+          this.container.getCoord(), this.container.getSize()
+        );
+      }));
+      this.setInMotion();
+      this.emit(this.config.getResponse());
+    }
   }
 
-  private handleHandlePointermove = (): void => {
-    if (!this.handles[this.activeIDX].getCaptureStatus()) { return; }
-    const lastPositions = this.config.getPositions();
-    lastPositions[this.activeIDX] = this.handles[this.activeIDX]
-      .calcPosition(this.container.getCoord(), this.container.getSize());
-    this.config.setPositions(lastPositions);
-    this.setInMotion();
-    this.emit(this.config.getResponse());
+  private checkCaptureStatus(): boolean {
+    return !!this.handles.find((h) => h.getCaptureStatus());
   }
 
   private handleHandleKeydown = (ev: KeyboardEvent): void => {
     const forwardCodes = ['ArrowUp', 'ArrowRight'];
     const backCodes = ['ArrowDown', 'ArrowLeft'];
-    const positions = this.config.getPositions()
-      .map((p, idx) => {
-        if (!this.handles[idx].getFocusStatus()) { return p; }
-        if (forwardCodes.includes(ev.code)) {
-          return this.config.getNext(p);
-        }
-        if (backCodes.includes(ev.code)) {
-          return this.config.getPrev(p);
-        }
-        return p;
-      });
-    this.config.setPositions(positions);
+    this.config.setPositions(this.config.getPositions().map((p, idx) => {
+      if (!this.handles[idx].getFocusStatus()) { return p; }
+      if (forwardCodes.includes(ev.code)) { return this.config.getNext(p); }
+      if (backCodes.includes(ev.code)) { return this.config.getPrev(p); }
+      return p;
+    }));
     this.setInMotion();
+    this.emit(this.config.getResponse());
   }
 
   private setInMotion(): void {
