@@ -13,7 +13,7 @@ module.exports = (env, argv) => {
     mode: 'development',
     devtool: isProd ? false : 'inline-source-map',
     entry: {
-      slider: './src/index.ts',
+      slider: './src/slider/index.ts',
       demo: './src/demo/demo.js',
     },
     output: {
