@@ -6,24 +6,26 @@ abstract class HandleView extends EventBinder {
   protected shiftY = 0
   protected pointerCoordX = 0
   protected pointerCoordY = 0
-  private frontMod: string
+  private pointerIsCapture = false
+  private InFocus = false
 
   constructor(component: HTMLElement) {
     super(component);
-    this.frontMod = this.getFrontMod();
     this.bindListeners();
   }
 
-  calcPosition(
-    min: number,
-    max: number,
-    containerCoord: number,
-    containerSize: number,
-  ): number {
-    return Math.min(max, Math.max(min, (
-      this.getPointerCoord() 
-      - containerCoord - this.getShift() - this.getOffset()
-    ) / containerSize));
+  getCaptureStatus(): boolean {
+    return this.pointerIsCapture;
+  }
+
+  getFocusStatus(): boolean {
+    return this.InFocus;
+  }
+
+  calcPosition(containerCoord: number, containerSize: number,): number {
+    return (this.getPointerCoord() - 
+      containerCoord - this.getShift() - this.getOffset()
+    ) / containerSize || 0;
   }
 
   protected resetPositions(): void {
@@ -31,16 +33,13 @@ abstract class HandleView extends EventBinder {
     this.component.style.top = '';
   }
 
-  private getFrontMod(): string {
-    return `${this.component.classList[0].replace(/--.*/, '')}--front`;
-  }
-
   private bindListeners(): void {
     this
       .bind('pointerdown', this.handleComponentPointerdown)
       .bind('pointermove', this.handleComponentPointermove)
       .bind('lostpointercapture', this.handleComponentLostpointercapture)
-    ;
+      .bind('focusin', this.handleComponentFocusin)
+      .bind('focusout', this.handleComponentFocusout);
   }
 
   protected unbindListeners(): void {
@@ -48,13 +47,14 @@ abstract class HandleView extends EventBinder {
       .unbind('pointerdown', this.handleComponentPointerdown)
       .unbind('pointermove', this.handleComponentPointermove)
       .unbind('lostpointercapture', this.handleComponentLostpointercapture)
-    ;
+      .unbind('focusin', this.handleComponentFocusin)
+      .unbind('focusout', this.handleComponentFocusout);
   }
 
   private handleComponentPointerdown = (ev: PointerEvent): void => {
     this.setShifts(ev);
+    this.pointerIsCapture = true;
     this.fixPointer(ev.pointerId);
-    this.component.classList.toggle(this.frontMod);
   }
 
   private handleComponentPointermove = (ev: PointerEvent): void => {
@@ -62,7 +62,15 @@ abstract class HandleView extends EventBinder {
   }
 
   private handleComponentLostpointercapture = (): void => {
-    this.component.classList.toggle(this.frontMod);
+    this.pointerIsCapture = false;
+  }
+
+  private handleComponentFocusin = (): void => {
+    this.InFocus = true;
+  }
+
+  private handleComponentFocusout = (): void => {
+    this.InFocus = false;
   }
 
   private setShifts(ev: PointerEvent): void {

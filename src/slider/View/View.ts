@@ -22,14 +22,12 @@ class View extends EventEmitter implements IView {
   private config: IConfig
   private components: { [k: string]: HTMLElement } = {}
   private sliderBEMBlockName = 'ui-slider'
-  private isTriggered = false
   private sliderHTML: HTMLElement
   private slider: ISliderView
   private container: IContainerView
   private handles: IHandleView[]
   private progressBars: IProgressBarView[]
   private labels: ILabelView[]
-  private handlesHandlePointerdown: Array<(ev: PointerEvent) => void>
   private activeIDX = 0
 
   constructor(response: IResponse, root: HTMLElement) {
@@ -47,7 +45,6 @@ class View extends EventEmitter implements IView {
     ];
     this.labels = [this.components.labelStart, this.components.labelEnd]
       .map((c) => new LabelView(c));
-    this.handlesHandlePointerdown = this.getHadlesHandlePointerdown();
     this.parseResponse(response);
     this.bindListeners();
     root.insertAdjacentElement('beforeend', this.sliderHTML);
@@ -62,7 +59,7 @@ class View extends EventEmitter implements IView {
       this.slider.toggleIntervalMod();
     }
     this.config.update(response);
-    this.moveComponents();
+    this.setInMotion();
   }
 
   private updateViewOrientation(): void {
@@ -110,66 +107,69 @@ class View extends EventEmitter implements IView {
     ];
   }
 
-  private getHadlesHandlePointerdown(): Array<(ev: PointerEvent) => void> {
-    return Array
-      .from({ length: 2 })
-      .map((i, idx) => this.makeHandleHandlePointerdown(idx));
-  }
-
-  private makeHandleHandlePointerdown = (idx: number) => () => {
-    this.isTriggered = true;
-    this.activeIDX = idx;
-  }
-
   private rebindListeners(): void {
     this.unbindListeners();
     this.bindListeners();
   }
 
   private bindListeners(): void {
-    this.handles.forEach((h, idx) => {
+    this.handles.forEach((h) => {
       h
-        .bind('pointerdown', this.handlesHandlePointerdown[idx])
+        .bind('pointerdown', this.handleHandlePointerdown)
         .bind('pointermove', this.handleHandlePointermove)
-        .bind('lostpointercapture', this.handleHandleLostpointercapture);
+        .bind('keydown', this.handleHandleKeydown);
     });
   }
 
   private unbindListeners(): void {
-    this.handles.forEach((h, idx) => {
+    this.handles.forEach((h) => {
       h
-        .unbind('pointerdown', this.handlesHandlePointerdown[idx])
+        .unbind('pointerdown', this.handleHandlePointerdown)
         .unbind('pointermove', this.handleHandlePointermove)
-        .unbind('lostpointercapture', this.handleHandleLostpointercapture);
+        .unbind('keydown', this.handleHandleKeydown);
     });
   }
 
+  private handleHandlePointerdown = () => {
+    this.activeIDX = this.handles.findIndex((h) => h.getCaptureStatus());
+  }
+
   private handleHandlePointermove = (): void => {
-    if (!this.isTriggered) { return; }
+    if (!this.handles[this.activeIDX].getCaptureStatus()) { return; }
     const lastPositions = this.config.getPositions();
-    const extremums = this.config.getExtremums()[this.activeIDX];
     lastPositions[this.activeIDX] = this.handles[this.activeIDX]
-      .calcPosition(
-        extremums.min,
-        extremums.max,
-        this.container.getCoord(),
-        this.container.getSize()
-      );
+      .calcPosition(this.container.getCoord(), this.container.getSize());
     this.config.setPositions(lastPositions);
-    this.moveComponents();
+    this.setInMotion();
     this.emit(this.config.getResponse());
   }
 
-  private moveComponents(): void {
-    this.handles.forEach((h, idx) => h.move(this.config.getPositions()[idx]));
-    this.progressBars
-      .forEach((pb, idx) => pb.resize(this.config.getPositions()[idx]));
-    const { from, to } = this.config.getResponse();
-    [from , to].forEach((v, idx) => this.labels[idx].updateValue(String(v)));
+  private handleHandleKeydown = (ev: KeyboardEvent): void => {
+    const forwardCodes = ['ArrowUp', 'ArrowRight'];
+    const backCodes = ['ArrowDown', 'ArrowLeft'];
+    const positions = this.config.getPositions()
+      .map((p, idx) => {
+        if (!this.handles[idx].getFocusStatus()) { return p; }
+        if (forwardCodes.includes(ev.code)) {
+          return this.config.getNext(p);
+        }
+        if (backCodes.includes(ev.code)) {
+          return this.config.getPrev(p);
+        }
+        return p;
+      });
+    this.config.setPositions(positions);
+    this.setInMotion();
   }
 
-  private handleHandleLostpointercapture = (): void => {
-    this.isTriggered = false;
+  private setInMotion(): void {
+    const { from, to } = this.config.getResponse();
+    [from , to].forEach((v, idx) => {
+      const position = this.config.getPositions()[idx];
+      this.handles[idx].move(position);
+      this.progressBars[idx].resize(position);
+      this.labels[idx].updateValue(String(v));
+    });
   }
 }
 

@@ -44,7 +44,7 @@ class Service extends EventEmitter implements IService {
 
   updateModel(response: IResponse): void {
     this.addModel({ ...response });
-    console.log(response);
+    // console.log(response);
     this.emit({ ...response }, 'sub' + response.id);
   }
 

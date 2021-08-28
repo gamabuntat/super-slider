@@ -1,8 +1,8 @@
 import './styles/slider.sass';
 
-import Presenter from './slider/Presenter/Presenter';
-import View from './slider/View/View';
-import Service from './slider/Service/Service';
+import Presenter from './Presenter/Presenter';
+import View from './View/View';
+import Service from './Service/Service';
 
 (function ($) {
   $.fn.slider = function (o?: IOptions) {
@@ -35,7 +35,7 @@ import Service from './slider/Service/Service';
 //   console.log('\n'), console.log(i), console.log('\n')
 // );
 
-$('#slider1').slider({ step: 2, max: 10, to: -12, isInterval: true });
+$('#slider1').slider({ step: 2.123, max: -32, min: -74, isInterval: true });
 $('#slider2').slider({ isVertical: true });
 $('#slider3')
   .slider({ isInterval: true, isVertical: true, min: -10, max: -2, step: 2 })

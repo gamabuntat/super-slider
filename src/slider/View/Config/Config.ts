@@ -1,9 +1,11 @@
+import clamp from 'slider/helpers/clamp';
 import numberDecimalPlaces from 'slider/helpers/numberDecimalPlaces';
 import { IConfig, typeExtremums } from './IConfig';
 
 abstract class Config {
   protected n!: number
   protected divisionNumber!: number
+  protected relativeStep!: number
   protected fakeDiff!: number
   protected positions!: number[]
   protected extremums!: typeExtremums
@@ -16,6 +18,7 @@ abstract class Config {
     const { min, max, step, from, to } = response;
     this.n = numberDecimalPlaces(step);
     this.divisionNumber = Math.ceil(+(max - min).toFixed(this.n) / step);
+    this.relativeStep = 1 / this.divisionNumber;
     this.fakeDiff = +(this.divisionNumber * step).toFixed(this.n);
     this.positions = [from, to].map(this.calcPosition, this);
     this.extremums = this.calcExtremums();
@@ -35,7 +38,7 @@ abstract class Config {
   }
 
   setPositions(positions: number[]): void {
-    this.positions = positions.map(this.sampling, this);
+    this.positions = positions.map(this.validate, this);
     this.updateExtremums();
     this.updateResponse();
   }
@@ -44,12 +47,24 @@ abstract class Config {
     return 1 / this.divisionNumber * Math.round(p * this.divisionNumber);
   }
 
+  private validate(p: number, idx: number): number {
+    return clamp(
+      this.extremums[idx].min,
+      this.sampling(p),
+      this.extremums[idx].max
+    );
+  }
+
   private updateResponse(): void {
     this.response.from = this.calcAbsolutePosition(this.positions[0]);
     this.response.to = this.calcAbsolutePosition(this.positions[1]);
   }
 
   abstract swap(): void
+
+  abstract getPrev(p: number): number
+
+  abstract getNext(p: number): number
 
   abstract calcPosition(ap: number): number
 
@@ -65,9 +80,20 @@ class HorizontalConfig extends Config implements IConfig {
     return new VerticalConfig(this.response);
   }
 
+  getPrev(p: number): number {
+    return this.sampling(p) - this.relativeStep;
+  }
+
+  getNext(p: number): number {
+    return this.sampling(p) + this.relativeStep;
+  }
+
   calcPosition(ap: number): number {
-    return Math.ceil((ap - this.response.min) / this.response.step) 
-      * this.response.step / this.fakeDiff;
+    return Math.min(
+      1, 
+      Math.ceil((ap - this.response.min) / this.response.step) 
+        * this.response.step / this.fakeDiff
+    );
   }
 
   calcAbsolutePosition(p: number): number {
@@ -95,9 +121,20 @@ class VerticalConfig extends Config implements IConfig {
     return new HorizontalConfig(this.response);
   }
 
+  getPrev(p: number): number {
+    return this.sampling(p) + this.relativeStep;
+  }
+
+  getNext(p: number): number {
+    return this.sampling(p) - this.relativeStep;
+  }
+
   calcPosition(ap: number): number {
-    return 1 - Math.ceil((ap - this.response.min) / this.response.step) 
-      * this.response.step / this.fakeDiff;
+    return Math.min(
+      1, 
+      1 - Math.ceil((ap - this.response.min) / this.response.step) 
+        * this.response.step / this.fakeDiff
+    );
   }
 
   calcAbsolutePosition(p: number): number {
