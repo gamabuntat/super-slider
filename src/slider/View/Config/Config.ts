@@ -33,10 +33,6 @@ abstract class Config {
     return [...this.positions];
   }
 
-  getExtremums(): typeExtremums {
-    return [{ ...this.extremums[0] }, { ...this.extremums[1] }];
-  }
-
   setPositions(positions: number[]): void {
     this.positions = positions.map(this.validate, this);
     this.updateExtremums();
@@ -45,6 +41,11 @@ abstract class Config {
 
   protected sampling(p: number): number {
     return 1 / this.divisionNumber * Math.round(p * this.divisionNumber);
+  }
+
+  protected generateAllPositions(v: number, res: number[] = []): number[] {
+    if (res.length > this.divisionNumber) { return res; }
+    return this.generateAllPositions(this.getNext(v), [...res, v]);
   }
 
   private validate(p: number, idx: number): number {
@@ -66,9 +67,11 @@ abstract class Config {
 
   abstract getNext(p: number): number
 
-  abstract calcPosition(ap: number): number
+  abstract getAllPositions(): number[]
 
-  abstract calcAbsolutePosition(p: number): number
+  protected abstract calcPosition(ap: number): number
+
+  protected  abstract calcAbsolutePosition(p: number): number
 
   protected abstract updateExtremums(): void
 
@@ -81,22 +84,27 @@ class HorizontalConfig extends Config implements IConfig {
   }
 
   getPrev(p: number): number {
-    return this.sampling(p) - this.relativeStep;
+    return Math.max(0, this.sampling(p) - this.relativeStep);
   }
 
   getNext(p: number): number {
-    return this.sampling(p) + this.relativeStep;
+    return Math.min(1, this.sampling(p) + this.relativeStep);
   }
 
-  calcPosition(ap: number): number {
-    return Math.min(
-      1, 
+  getAllPositions(): number[] {
+    return this.generateAllPositions(0);
+  }
+
+  protected calcPosition(ap: number): number {
+    return clamp(
+      0, 
       Math.ceil((ap - this.response.min) / this.response.step) 
-        * this.response.step / this.fakeDiff
+        * this.response.step / this.fakeDiff,
+      1
     );
   }
 
-  calcAbsolutePosition(p: number): number {
+  protected calcAbsolutePosition(p: number): number {
     return Math.min(
       +(this.sampling(p) * this.fakeDiff + this.response.min)
         .toFixed(this.n),
@@ -122,22 +130,27 @@ class VerticalConfig extends Config implements IConfig {
   }
 
   getPrev(p: number): number {
-    return this.sampling(p) + this.relativeStep;
+    return Math.min(1, this.sampling(p) + this.relativeStep);
   }
 
   getNext(p: number): number {
-    return this.sampling(p) - this.relativeStep;
+    return Math.max(0, this.sampling(p) - this.relativeStep);
   }
 
-  calcPosition(ap: number): number {
-    return Math.min(
-      1, 
+  getAllPositions(): number[] {
+    return this.generateAllPositions(1);
+  }
+
+  protected calcPosition(ap: number): number {
+    return clamp(
+      0, 
       1 - Math.ceil((ap - this.response.min) / this.response.step) 
-        * this.response.step / this.fakeDiff
+        * this.response.step / this.fakeDiff,
+      1
     );
   }
 
-  calcAbsolutePosition(p: number): number {
+  protected calcAbsolutePosition(p: number): number {
     return Math.min(
       +((1 - this.sampling(p)) * this.fakeDiff + this.response.min)
         .toFixed(this.n),

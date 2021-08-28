@@ -5,11 +5,9 @@ interface IConfig {
   getPrev(p: number): number
   getNext(p: number): number
   swap(): IConfig
-  calcPosition(ap: number): number
-  calcAbsolutePosition(p: number): number
   getResponse(): IResponse
-  getExtremums(): typeExtremums
   getPositions(): number[]
+  getAllPositions(): number[]
   setPositions(p: number[]): void
 }
 

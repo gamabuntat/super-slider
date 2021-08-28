@@ -6,7 +6,7 @@ abstract class HandleView extends EventBinder {
   protected shiftY = 0
   protected pointerCoordX = 0
   protected pointerCoordY = 0
-  private pointerIsCapture = false
+  private isCapture = false
   private InFocus = false
 
   constructor(component: HTMLElement) {
@@ -15,7 +15,7 @@ abstract class HandleView extends EventBinder {
   }
 
   getCaptureStatus(): boolean {
-    return this.pointerIsCapture;
+    return this.isCapture;
   }
 
   getFocusStatus(): boolean {
@@ -23,8 +23,8 @@ abstract class HandleView extends EventBinder {
   }
 
   calcPosition(containerCoord: number, containerSize: number,): number {
-    return (this.getPointerCoord() - 
-      containerCoord - this.getShift() - this.getOffset()
+    return (this.getPointerCoord() 
+      - containerCoord - this.getShift() - this.getOffset()
     ) / containerSize || 0;
   }
 
@@ -53,7 +53,7 @@ abstract class HandleView extends EventBinder {
 
   private handleComponentPointerdown = (ev: PointerEvent): void => {
     this.setShifts(ev);
-    this.pointerIsCapture = true;
+    this.isCapture = true;
     this.fixPointer(ev.pointerId);
   }
 
@@ -62,7 +62,7 @@ abstract class HandleView extends EventBinder {
   }
 
   private handleComponentLostpointercapture = (): void => {
-    this.pointerIsCapture = false;
+    this.isCapture = false;
   }
 
   private handleComponentFocusin = (): void => {

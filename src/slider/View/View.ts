@@ -112,28 +112,27 @@ class View extends EventEmitter implements IView {
   }
 
   private bindListeners(): void {
-    this.handles.forEach((h) => {
-      h
-        .bind('pointermove', this.handleHandlePointermove)
-        .bind('keydown', this.handleHandleKeydown);
-    });
+    this.handles.forEach((h) => h
+      .bind('pointermove', this.handleHandlePointermove)
+      .bind('keydown', this.handleHandleKeydown)
+    );
   }
 
   private unbindListeners(): void {
-    this.handles.forEach((h) => {
-      h
-        .unbind('pointermove', this.handleHandlePointermove)
-        .unbind('keydown', this.handleHandleKeydown);
-    });
+    this.handles.forEach((h) => h
+      .unbind('pointermove', this.handleHandlePointermove)
+      .unbind('keydown', this.handleHandleKeydown)
+    );
   }
 
   private handleHandlePointermove = (): void => {
     if (this.checkCaptureStatus()) { 
       this.config.setPositions(this.config.getPositions().map((p, idx) => {
-        if (!this.handles[idx].getCaptureStatus()) { return p; }
-        return this.handles[idx].calcPosition(
-          this.container.getCoord(), this.container.getSize()
-        );
+        return this.handles[idx].getCaptureStatus() 
+          ? this.handles[idx].calcPosition(
+            this.container.getCoord(), this.container.getSize()
+          ) 
+          : p;
       }));
       this.setInMotion();
       this.emit(this.config.getResponse());
@@ -155,6 +154,7 @@ class View extends EventEmitter implements IView {
     }));
     this.setInMotion();
     this.emit(this.config.getResponse());
+    console.log(this.config.getAllPositions());
   }
 
   private setInMotion(): void {
