@@ -12,7 +12,9 @@ interface IConfig {
   swap(): IConfig
   getResponse(): IResponse
   getPositions(): number[]
+  sampling(p: number): number
   getAllPositions(): IAllPositions
+  calcPosition(ap: number): number
   setPositions(p: number[]): void
 }
 

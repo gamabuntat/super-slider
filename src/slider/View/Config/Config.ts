@@ -39,13 +39,16 @@ abstract class Config {
     this.updateResponse();
   }
 
-  protected sampling(p: number): number {
+  sampling(p: number): number {
     return 1 / this.divisionNumber * Math.round(p * this.divisionNumber);
   }
 
-  protected generateAllPositions(v: number, res: number[] = []): number[] {
-    if (res.length > this.divisionNumber) { return res; }
-    return this.generateAllPositions(this.getNext(v), [...res, v]);
+  protected generateAllPositions(v = 0): number[] {
+    const positions = [v];
+    while (positions.length <= this.divisionNumber) {
+      positions.push(this.getNext(positions[positions.length - 1]));
+    }
+    return positions;
   }
 
   private validate(p: number, idx: number): number {
@@ -69,7 +72,7 @@ abstract class Config {
 
   abstract getAllPositions(): IAllPositions
 
-  protected abstract calcPosition(ap: number): number
+  abstract calcPosition(ap: number): number
 
   protected abstract calcAbsolutePosition(p: number): number
 
@@ -99,10 +102,10 @@ class HorizontalConfig extends Config implements IConfig {
     };
   }
 
-  protected calcPosition(ap: number): number {
+  calcPosition(ap: number): number {
     return clamp(
       0, 
-      Math.ceil((ap - this.response.min) / this.response.step) 
+      Math.round((ap - this.response.min) / this.response.step) 
         * this.response.step / this.fakeDiff,
       1
     );
@@ -142,17 +145,17 @@ class VerticalConfig extends Config implements IConfig {
   }
 
   getAllPositions(): IAllPositions {
-    const positions = this.generateAllPositions(1);
+    const positions = this.generateAllPositions(1).reverse();
     return {
       absolutePositions: positions.map(this.calcAbsolutePosition, this),
       positions
     };
   }
 
-  protected calcPosition(ap: number): number {
+  calcPosition(ap: number): number {
     return clamp(
       0, 
-      1 - Math.ceil((ap - this.response.min) / this.response.step) 
+      1 - Math.round((ap - this.response.min) / this.response.step) 
         * this.response.step / this.fakeDiff,
       1
     );

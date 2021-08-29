@@ -35,10 +35,15 @@ import Service from './Service/Service';
 //   console.log('\n'), console.log(i), console.log('\n')
 // );
 
-$('#slider1').slider({ step: 2.123, max: -32, min: -74, isInterval: true });
-$('#slider2').slider({ isVertical: true });
+$('#slider1').slider({
+  step: 2.123, max: -32, min: -74, isInterval: true, from: -54.893
+});
+$('#slider2').slider({ isVertical: false })
+  .slider({ isVertical: true, max: 2 });
 $('#slider3')
-  .slider({ isInterval: true, isVertical: true, min: -10, max: -2, step: 2 })
+  .slider({
+    isInterval: true, isVertical: true, min: -10, max: -2, step: 2
+  })
 ;
 
 const $s = $('.js-hihe');
@@ -50,5 +55,5 @@ $s
 
 $s.destroy();
 
-$s.slider({from: 10, step: 10});
+$s.slider({from: 10, step: 5});
 

@@ -24,7 +24,6 @@ class View extends EventEmitter implements IView {
   private config: IConfig
   private components: { [k: string]: HTMLElement } = {}
   private sliderBEMBlockName = 'ui-slider'
-  private sliderHTML: HTMLElement
   private slider: ISliderView
   private container: IContainerView
   private handles: IHandleView[]
@@ -35,12 +34,17 @@ class View extends EventEmitter implements IView {
   constructor(response: IResponse, root: HTMLElement) {
     super();
     this.config = new HorizontalConfig({
-      ...response, isVertical: false, isInterval: false 
+      ...response, 
+      isVertical: false,
+      isInterval: false,
+      isLabel: true,
+      isScale: true
     });
-    this.sliderHTML = this.createSlider(View.tree);
+    root.insertAdjacentElement('beforeend', this.createSlider(View.tree));
     this.slider = new SliderView(this.components[this.sliderBEMBlockName]);
     this.container = new HorizontalContainerView(this.components.container);
-    this.handles = this.getHandles();
+    this.handles = [this.components.handleStart, this.components.handleEnd]
+      .map((h) => new HorizontalHandleView(h));
     this.progressBars = [
       new StartProgressBarView(this.components.progressBarStart),
       new EndProgressBarView(this.components.progressBarEnd)
@@ -50,7 +54,6 @@ class View extends EventEmitter implements IView {
     this.scale = new ScaleView(this.components.scale);
     this.parseResponse(response);
     this.bindListeners();
-    root.insertAdjacentElement('beforeend', this.sliderHTML);
     root.id = response.id;
   }
 
@@ -64,6 +67,7 @@ class View extends EventEmitter implements IView {
     this.config.update(response);
     this.scale.update(this.config.getAllPositions());
     this.setInMotion();
+    this.rebindListeners();
   }
 
   private updateViewOrientation(): void {
@@ -72,7 +76,6 @@ class View extends EventEmitter implements IView {
     this.container = this.container.swap();
     this.handles = this.handles.map((hv) => hv.swap());
     this.progressBars.reverse();
-    this.rebindListeners();
   }
 
   private createSlider(
@@ -104,13 +107,6 @@ class View extends EventEmitter implements IView {
       );
   }
 
-  private getHandles(): IHandleView[] {
-    return [
-      new HorizontalHandleView(this.components.handleStart),
-      new HorizontalHandleView(this.components.handleEnd)
-    ];
-  }
-
   private rebindListeners(): void {
     this.unbindListeners();
     this.bindListeners();
@@ -121,6 +117,7 @@ class View extends EventEmitter implements IView {
       .bind('pointermove', this.handleHandlePointermove)
       .bind('keydown', this.handleHandleKeydown)
     );
+    this.scale.bind('click', this.handleScaleClick);
   }
 
   private unbindListeners(): void {
@@ -128,6 +125,7 @@ class View extends EventEmitter implements IView {
       .unbind('pointermove', this.handleHandlePointermove)
       .unbind('keydown', this.handleHandleKeydown)
     );
+    this.scale.unbind('click', this.handleScaleClick);
   }
 
   private handleHandlePointermove = (): void => {
@@ -157,6 +155,25 @@ class View extends EventEmitter implements IView {
       if (backCodes.includes(ev.code)) { return this.config.getPrev(p); }
       return p;
     }));
+    this.setInMotion();
+    this.emit(this.config.getResponse());
+  }
+
+  private handleScaleClick = (): void => {
+    const lastPosition = this.config.calcPosition(this.scale.getLastPosition());
+    const positions = this.config.getPositions();
+    const diffs = positions.map((p) => (
+      this.config.sampling(Math.abs(p - lastPosition)) || Infinity
+    ));
+    let idx = diffs.indexOf(Math.min(...diffs));
+    if (positions[0] === positions[1]) { 
+      if (lastPosition > positions[1]) { idx = 1; }
+      if (lastPosition < positions[0]) { idx = 0; }
+      if (this.config.getResponse().isVertical) { idx = +!idx; }
+    }
+    if (!this.config.getResponse().isInterval) { idx = 0; }
+    positions[idx] = lastPosition;
+    this.config.setPositions(positions);
     this.setInMotion();
     this.emit(this.config.getResponse());
   }

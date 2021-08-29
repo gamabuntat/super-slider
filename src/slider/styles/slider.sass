@@ -9,6 +9,7 @@ $track-size: 6px
 $color-main: #615C70
 $color-accent: #afacb9
 $color-active: #FCCB1A
+$color-active-scale-label: #e2b203
 
 .ui-slider
   border: .5px dashed pink
@@ -215,10 +216,45 @@ $color-active: #FCCB1A
     background-color: $color-accent
 
   &__scale
+    display: flex
     height: 20px
-    background-color: lightgreen
+    box-sizing: border-box
+
+    & > &-button:first-child
+      justify-content: initial
+
+    & > &-button:last-child
+      justify-content: flex-end
+
+    &-button
+      display: flex
+      flex-grow: 1
+      justify-content: center
+      align-items: center
+      margin: 0
+      padding: 0
+      background-color: #ffffff00
+      border: none
+      overflow: hidden
+      cursor: pointer
+      font-family: monospace
+      font-size: 0.6rem
+      outline: none
+
+      &:hover, &:focus
+        color: $color-active-scale-label
+        overflow: initial
 
   &--vertical &__scale
+    flex-direction: column
     width: 20px
     height: unset
+
+    &-button:first-child
+      justify-content: center
+      align-items: initial
+
+    &-button:last-child
+      justify-content: center
+      align-items: flex-end
 
