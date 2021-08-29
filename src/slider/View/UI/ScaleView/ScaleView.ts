@@ -1,12 +1,18 @@
+import { IAllPositions } from 'slider/View/Config/IConfig';
 import EventBinder from 'slider/EventBinder/EventBinder';
 import IScaleView from './IScaleView';
 
 class ScaleView extends EventBinder implements IScaleView {
   private scaleButtonClass: string
+  private positions: number[] = []
 
   constructor(component: HTMLElement) {
     super(component);
     this.scaleButtonClass = this.getScaleButtonClass();
+  }
+
+  update({ positions, absolutePositions }: IAllPositions): void {
+    this.positions = positions;
   }
 
   private getScaleButtonClass(): string {

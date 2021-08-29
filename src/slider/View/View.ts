@@ -2,6 +2,8 @@ import { EventEmitter } from 'slider/EventEmitter/EventEmitter';
 import treeTemplate from './treeTemplate';
 import IView from './interfaces/IView';
 import IViewTreeTemplate from './interfaces/IViewTreeTemplate';
+import { HorizontalConfig } from './Config/Config';
+import { IConfig } from './Config/IConfig';
 import SliderView from './UI/SliderView/SliderView';
 import ISliderView from './UI/SliderView/ISliderView';
 import { HorizontalContainerView } from './UI/ContainerView/ContainerView';
@@ -14,8 +16,8 @@ import {
 import IProgressBarView from './UI/ProgressBarView/IProgressBarView';
 import LabelView from './UI/LabelView/LabelView';
 import ILabelView from './UI/LabelView/ILabelView';
-import { HorizontalConfig } from './Config/Config';
-import { IConfig } from './Config/IConfig';
+import ScaleView from './UI/ScaleView/ScaleView';
+import IScaleView from './UI/ScaleView/IScaleView';
 
 class View extends EventEmitter implements IView {
   private static tree: IViewTreeTemplate = treeTemplate
@@ -28,6 +30,7 @@ class View extends EventEmitter implements IView {
   private handles: IHandleView[]
   private progressBars: IProgressBarView[]
   private labels: ILabelView[]
+  private scale: IScaleView
 
   constructor(response: IResponse, root: HTMLElement) {
     super();
@@ -44,6 +47,7 @@ class View extends EventEmitter implements IView {
     ];
     this.labels = [this.components.labelStart, this.components.labelEnd]
       .map((c) => new LabelView(c));
+    this.scale = new ScaleView(this.components.scale);
     this.parseResponse(response);
     this.bindListeners();
     root.insertAdjacentElement('beforeend', this.sliderHTML);
@@ -58,6 +62,7 @@ class View extends EventEmitter implements IView {
       this.slider.toggleIntervalMod();
     }
     this.config.update(response);
+    this.scale.update(this.config.getAllPositions());
     this.setInMotion();
   }
 
@@ -154,7 +159,6 @@ class View extends EventEmitter implements IView {
     }));
     this.setInMotion();
     this.emit(this.config.getResponse());
-    console.log(this.config.getAllPositions());
   }
 
   private setInMotion(): void {
