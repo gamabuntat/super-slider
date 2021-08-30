@@ -38,15 +38,6 @@ abstract class HandleView extends EventBinder {
     this.component.style.top = '';
   }
 
-  private bindListeners(): void {
-    this
-      .bind('pointerdown', this.handleComponentPointerdown)
-      .bind('pointermove', this.handleComponentPointermove)
-      .bind('lostpointercapture', this.handleComponentLostpointercapture)
-      .bind('focusin', this.handleComponentFocusin)
-      .bind('focusout', this.handleComponentFocusout);
-  }
-
   protected unbindListeners(): void {
     this
       .unbind('pointerdown', this.handleComponentPointerdown)
@@ -54,6 +45,15 @@ abstract class HandleView extends EventBinder {
       .unbind('lostpointercapture', this.handleComponentLostpointercapture)
       .unbind('focusin', this.handleComponentFocusin)
       .unbind('focusout', this.handleComponentFocusout);
+  }
+
+  private bindListeners(): void {
+    this
+      .bind('pointerdown', this.handleComponentPointerdown)
+      .bind('pointermove', this.handleComponentPointermove)
+      .bind('lostpointercapture', this.handleComponentLostpointercapture)
+      .bind('focusin', this.handleComponentFocusin)
+      .bind('focusout', this.handleComponentFocusout);
   }
 
   private handleComponentPointerdown = (ev: PointerEvent): void => {

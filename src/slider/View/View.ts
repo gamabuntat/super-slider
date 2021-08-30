@@ -16,7 +16,7 @@ import {
 import IProgressBarView from './UI/ProgressBarView/IProgressBarView';
 import LabelView from './UI/LabelView/LabelView';
 import ILabelView from './UI/LabelView/ILabelView';
-import ScaleView from './UI/ScaleView/ScaleView';
+import { HorizontalScaleView } from './UI/ScaleView/ScaleView';
 import IScaleView from './UI/ScaleView/IScaleView';
 
 class View extends EventEmitter implements IView {
@@ -51,7 +51,7 @@ class View extends EventEmitter implements IView {
     ];
     this.labels = [this.components.labelStart, this.components.labelEnd]
       .map((c) => new LabelView(c));
-    this.scale = new ScaleView(this.components.scale);
+    this.scale = new HorizontalScaleView(this.components.scale);
     this.parseResponse(response);
     this.bindListeners();
     root.id = response.id;
@@ -76,6 +76,7 @@ class View extends EventEmitter implements IView {
     this.container = this.container.swap();
     this.handles = this.handles.map((hv) => hv.swap());
     this.progressBars.reverse();
+    this.scale = this.scale.swap();
   }
 
   private createSlider(
@@ -162,9 +163,7 @@ class View extends EventEmitter implements IView {
   private handleScaleClick = (): void => {
     const lastPosition = this.config.calcPosition(this.scale.getLastPosition());
     const positions = this.config.getPositions();
-    const diffs = positions.map((p) => (
-      this.config.sampling(Math.abs(p - lastPosition)) || Infinity
-    ));
+    const diffs = positions.map((p) => Math.abs(p - lastPosition) || Infinity);
     let idx = diffs.indexOf(Math.min(...diffs));
     if (positions[0] === positions[1]) { 
       if (lastPosition > positions[1]) { idx = 1; }

@@ -39,7 +39,7 @@ abstract class Config {
     this.updateResponse();
   }
 
-  sampling(p: number): number {
+  protected sampling(p: number): number {
     return 1 / this.divisionNumber * Math.round(p * this.divisionNumber);
   }
 
@@ -105,8 +105,10 @@ class HorizontalConfig extends Config implements IConfig {
   calcPosition(ap: number): number {
     return clamp(
       0, 
-      Math.round((ap - this.response.min) / this.response.step) 
-        * this.response.step / this.fakeDiff,
+      this.sampling(
+        Math.round((ap - this.response.min) / this.response.step) 
+          * this.response.step / this.fakeDiff
+      ),
       1
     );
   }
@@ -155,8 +157,10 @@ class VerticalConfig extends Config implements IConfig {
   calcPosition(ap: number): number {
     return clamp(
       0, 
-      1 - Math.round((ap - this.response.min) / this.response.step) 
-        * this.response.step / this.fakeDiff,
+      this.sampling(
+        1 - Math.round((ap - this.response.min) / this.response.step) 
+          * this.response.step / this.fakeDiff
+      ),
       1
     );
   }

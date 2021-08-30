@@ -2,18 +2,20 @@ import { IAllPositions } from 'slider/View/Config/IConfig';
 import EventBinder from 'slider/EventBinder/EventBinder';
 import IScaleView from './IScaleView';
 
-class ScaleView extends EventBinder implements IScaleView {
+abstract class ScaleView extends EventBinder {
+  protected scaleSize = 0
+  protected lableSize = 0
+  protected buttons: HTMLElement[] = []
   private buttonClass: string
   private labelClass: string
   private lastPosition = 0
   private resizeObserver: ResizeObserver
-  private buttons: HTMLElement[] = []
 
   constructor(component: HTMLElement) {
     super(component);
     this.buttonClass = this.getElemClass('button');
     this.labelClass = this.getElemClass('label');
-    this.resizeObserver = this.getResizeObserver();
+    this.resizeObserver = new ResizeObserver(this.handleScaleResize);
     this.bindListeners();
   }
 
@@ -22,6 +24,7 @@ class ScaleView extends EventBinder implements IScaleView {
     this.buttons = absolutePositions.map((ap) => {
       const button = this.getButton(ap);
       this.component.appendChild(button);
+      this.setLableSize(button);
       return button;
     });
   }
@@ -34,8 +37,10 @@ class ScaleView extends EventBinder implements IScaleView {
     return `${this.component.classList[0].replace(/--.*/, '')}-${postfix}`;
   }
 
-  private getResizeObserver(): ResizeObserver {
-    return new ResizeObserver(this.handleScaleResize);
+  protected unbindListeners(): void {
+    this
+      .unbind('click', this.handleScaleClick)
+      .resizeObserver.unobserve(this.component);
   }
 
   private bindListeners(): void {
@@ -44,15 +49,27 @@ class ScaleView extends EventBinder implements IScaleView {
       .resizeObserver.observe(this.component);
   }
 
-  private handleScaleResize = (entr: ResizeObserverEntry[]): void => {
-    console.log(entr[0].target);
-  }
-
   private handleScaleClick = (e: MouseEvent): void => {
     const button = (<HTMLElement>e.target).closest(`.${this.buttonClass}`);
     if (button) {
       this.lastPosition =  Number(button.getAttribute('data-position'));
     }
+  }
+
+  private handleScaleResize = (entrs: ResizeObserverEntry[]): void => {
+    console.log(this.component);
+    this.updateScaleSize(entrs[0]);
+    console.log(this.scaleSize);
+    console.log(this.lableSize);
+    const n = Math.min(
+        this.buttons.length,
+        Math.floor(this.scaleSize / this.lableSize)
+    );
+
+  }
+
+  private restoreUsability(n: number): void {
+    
   }
 
   private getButton(ap: number): HTMLElement {
@@ -65,7 +82,48 @@ class ScaleView extends EventBinder implements IScaleView {
     b.insertAdjacentElement('beforeend', label);
     return b;
   }
+
+  abstract swap(): IScaleView
+
+  protected abstract updateScaleSize(entr: ResizeObserverEntry): void
+
+  protected abstract setLableSize(button: HTMLElement): void
 }
 
-export default ScaleView;
+class HorizontalScaleView extends ScaleView implements IScaleView {
+  swap(): IScaleView {
+    this.unbindListeners();
+    return new VerticalScaleView(this.component);
+  }
+
+  protected updateScaleSize(entr: ResizeObserverEntry): void  {
+    this.scaleSize = entr.contentRect.width;
+  }
+
+  protected setLableSize(button: HTMLElement): void {
+    this.lableSize = Math.max(
+      button.children[0].getBoundingClientRect().width,
+      this.lableSize
+    );
+  }
+}
+
+class VerticalScaleView extends ScaleView implements IScaleView {
+  swap(): IScaleView {
+    this.unbindListeners();
+    return new HorizontalScaleView(this.component);
+  }
+
+  protected updateScaleSize(entr: ResizeObserverEntry): void {
+    this.scaleSize = entr.contentRect.height;
+  }
+
+  protected setLableSize(button: HTMLElement): void {
+    this.lableSize = Math.max(
+      button.children[0].getBoundingClientRect().height,
+      this.lableSize
+    );
+  }
+}
+export { HorizontalScaleView, VerticalScaleView };
 
