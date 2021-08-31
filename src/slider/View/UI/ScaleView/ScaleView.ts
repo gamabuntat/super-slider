@@ -6,13 +6,17 @@ abstract class ScaleView extends EventBinder {
   protected scaleSize = 0
   protected lableSize = 0
   protected buttons: HTMLElement[] = []
+  private hiddenMod: string
   private buttonClass: string
   private labelClass: string
   private lastPosition = 0
   private resizeObserver: ResizeObserver
+  private timeoutIDX!: ReturnType<typeof setTimeout>
+  private delay = 200
 
   constructor(component: HTMLElement) {
     super(component);
+    this.hiddenMod = this.getElemClass('-hidden');
     this.buttonClass = this.getElemClass('button');
     this.labelClass = this.getElemClass('label');
     this.resizeObserver = new ResizeObserver(this.handleScaleResize);
@@ -57,19 +61,22 @@ abstract class ScaleView extends EventBinder {
   }
 
   private handleScaleResize = (entrs: ResizeObserverEntry[]): void => {
-    console.log(this.component);
     this.updateScaleSize(entrs[0]);
-    console.log(this.scaleSize);
-    console.log(this.lableSize);
-    const n = Math.min(
-        this.buttons.length,
+    const cb = () => (
+      this.restoreUsability(Math.min(
+        this.buttons.length, 
         Math.floor(this.scaleSize / this.lableSize)
+      ))
     );
-
+    clearTimeout(this.timeoutIDX);
+    this.timeoutIDX = setTimeout(cb, this.delay);
   }
 
-  private restoreUsability(n: number): void {
-    
+  private restoreUsability = (n: number): void => {
+    console.log(this.component);
+    console.log(n);
+    console.log(this.scaleSize);
+    console.log(this.lableSize);
   }
 
   private getButton(ap: number): HTMLElement {
