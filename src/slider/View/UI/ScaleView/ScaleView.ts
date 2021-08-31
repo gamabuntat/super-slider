@@ -8,22 +8,26 @@ abstract class ScaleView extends EventBinder {
   protected buttons: HTMLElement[] = []
   private hiddenMod: string
   private buttonClass: string
+  private buttonHiddenMod: string
   private labelClass: string
   private lastPosition = 0
   private resizeObserver: ResizeObserver
-  private timeoutIDX!: ReturnType<typeof setTimeout>
+  private timer!: ReturnType<typeof setTimeout>
   private delay = 200
+  private prevN = 0
 
   constructor(component: HTMLElement) {
     super(component);
     this.hiddenMod = this.getElemClass('-hidden');
     this.buttonClass = this.getElemClass('button');
+    this.buttonHiddenMod = this.getElemClass('button--hidden');
     this.labelClass = this.getElemClass('label');
     this.resizeObserver = new ResizeObserver(this.handleScaleResize);
     this.bindListeners();
   }
 
   update({ absolutePositions }: IAllPositions): void {
+    if (this.component.classList.contains(this.hiddenMod)) { return; }
     this.component.innerHTML = '';
     this.buttons = absolutePositions.map((ap) => {
       const button = this.getButton(ap);
@@ -31,6 +35,8 @@ abstract class ScaleView extends EventBinder {
       this.setLableSize(button);
       return button;
     });
+    this.prevN = this.getN();
+    // this.restoreUsability(this.prevN);
   }
 
   getLastPosition(): number {
@@ -53,6 +59,13 @@ abstract class ScaleView extends EventBinder {
       .resizeObserver.observe(this.component);
   }
 
+  private getN(): number {
+    return Math.min(
+      this.buttons.length,
+      Math.floor(this.scaleSize / this.lableSize) || 0
+    );
+  }
+
   private handleScaleClick = (e: MouseEvent): void => {
     const button = (<HTMLElement>e.target).closest(`.${this.buttonClass}`);
     if (button) {
@@ -61,33 +74,47 @@ abstract class ScaleView extends EventBinder {
   }
 
   private handleScaleResize = (entrs: ResizeObserverEntry[]): void => {
+    if (this.component.classList.contains(this.hiddenMod)) { return; }
     this.updateScaleSize(entrs[0]);
-    const cb = () => (
-      this.restoreUsability(Math.min(
-        this.buttons.length, 
-        Math.floor(this.scaleSize / this.lableSize)
-      ))
-    );
-    clearTimeout(this.timeoutIDX);
-    this.timeoutIDX = setTimeout(cb, this.delay);
+    const n = this.getN();
+    // if (n !== this.prevN) {
+    //   this.prevN = n;
+    //   clearTimeout(this.timer);
+    //   this.timer = setTimeout(
+    //     () => this.restoreUsability(n),
+    //     this.delay
+    //   );
+    // }
   }
 
-  private restoreUsability = (n: number): void => {
-    console.log(this.component);
-    console.log(n);
-    console.log(this.scaleSize);
-    console.log(this.lableSize);
+  private restoreUsability = (
+    n: number, halves: HTMLElement[][] = [this.buttons]
+  ): void => {
+    if (n <= 0) { return; }
+    const newHalves = [];
+    let newN = n;
+    let idx = 0;
+    do {
+      const leftSide = halves[idx];
+      const lCenter = Math.floor(leftSide.length / 2);
+      leftSide[lCenter]
+    } while (idx < halves.length / 2)
   }
 
   private getButton(ap: number): HTMLElement {
     const b = document.createElement('button');
     b.classList.add(this.buttonClass);
     b.dataset.position = String(ap);
+    this.toggleButtonHiddenMod(b);
     const label = document.createElement('span');
     label.classList.add(this.labelClass);
     label.innerText = String(ap);
     b.insertAdjacentElement('beforeend', label);
     return b;
+  }
+
+  private toggleButtonHiddenMod(button: HTMLElement): void {
+    button.classList.toggle(this.buttonHiddenMod);
   }
 
   abstract swap(): IScaleView
