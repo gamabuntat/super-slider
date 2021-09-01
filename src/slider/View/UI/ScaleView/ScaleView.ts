@@ -3,9 +3,10 @@ import EventBinder from 'slider/EventBinder/EventBinder';
 import IScaleView from './IScaleView';
 
 abstract class ScaleView extends EventBinder {
-  protected size: number
+  protected size!: number
   protected labelSize = 0
   protected buttons: HTMLElement[] = []
+  private container: HTMLElement
   private hiddenMod: string
   private buttonClass: string
   private buttonHiddenMod: string
@@ -13,12 +14,13 @@ abstract class ScaleView extends EventBinder {
   private lastPosition = 0
   private resizeObserver: ResizeObserver
   private timer!: ReturnType<typeof setTimeout>
-  private delay = 200
+  private delay = 100
   private prevN = 0
 
   constructor(component: HTMLElement) {
     super(component);
-    this.size = this.component.getBoundingClientRect().width;
+    this.updateSize();
+    this.container = this.getContainer();
     this.hiddenMod = this.getElemClass('-hidden');
     this.buttonClass = this.getElemClass('button');
     this.buttonHiddenMod = this.getElemClass('button--hidden');
@@ -29,15 +31,23 @@ abstract class ScaleView extends EventBinder {
 
   update({ absolutePositions }: IAllPositions): void {
     if (this.component.classList.contains(this.hiddenMod)) { return; }
+    this.container.innerHTML = '';
     this.component.innerHTML = '';
     this.buttons = absolutePositions.map((ap) => {
-      const button = this.getButton(ap);
-      this.component.appendChild(button);
-      this.setLableSize(button);
-      this.toggleButtonHiddenMod(button);
-      return button;
+      const b = this.getButton(ap);
+      this.container.insertAdjacentElement('beforeend', b);
+      return b;
     });
+    this.component.insertAdjacentElement('beforeend', this.container);
+    this.buttons.forEach((b) => {
+      this.setLableSize(b);
+      this.toggleButtonHiddenMod(b);
+    });
+    console.log(this.component);
+    console.log(this.size);
+    console.log(this.labelSize);
     this.prevN = this.getN();
+    console.log(this.prevN);
     this.restoreUsability(this.prevN - 2, [this.buttons.slice(1, -1)]);
     this.showExtremeButtons();
   }
@@ -49,7 +59,6 @@ abstract class ScaleView extends EventBinder {
   toggleHiddenMode(): void {
     this.component.classList.toggle(this.hiddenMod);
   }
-
 
   private getElemClass(postfix: string): string {
     return `${this.component.classList[0].replace(/--.*/, '')}-${postfix}`;
@@ -81,9 +90,9 @@ abstract class ScaleView extends EventBinder {
     }
   }
 
-  private handleScaleResize = (entrs: ResizeObserverEntry[]): void => {
+  private handleScaleResize = (): void => {
     if (this.component.classList.contains(this.hiddenMod)) { return; }
-    this.updateSize(entrs[0]);
+    this.updateSize();
     const n = this.getN();
     if (n !== this.prevN) {
       this.prevN = n;
@@ -91,7 +100,9 @@ abstract class ScaleView extends EventBinder {
       this.timer = setTimeout(
         () => (
           this.hideButtons(),
-          (() => this.restoreUsability(n - 2, [this.buttons.slice(1, -1)]))(),
+          (() => (
+            this.restoreUsability(this.prevN - 2, [this.buttons.slice(1, -1)])
+          ))(),
           this.showExtremeButtons()
         ),
         this.delay
@@ -150,6 +161,12 @@ abstract class ScaleView extends EventBinder {
     return b;
   }
 
+  private getContainer(): HTMLElement {
+    const c = document.createElement('div');
+    c.classList.add(this.getElemClass('container'));
+    return c;
+  }
+
   private hideButtons(): void {
     this.buttons.forEach((b) => b.classList.add(this.buttonHiddenMod));
   }
@@ -160,7 +177,7 @@ abstract class ScaleView extends EventBinder {
 
   abstract swap(): IScaleView
 
-  protected abstract updateSize(entr: ResizeObserverEntry): void
+  protected abstract updateSize(): void
 
   protected abstract setLableSize(button: HTMLElement): void
 }
@@ -171,8 +188,8 @@ class HorizontalScaleView extends ScaleView implements IScaleView {
     return new VerticalScaleView(this.component);
   }
 
-  protected updateSize(entr: ResizeObserverEntry): void  {
-    this.size = entr.contentRect.width;
+  protected updateSize(): void  {
+    this.size = this.component.getBoundingClientRect().width;
   }
 
   protected setLableSize(button: HTMLElement): void {
@@ -189,8 +206,8 @@ class VerticalScaleView extends ScaleView implements IScaleView {
     return new HorizontalScaleView(this.component);
   }
 
-  protected updateSize(entr: ResizeObserverEntry): void {
-    this.size = entr.contentRect.height;
+  protected updateSize(): void {
+    this.size = this.component.getBoundingClientRect().height;
   }
 
   protected setLableSize(button: HTMLElement): void {
