@@ -38,11 +38,11 @@ import Service from './Service/Service';
 $('#slider1').slider({
   step: 2.123, max: -32, min: -74, isInterval: true, from: -52.77
 });
-$('#slider2').slider({ isVertical: false })
-  .slider({ isVertical: true, max: 2 });
+// $('#slider2').slider({ isVertical: false })
+//   .slider({ isVertical: true, max: 2 });
 $('#slider3')
   .slider({
-    isInterval: true, isVertical: true, min: -10, max: -2, step: 2
+    isInterval: true, isVertical: true, min: -10, max: -2, step: 2,
   })
 ;
 

@@ -19,7 +19,7 @@ abstract class ScaleView extends EventBinder {
   constructor(component: HTMLElement) {
     super(component);
     this.size = this.component.getBoundingClientRect().width;
-    this.hiddenMod = this.getElemClass('--hidden');
+    this.hiddenMod = this.getElemClass('-hidden');
     this.buttonClass = this.getElemClass('button');
     this.buttonHiddenMod = this.getElemClass('button--hidden');
     this.labelClass = this.getElemClass('label');
@@ -45,6 +45,11 @@ abstract class ScaleView extends EventBinder {
   getLastPosition(): number {
     return this.lastPosition;
   }
+
+  toggleHiddenMode(): void {
+    this.component.classList.toggle(this.hiddenMod);
+  }
+
 
   private getElemClass(postfix: string): string {
     return `${this.component.classList[0].replace(/--.*/, '')}-${postfix}`;
@@ -94,10 +99,6 @@ abstract class ScaleView extends EventBinder {
     }
   }
 
-  private hideButtons(): void {
-    this.buttons.forEach((b) => b.classList.add(this.buttonHiddenMod));
-  }
-
   private restoreUsability(
     n: number, halves: HTMLElement[][] = [this.buttons]
   ): void {
@@ -105,7 +106,7 @@ abstract class ScaleView extends EventBinder {
     const newHalves = [];
     let newN = n;
     let idx = 0;
-    do {
+    while (idx < halves.length / 2) {
       const leftSide = halves[idx];
       const lCenter = Math.floor(leftSide.length / 2);
       this.toggleButtonHiddenMod(leftSide[lCenter]);
@@ -127,7 +128,7 @@ abstract class ScaleView extends EventBinder {
         }
       }
       idx += 1;
-    } while (idx < halves.length / 2);
+    }
     this.restoreUsability(newN, newHalves);
   }
 
@@ -147,6 +148,10 @@ abstract class ScaleView extends EventBinder {
     label.innerText = String(ap);
     b.insertAdjacentElement('beforeend', label);
     return b;
+  }
+
+  private hideButtons(): void {
+    this.buttons.forEach((b) => b.classList.add(this.buttonHiddenMod));
   }
 
   private toggleButtonHiddenMod(button: HTMLElement): void {

@@ -23,11 +23,6 @@ abstract class HandleView extends EventBinder {
   }
 
   calcPosition(containerCoord: number, containerSize: number,): number {
-    console.log(
-      (this.getPointerCoord() 
-        - containerCoord - this.getShift() - this.getOffset()
-      ) / containerSize || 0
-    );
     return (this.getPointerCoord() 
       - containerCoord - this.getShift() - this.getOffset()
     ) / containerSize || 0;

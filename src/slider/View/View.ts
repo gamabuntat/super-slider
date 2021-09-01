@@ -64,6 +64,12 @@ class View extends EventEmitter implements IView {
     if (this.config.getResponse().isInterval !== response.isInterval) {
       this.slider.toggleIntervalMod();
     }
+    if (this.config.getResponse().isScale !== response.isScale) {
+      this.scale.toggleHiddenMode();
+    }
+    if (this.config.getResponse().isLabel !== response.isLabel) {
+      this.labels.forEach((l) => l.toggleHiddenMode());
+    }
     this.config.update(response);
     this.scale.update(this.config.getAllPositions());
     this.setInMotion();
