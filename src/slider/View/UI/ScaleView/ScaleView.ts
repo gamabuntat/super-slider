@@ -19,6 +19,10 @@ abstract class ScaleView extends EventBinder {
 
   constructor(component: HTMLElement) {
     super(component);
+    this.resetSizes();
+    this.container = this.getContainer();
+    this.component.innerHTML = '';
+    this.component.insertAdjacentElement('beforeend', this.container);
     this.updateSize();
     this.hiddenMod = this.getElemClass('-hidden');
     this.buttonClass = this.getElemClass('button');
@@ -30,14 +34,12 @@ abstract class ScaleView extends EventBinder {
 
   update({ absolutePositions }: IAllPositions): void {
     if (this.component.classList.contains(this.hiddenMod)) { return; }
-    this.container = this.getContainer();
-    this.component.insertAdjacentElement('beforeend', this.container);
     this.container.innerHTML = '';
     this.buttons = absolutePositions.map((ap) => {
       const b = this.getButton(ap);
       this.container.insertAdjacentElement('beforeend', b);
       this.setLabelSize(b);
-      this.setAnotherLabelSize(b);
+      this.setAttrSize(b);
       this.toggleButtonHiddenMod(b);
       return b;
     });
@@ -52,6 +54,11 @@ abstract class ScaleView extends EventBinder {
 
   toggleHiddenMode(): void {
     this.component.classList.toggle(this.hiddenMod);
+  }
+
+  private resetSizes(): void {
+    this.component.style.width = '';
+    this.component.style.height = '';
   }
 
   private getElemClass(postfix: string): string {
@@ -175,7 +182,7 @@ abstract class ScaleView extends EventBinder {
 
   protected abstract setLabelSize(button: HTMLElement): void
 
-  protected abstract setAnotherLabelSize(button: HTMLElement): void
+  protected abstract setAttrSize(button: HTMLElement): void
 }
 
 class HorizontalScaleView extends ScaleView implements IScaleView {
@@ -195,7 +202,7 @@ class HorizontalScaleView extends ScaleView implements IScaleView {
     );
   }
 
-  protected setAnotherLabelSize(button: HTMLElement): void {
+  protected setAttrSize(button: HTMLElement): void {
     this.component.style.height = `${Math.max(
       parseFloat(getComputedStyle(this.component).height),
       button.children[0].getBoundingClientRect().height
@@ -220,7 +227,7 @@ class VerticalScaleView extends ScaleView implements IScaleView {
     );
   }
 
-  protected setAnotherLabelSize(button: HTMLElement): void {
+  protected setAttrSize(button: HTMLElement): void {
     this.component.style.width = `${Math.max(
       parseFloat(getComputedStyle(this.component).width),
       button.children[0].getBoundingClientRect().width
