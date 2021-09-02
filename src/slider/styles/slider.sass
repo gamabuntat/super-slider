@@ -162,8 +162,8 @@ $track-size: 6px
     background-color: $color-main
     color: white
     pointer-events: none
-    font-family: monospace
-    font-size: 1.0rem
+    font-size: 1rem
+    font-family: Unifont, monospace
 
     &--start
       @extend .ui-slider__label
@@ -223,12 +223,6 @@ $track-size: 6px
       height: 100%
       position: absolute
 
-    & &-button:first-child
-      justify-content: initial
-
-    & &-button:last-child
-      justify-content: flex-end
-
     &-button
       display: flex
       flex-grow: 1
@@ -240,9 +234,9 @@ $track-size: 6px
       border: none
       overflow: hidden
       cursor: pointer
-      font-family: monospace
-      font-size: 1rem
       outline: none
+      font-size: 0.7rem
+      font-family: Unifont, monospace
 
       &:hover, &:focus
         color: $color-active-scale-label
@@ -258,10 +252,8 @@ $track-size: 6px
       flex-direction: column
 
     &-button:first-child
-      justify-content: center
       align-items: initial
 
     &-button:last-child
-      justify-content: center
       align-items: flex-end
 

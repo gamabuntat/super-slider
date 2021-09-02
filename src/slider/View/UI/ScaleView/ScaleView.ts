@@ -19,7 +19,6 @@ abstract class ScaleView extends EventBinder {
 
   constructor(component: HTMLElement) {
     super(component);
-    this.resetSizes();
     this.container = this.getContainer();
     this.component.innerHTML = '';
     this.component.insertAdjacentElement('beforeend', this.container);
@@ -34,6 +33,7 @@ abstract class ScaleView extends EventBinder {
 
   update({ absolutePositions }: IAllPositions): void {
     if (this.component.classList.contains(this.hiddenMod)) { return; }
+    this.resetSizes();
     this.container.innerHTML = '';
     this.buttons = absolutePositions.map((ap) => {
       const b = this.getButton(ap);
@@ -69,12 +69,14 @@ abstract class ScaleView extends EventBinder {
     this
       .unbind('click', this.handleScaleClick)
       .resizeObserver.unobserve(this.component);
+    window.removeEventListener('load', this.handleWindowLoad);
   }
 
   private bindListeners(): void {
     this
       .bind('click', this.handleScaleClick)
       .resizeObserver.observe(this.component);
+    window.addEventListener('load', this.handleWindowLoad);
   }
 
   private getN(): number {
@@ -109,6 +111,11 @@ abstract class ScaleView extends EventBinder {
         this.delay
       );
     }
+  }
+
+  private handleWindowLoad = (): void => {
+    this.resetSizes();
+    this.buttons.forEach(this.setAttrSize, this);
   }
 
   private restoreUsability(

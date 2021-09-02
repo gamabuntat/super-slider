@@ -1,31 +1,34 @@
 @import '../slider/styles/vars'
+@import '../fonts/unifont/stylesheet.css'
 
 html
   font-size: 24px
-  font-family: monospace
+  font-family: Unifont, monospace
   margin: 0
 
 body
   display: flex
   flex-direction: column
+  gap: 10px
   align-items: center
   background-color: #d7d6d694
   min-height: 100vh
   margin: 0
-  padding: 20px 0
+  padding: 20px
   box-sizing: border-box
 
 .container
   display: flex
   flex-direction: column
   min-width: 60vw
-  row-gap: 10px
+  gap: 10px
 
   &_vertical
     flex-grow: 1
 
     & .slider
       flex-grow: 1
+      min-height: 120px
 
 .slider
   display: flex
@@ -40,7 +43,6 @@ body
   &__container
     display: flex
     flex-wrap: wrap
-    justify-content: center
     gap: 4px
 
   &__numeric
@@ -49,6 +51,7 @@ body
       display: flex
       width: 120px
       cursor: pointer
+      font-size: .7rem
 
     &-sign
       padding: 4px
@@ -59,6 +62,7 @@ body
       font-size: 1rem
       border: 1px dashed black
       outline: none
+      font-size: .7rem
 
       &:focus
         border: 1px dashed $color-active-scale-label
@@ -68,6 +72,7 @@ body
     &-label
       display: flex
       cursor: pointer
+      font-size: .7rem
 
     &-sign
       padding: 4px
@@ -76,12 +81,12 @@ body
       position: absolute
       -webkit-appearance: none
       appearance: none
+      font-size: .7rem
 
       &:focus
 
         & + .conf__switches-box
           border-color: $color-active-scale-label
-          box-shadow: 30px 0px 0px 0px $color-active inset
 
       &:checked
         

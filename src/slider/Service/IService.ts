@@ -15,7 +15,7 @@ type TypeValidateOptionsKeys = keyof {
 };
 
 interface IService extends IEventEmitter {
-  subscribe(id: string, cb: TypeResponseHandler): void
+  subscribe(preID: string, cb: TypeResponseHandler): string
   removeModel(id: string): void
   updateModel(response: IResponse): void
   add(id: string, o: IOptions): { model: IResponse, isNew: boolean }

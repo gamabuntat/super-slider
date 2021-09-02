@@ -13,7 +13,8 @@ import Service from './Service/Service';
     };
 
     this.subscribe = (cb: (r: IResponse) => void) => {
-      Service.getInstance().subscribe(this[0].id, cb);
+      const id = Service.getInstance().subscribe(this[0].id, cb);
+      this[0].id ||= id;
     };
 
     if (o) {

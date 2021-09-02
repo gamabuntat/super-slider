@@ -19,6 +19,7 @@ module.exports = (env, argv) => {
     output: {
       filename: '[name].js',
       path: path.resolve(__dirname, 'dist'),
+      assetModuleFilename: 'images/[name][ext][query]'
     },
     resolve: {
       extensions: [ '.ts', '.js' ],
@@ -63,7 +64,15 @@ module.exports = (env, argv) => {
         {
           test: /\.pug$/,
           use: 'pug3-loader',
-        }
+        },
+        {
+          test: /\.(svg|ttf|otf|eot|woff[2]?)$/i,
+          type: 'asset/resource',
+          include: path.resolve(__dirname, 'src/fonts'),
+          generator: {
+            filename: 'fonts/[name][ext][query]'
+          },
+        },
       ],
     },
     plugins: [

@@ -32,8 +32,10 @@ class Service extends EventEmitter implements IService {
     return Service.instance; 
   }
 
-  subscribe(id: string, cb: TypeResponseHandler): void {
+  subscribe(preID: string, cb: TypeResponseHandler): string {
+    const id = preID || this.generateID();
     this.on('sub' + id, cb);
+    return id;
   }
 
   removeModel(id: string): void {
@@ -44,13 +46,10 @@ class Service extends EventEmitter implements IService {
 
   updateModel(response: IResponse): void {
     this.addModel({ ...response });
-    // console.log(response);
     this.emit({ ...response }, 'sub' + response.id);
   }
 
-  add(preID: string, o: IOptions): { 
-    model: IResponse, isNew: boolean 
-  } {
+  add(preID: string, o: IOptions): { model: IResponse, isNew: boolean } {
     const id = preID || this.generateID();
     const prevLength = this.models.length;
     this.selectedModel = { 
