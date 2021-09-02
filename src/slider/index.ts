@@ -35,9 +35,9 @@ import Service from './Service/Service';
 //   console.log('\n'), console.log(i), console.log('\n')
 // );
 
-// $('#slider1').slider({
-//   step: 2.123, max: -32, min: -74, isInterval: true, from: -52.77
-// });
+$('#slider1').slider({
+  step: 2.123, max: -32, min: -74, isInterval: true, from: -52.77
+});
 // $('#slider2').slider({ isVertical: false })
 //   .slider({ isVertical: false, max: 2 });
 $('#slider3')

@@ -6,7 +6,7 @@ abstract class ScaleView extends EventBinder {
   protected size!: number
   protected labelSize = 0
   protected buttons: HTMLElement[] = []
-  private container: HTMLElement
+  private container!: HTMLElement
   private hiddenMod: string
   private buttonClass: string
   private buttonHiddenMod: string
@@ -20,7 +20,6 @@ abstract class ScaleView extends EventBinder {
   constructor(component: HTMLElement) {
     super(component);
     this.updateSize();
-    this.container = this.getContainer();
     this.hiddenMod = this.getElemClass('-hidden');
     this.buttonClass = this.getElemClass('button');
     this.buttonHiddenMod = this.getElemClass('button--hidden');
@@ -31,23 +30,18 @@ abstract class ScaleView extends EventBinder {
 
   update({ absolutePositions }: IAllPositions): void {
     if (this.component.classList.contains(this.hiddenMod)) { return; }
+    this.container = this.getContainer();
+    this.component.insertAdjacentElement('beforeend', this.container);
     this.container.innerHTML = '';
-    this.component.innerHTML = '';
     this.buttons = absolutePositions.map((ap) => {
       const b = this.getButton(ap);
       this.container.insertAdjacentElement('beforeend', b);
+      this.setLabelSize(b);
+      this.setAnotherLabelSize(b);
+      this.toggleButtonHiddenMod(b);
       return b;
     });
-    this.component.insertAdjacentElement('beforeend', this.container);
-    this.buttons.forEach((b) => {
-      this.setLableSize(b);
-      this.toggleButtonHiddenMod(b);
-    });
-    console.log(this.component);
-    console.log(this.size);
-    console.log(this.labelSize);
     this.prevN = this.getN();
-    console.log(this.prevN);
     this.restoreUsability(this.prevN - 2, [this.buttons.slice(1, -1)]);
     this.showExtremeButtons();
   }
@@ -179,7 +173,9 @@ abstract class ScaleView extends EventBinder {
 
   protected abstract updateSize(): void
 
-  protected abstract setLableSize(button: HTMLElement): void
+  protected abstract setLabelSize(button: HTMLElement): void
+
+  protected abstract setAnotherLabelSize(button: HTMLElement): void
 }
 
 class HorizontalScaleView extends ScaleView implements IScaleView {
@@ -192,11 +188,18 @@ class HorizontalScaleView extends ScaleView implements IScaleView {
     this.size = this.component.getBoundingClientRect().width;
   }
 
-  protected setLableSize(button: HTMLElement): void {
+  protected setLabelSize(button: HTMLElement): void {
     this.labelSize = Math.max(
       button.children[0].getBoundingClientRect().width,
       this.labelSize
     );
+  }
+
+  protected setAnotherLabelSize(button: HTMLElement): void {
+    this.component.style.height = `${Math.max(
+      parseFloat(getComputedStyle(this.component).height),
+      button.children[0].getBoundingClientRect().height
+    )}px`;
   }
 }
 
@@ -210,11 +213,18 @@ class VerticalScaleView extends ScaleView implements IScaleView {
     this.size = this.component.getBoundingClientRect().height;
   }
 
-  protected setLableSize(button: HTMLElement): void {
+  protected setLabelSize(button: HTMLElement): void {
     this.labelSize = Math.max(
       button.children[0].getBoundingClientRect().height,
       this.labelSize
     );
+  }
+
+  protected setAnotherLabelSize(button: HTMLElement): void {
+    this.component.style.width = `${Math.max(
+      parseFloat(getComputedStyle(this.component).width),
+      button.children[0].getBoundingClientRect().width
+    )}px`;
   }
 }
 export { HorizontalScaleView, VerticalScaleView };
