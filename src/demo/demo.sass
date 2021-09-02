@@ -1,3 +1,5 @@
+@import '../slider/styles/vars'
+
 html
   font-size: 24px
   font-family: monospace
@@ -6,16 +8,89 @@ html
 body
   display: flex
   flex-direction: column
-  height: 100vh
+  align-items: center
   background-color: #d7d6d694
+  min-height: 100vh
   margin: 0
-  padding: 50px
-  box-sizing: border-box
-
-#slider3
-  height: 100%
+  padding: 20px 0
   box-sizing: border-box
 
 .container
-  flex-grow: 1
+  display: flex
+  flex-direction: column
+  min-width: 60vw
+  row-gap: 10px
+
+  &_vertical
+    flex-grow: 1
+
+    & .slider
+      flex-grow: 1
+
+.slider
+  display: flex
+  flex-direction: column
+  border: .5px dashed pink
+
+.conf
+  display: flex
+  flex-direction: column
+  gap: 4px
+
+  &__container
+    display: flex
+    flex-wrap: wrap
+    justify-content: center
+    gap: 4px
+
+  &__numeric
+
+    &-label
+      display: flex
+      width: 120px
+      cursor: pointer
+
+    &-sign
+      padding: 4px
+
+    &-input
+      min-width: 0
+      font-family: monospace
+      font-size: 1rem
+      border: 1px dashed black
+      outline: none
+
+      &:focus
+        border: 1px dashed $color-active-scale-label
+
+  &__switches
+    
+    &-label
+      display: flex
+      cursor: pointer
+
+    &-sign
+      padding: 4px
+
+    &-input
+      position: absolute
+      -webkit-appearance: none
+      appearance: none
+
+      &:focus
+
+        & + .conf__switches-box
+          border-color: $color-active-scale-label
+          box-shadow: 30px 0px 0px 0px $color-active inset
+
+      &:checked
+        
+        & + .conf__switches-box
+          box-shadow: -30px 0px 0px 0px $color-active inset
+
+    &-box
+      width: 60px
+      border: 1px dashed black
+      background-color: #fff
+      box-shadow: 30px 0px 0px 0px $color-main inset
 

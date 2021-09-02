@@ -14,7 +14,7 @@ module.exports = (env, argv) => {
     devtool: isProd ? false : 'inline-source-map',
     entry: {
       slider: './src/slider/index.ts',
-      demo: './src/demo/demo.js',
+      demo: './src/demo/demo.ts',
     },
     output: {
       filename: '[name].js',

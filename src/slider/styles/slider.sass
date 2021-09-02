@@ -1,4 +1,5 @@
 @use 'sass:math'
+@import 'vars'
 
 $double-vertical: '.ui-slider--vertical.ui-slider--interval'
 $handle-width: 12px
@@ -6,13 +7,6 @@ $handle-heigth: 30px
 $label-height: 18px
 $label-gap: 14px
 $track-size: 6px
-$color-main: #615C70
-$color-accent: #afacb9
-$color-active: #FCCB1A
-$color-active-scale-label: #e2b203
-
-.ui-slider
-  border: .5px dashed pink
 
 .ui-slider
   display: flex
@@ -247,7 +241,7 @@ $color-active-scale-label: #e2b203
       overflow: hidden
       cursor: pointer
       font-family: monospace
-      font-size: 0.6rem
+      font-size: 1rem
       outline: none
 
       &:hover, &:focus
@@ -259,7 +253,6 @@ $color-active-scale-label: #e2b203
 
   &--vertical &__scale
     max-width: 50%
-    height: 100%
 
     &-container
       flex-direction: column

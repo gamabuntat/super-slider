@@ -1,5 +1,20 @@
--
-  const hi = 'hihewhe'
+mixin conf
+  - 
+    const numericNames = ['min', 'max', 'step', 'from', 'to'];
+    const switchesNames = ['interval', 'vertical', 'labels', 'scale'];
+
+  .conf
+    .conf__container
+      each name in numericNames
+        label.conf__numeric-label
+          span.conf__numeric-sign= name
+          input.conf__numeric-input(type='number')
+    .conf__container
+      each name in switchesNames
+        label.conf__switches-label
+          span.conf__switches-sign= name
+          input.conf__switches-input(type='checkbox')
+          span.conf__switches-box
 
 doctype html
 html(lang="en")
@@ -10,6 +25,14 @@ html(lang="en")
   body
     .container
       #slider1.slider
+      +conf
+    .container.container_vertical
+      #slider2.slider
+      +conf
     .container
       #slider3.slider
+      +conf
+    .container.container_vertical
+      #slider4.slider
+      +conf
 
