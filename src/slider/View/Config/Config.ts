@@ -6,6 +6,7 @@ abstract class Config {
   protected n!: number
   protected divisionNumber!: number
   protected relativeStep!: number
+  protected fakeMax!: number
   protected fakeDiff!: number
   protected positions!: number[]
   protected extremums!: typeExtremums
@@ -15,14 +16,15 @@ abstract class Config {
   }
 
   update(response: IResponse = this.response): void {
+    this.response = response;
     const { min, max, step, from, to } = response;
     this.n = numberDecimalPlaces(step);
     this.divisionNumber = Math.ceil(+(max - min).toFixed(this.n) / step);
     this.relativeStep = 1 / this.divisionNumber;
     this.fakeDiff = +(this.divisionNumber * step).toFixed(this.n);
+    this.fakeMax = +(this.fakeDiff + min).toFixed(this.n);
     this.positions = [from, to].map(this.calcPosition, this);
     this.extremums = this.getExtremums();
-    this.response = response;
   }
 
   getResponse(): IResponse {
@@ -106,7 +108,14 @@ class HorizontalConfig extends Config implements IConfig {
     return clamp(
       0, 
       this.sampling(
-        Math.round((ap - this.response.min) / this.response.step) 
+        Math.round(
+          (
+            ap == this.response.max
+              ? this.fakeMax
+              : ap
+            - this.response.min
+          ) / this.response.step
+        ) 
           * this.response.step / this.fakeDiff
       ),
       1
@@ -158,7 +167,15 @@ class VerticalConfig extends Config implements IConfig {
     return clamp(
       0, 
       this.sampling(
-        1 - Math.round((ap - this.response.min) / this.response.step) 
+        1 - Math.round(
+          (
+            ap == this.response.max 
+              ? this.fakeMax
+              : ap
+            - this.response.min
+          ) 
+          / this.response.step
+        ) 
           * this.response.step / this.fakeDiff
       ),
       1

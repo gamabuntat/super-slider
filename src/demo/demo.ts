@@ -86,7 +86,7 @@ class Conf implements IConf {
 
 const options: IOptions[] = [
   {
-    step: 2.123, max: -32, min: -74, isInterval: true, from: -52.77
+    step: 0.123, max: 101, min: 100, isInterval: true, from: -52.77
   },
   {
     isVertical: true, max: 2.2
