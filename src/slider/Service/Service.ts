@@ -103,7 +103,7 @@ class Service extends EventEmitter implements IService {
     return {
       step: () => Math.abs(step),
       min: () => +min.toFixed(n),
-      max: () => +Math.max(max, min + step).toFixed(n),
+      max: () => Math.max(max, min + step),
       from: () => (Math.min(
         max, +(Math.ceil((Math.max(min, from) - min) / step) 
           * step + min).toFixed(n)
