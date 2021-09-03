@@ -16,9 +16,9 @@ abstract class Config {
 
   update(response: IResponse = this.response): void {
     this.response = response;
-    const { min, max, step, from, to } = response;
+    const { step, from, to } = response;
     this.n = numberDecimalPlaces(step);
-    this.divisionNumber = Math.ceil((max - min) / step);
+    this.divisionNumber = this.getDivisionNumber();
     this.relativeStep = 1 / this.divisionNumber;
     this.fakeDiff = +(this.divisionNumber * step).toFixed(this.n);
     this.positions = [from, to].map(this.calcPosition, this);
@@ -49,6 +49,16 @@ abstract class Config {
       positions.push(this.getNext(positions[positions.length - 1]));
     }
     return positions;
+  }
+
+  private getDivisionNumber(): number {
+    const min = this.response.min;
+    const max = this.response.max;
+    const minN = numberDecimalPlaces(min);
+    const maxN = numberDecimalPlaces(max);
+    return Math.ceil(
+      +(max - min).toFixed(Math.max(minN, maxN)) / this.response.step
+    );
   }
 
   private validate(p: number, idx: number): number {
