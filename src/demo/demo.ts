@@ -6,32 +6,15 @@ interface IConf {
 
 class Conf implements IConf {
   private $slider: JQuery
-  private min: HTMLElement
-  private max: HTMLElement
-  private step: HTMLElement
-  private from: HTMLElement
-  private to: HTMLElement
-  private interval: HTMLElement
-  private vertical: HTMLElement
-  private labels: HTMLElement
-  private scale: HTMLElement
+  private inputs: HTMLInputElement[]
+  private intervalInput: HTMLInputElement
+  private toInput: HTMLInputElement
 
   constructor(private root: HTMLElement) {
-    console.log(this.root);
     this.$slider = this.getJqueryElement('.js-slider');
-    const [min, max, step, from, to] = this
-      .getJqueryElement('.conf__numeric-input');
-    this.min = min;
-    this.max = max;
-    this.step = step;
-    this.from = from;
-    this.to = to;
-    const [interval, vertical, labels, scale] = this
-      .getJqueryElement('.conf__switches-input');
-    this.interval = interval;
-    this.vertical = vertical;
-    this.labels = labels;
-    this.scale = scale;
+    this.inputs = [...this.getInputs('input')];
+    this.intervalInput = this.getInputs('[name="interval"]')[0];
+    this.toInput = this.getInputs('[name="to"]')[0];
     this.subscribe();
     this.bindListeners();
   }
@@ -44,21 +27,60 @@ class Conf implements IConf {
     this.$slider.slider().subscribe(this.handleSliderUpdate);
   }
 
+  private updateSlider(k: string, v: number | boolean) {
+    const o: { [k: string]: IOptions[keyof IOptions] } = {};
+    o[k] = v;
+    this.init(o);
+  }
+
   private handleSliderUpdate = (response: IResponse): void => {
-    console.log(response);
+    Object.entries(response).forEach((entr) => {
+      const input = this.inputs.find((i) => i.dataset.name === entr[0]);
+      if (!input) { return; }
+      if (typeof entr[1] == 'number') { input.value = String(entr[1]); }
+      if (typeof entr[1] == 'boolean') { input.checked = entr[1]; }
+    });
+    this.handleIntervalInputChange();
+    this.toggleRootVerticalMod(response.isVertical);
   }
 
   private bindListeners(): void {
-    this.root.addEventListener('change', this.hanldeRootChange);
+    const containers = this.root.querySelectorAll('.conf__container');
+    containers[0].addEventListener('change', this.handleNumericsChange);
+    containers[1].addEventListener('change', this.handleSwithesChange);
+    this.intervalInput
+      .addEventListener('change', this.handleIntervalInputChange);
   }
 
-  private hanldeRootChange = (e: Event): void => {
+  private handleNumericsChange = (e: Event): void => {
     const target = <HTMLInputElement>e.target;
-    console.log(target.name);
+    this.updateSlider(target.name, +target.value);
+  }
+
+  private handleSwithesChange = (e: Event): void => {
+    const target = <HTMLInputElement>e.target;
+    this.updateSlider(
+      target.dataset.name || '', 
+      target.checked
+    );
+  }
+
+  private handleIntervalInputChange = (): void => {
+    this.toInput.disabled = !this.intervalInput.checked;
+  }
+
+  private toggleRootVerticalMod(flag: boolean): void {
+    flag 
+      ? this.root.classList.add('container_vertical')
+      : this.root.classList.remove('container_vertical');
   }
 
   private getJqueryElement(selector: string): JQuery {
     return $(this.root).find(selector);
+  }
+
+  private getInputs(selector: string): NodeListOf<HTMLInputElement> {
+    return this.root.querySelectorAll(selector);
   }
 }
 
@@ -76,6 +98,6 @@ const options: IOptions[] = [
 ];
 
 document
-  .querySelectorAll<HTMLElement>('.container')
+  .querySelectorAll<HTMLElement>('.js-container')
   .forEach((c, idx) => new Conf(c).init(options[idx]));
 
