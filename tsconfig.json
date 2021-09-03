@@ -19,6 +19,6 @@
       "slider": ["./src/slider/*"]
     }
   },
-  "include": ["./src", "./jest.config.ts, './__test__'"],
+  "include": ["./src", "./jest.config.ts"],
   "exclude": ["node_modules", "test", "types"]
 }
