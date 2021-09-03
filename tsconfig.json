@@ -16,9 +16,9 @@
     "outDir": "./dist",
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "slider": ["slider/*"]
+      "slider": ["./src/slider/*"]
     }
   },
-  "include": ["./src", "./jest.config.ts"],
+  "include": ["./src", "./jest.config.ts, './__test__'"],
   "exclude": ["node_modules", "test", "types"]
 }

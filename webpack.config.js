@@ -29,10 +29,9 @@ module.exports = (env, argv) => {
       jquery: 'jQuery',
     },
     devServer: {
-      noInfo: true,
       compress: true,
-      open: false,
       port: 9000,
+      hot: true
     },
     optimization: {
       splitChunks: {
