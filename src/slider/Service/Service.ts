@@ -6,20 +6,11 @@ import numberDecimalPlaces from 'slider/helpers/numberDecimalPlaces';
 import { 
   IService, IValidatedOptions, TypeValidateOptionsKeys 
 } from './IService';
+import defaultOptions from './defaultOptions';
 
 class Service extends EventEmitter implements IService {
   private static instance: Service
-  private readonly defaultOptions: TypeRequiredOptions = {
-    min: 0,
-    max: 10,
-    from: -Infinity,
-    to: Infinity,
-    step: 1,
-    isInterval: false,
-    isVertical: false,
-    isLabel: true,
-    isScale: true,
-  }
+  private readonly defaultOptions: TypeRequiredOptions = defaultOptions 
   private selectedModel: IResponse = { ...this.defaultOptions, id: '' }
   private models: IResponse[] = []
   private selectedIndex = -1
@@ -104,14 +95,20 @@ class Service extends EventEmitter implements IService {
       step: () => Math.abs(step),
       min: () => +min.toFixed(n),
       max: () => Math.max(max, min + step),
-      from: () => (Math.min(
-        max, +(Math.round((Math.max(min, from) - min) / step) 
-          * step + min).toFixed(n)
-      )),
-      to: () => (Math.min(
-        max, +(Math.round((clamp(from, to, max) - min) / step)
-          * step + min).toFixed(n)
-      )),
+      from: () => (
+        Math.min(
+          max,
+          +(Math.ceil((Math.max(min, from) - min) / step) 
+            * step + min).toFixed(n)
+        )
+      ),
+      to: () => (
+        Math.min(
+          max,
+          +(Math.ceil((clamp(from, to, max) - min) / step)
+            * step + min).toFixed(n)
+        )
+      ),
     }[key]();
   }
 
