@@ -74,13 +74,13 @@ abstract class HandleView extends EventBinder {
   }
 
   private setShifts(ev: PointerEvent): void {
-    this.shiftX = ev.offsetX;
-    this.shiftY = ev.offsetY;
+    this.shiftX = ev.offsetX ?? 0;
+    this.shiftY = ev.offsetY ?? 0;
   }
 
   private setPointerCoords(ev: PointerEvent): void {
-    this.pointerCoordX = ev.x;
-    this.pointerCoordY = ev.y;
+    this.pointerCoordX = ev.x ?? 0;
+    this.pointerCoordY = ev.y ?? 0;
   }
 
   private fixPointer(pointerID: number): void {

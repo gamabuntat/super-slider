@@ -33,6 +33,7 @@
     "eslint-plugin-fsd": "^1.0.1",
     "fork-ts-checker-webpack-plugin": "^6.3.3",
     "html-webpack-plugin": "^5.3.2",
+    "jest-canvas-mock": "^2.3.1",
     "mini-css-extract-plugin": "^2.2.2",
     "pug3-loader": "^2.4.3",
     "sass": "^1.39.0",
