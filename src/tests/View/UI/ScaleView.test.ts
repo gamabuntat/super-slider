@@ -1,7 +1,7 @@
 import {
   HorizontalScaleView 
-} from '../../../src/slider/View/UI/ScaleView/ScaleView';
-import IScaleView from '../../../src/slider/View/UI/ScaleView/IScaleView';
+} from '../../../slider/View/UI/ScaleView/ScaleView';
+import IScaleView from '../../../slider/View/UI/ScaleView/IScaleView';
 
 type TypeLs = () => void;
 type TypeOptionalRect = { [k in keyof DOMRect]+?: DOMRect[k] };

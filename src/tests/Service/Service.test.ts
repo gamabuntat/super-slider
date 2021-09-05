@@ -1,4 +1,4 @@
-import Service from '../../src/slider/Service/Service';
+import Service from '../../slider/Service/Service';
 
 test('create one instance (singleton)', () => {
   const instance1 = Service.getInstance();
