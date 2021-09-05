@@ -71,7 +71,7 @@ class View extends EventEmitter implements IView {
       this.labels.forEach((l) => l.toggleHiddenMode());
     }
     this.config.update(response);
-    this.scale.update(this.config.getAllPositions());
+    this.scale.update(this.config.getAllPositions().absolutePositions);
     this.setInMotion();
     this.rebindListeners();
   }

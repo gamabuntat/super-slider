@@ -1,4 +1,3 @@
-import { IAllPositions } from 'slider/View/Config/IConfig';
 import EventBinder from 'slider/EventBinder/EventBinder';
 import IScaleView from './IScaleView';
 
@@ -23,15 +22,15 @@ abstract class ScaleView extends EventBinder {
     this.component.innerHTML = '';
     this.component.insertAdjacentElement('beforeend', this.container);
     this.updateSize();
-    this.hiddenMod = this.getElemClass('-hidden');
-    this.buttonClass = this.getElemClass('button');
-    this.buttonHiddenMod = this.getElemClass('button--hidden');
-    this.labelClass = this.getElemClass('label');
+    this.hiddenMod = this.getElemClass('--hidden');
+    this.buttonClass = this.getElemClass('-button');
+    this.buttonHiddenMod = this.getElemClass('-button--hidden');
+    this.labelClass = this.getElemClass('-label');
     this.resizeObserver = new ResizeObserver(this.handleScaleResize);
     this.bindListeners();
   }
 
-  update({ absolutePositions }: IAllPositions): void {
+  update(absolutePositions: number[]): void {
     if (this.component.classList.contains(this.hiddenMod)) { return; }
     this.resetSizes();
     this.container.innerHTML = '';
@@ -62,7 +61,9 @@ abstract class ScaleView extends EventBinder {
   }
 
   private getElemClass(postfix: string): string {
-    return `${this.component.classList[0].replace(/--.*/, '')}-${postfix}`;
+    return `${
+      (this.component.classList[0] || '').replace(/--.*/, '')
+    }${postfix}`;
   }
 
   protected unbindListeners(): void {
@@ -151,7 +152,7 @@ abstract class ScaleView extends EventBinder {
     this.restoreUsability(newN, newHalves);
   }
 
-  showExtremeButtons(): void {
+  private showExtremeButtons(): void {
     if (this.prevN >= 1) { this.toggleButtonHiddenMod(this.buttons[0]); }
     if (this.prevN >= 2) {
       this.toggleButtonHiddenMod(this.buttons[this.buttons.length - 1]); 
@@ -171,7 +172,7 @@ abstract class ScaleView extends EventBinder {
 
   private getContainer(): HTMLElement {
     const c = document.createElement('div');
-    c.classList.add(this.getElemClass('container'));
+    c.classList.add(this.getElemClass('-container'));
     return c;
   }
 
