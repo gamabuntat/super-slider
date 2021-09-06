@@ -45,6 +45,7 @@ $(sliderID).slider({ isScale: false });
 //     ...options
 //   }
 // yes, the answer also contains a slider ID
+```
 
 ## architecture
 Плагин реализован по схеме MVP, с пассивным view.
