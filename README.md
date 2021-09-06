@@ -1,6 +1,12 @@
 # ~~Shitty~~ Simple slider
 ## gh-pages
 [example](https://gamabuntat.github.io/shitty-slider/)
+## install
+```
+$ git clone https://github.com/gamabuntat/shitty-slider
+$ cd shitty-slider
+$ npm i
+```
 ## build
 `nmp run build`
 ## tests
