@@ -8,7 +8,6 @@ const scaleSwap = jest.fn();
 let scaleLastPosition = 0;
 const scaleGetLastPositon = () => scaleLastPosition;
 
-
 jest.mock( '../../slider/View/UI/ScaleView/ScaleView', () => {
   return {
     HorizontalScaleView: jest.fn().mockImplementation(() => {
