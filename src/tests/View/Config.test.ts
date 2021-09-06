@@ -79,7 +79,7 @@ test('get all vertical positions correctly', () => {
   const { positions, absolutePositions } = verticalConfig.getAllPositions();
   reverseTruthful.forEach((p, idx) => {
     expect(p).toBe(absolutePositions[idx]);
-    expect(verticalConfig.calcPosition(p)).toBeCloseTo(positions[idx])
+    expect(verticalConfig.calcPosition(p)).toBeCloseTo(positions[idx]);
   });
 });
 
