@@ -80,7 +80,7 @@ module.exports = (env, argv) => {
         }
       }),
       new HtmlWebpackPlugin({
-        filename: 'demo.html',
+        filename: 'index.html',
         template: './src/demo/demo.pug',
         minify: false,
         meta: {
