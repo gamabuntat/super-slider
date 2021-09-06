@@ -6,7 +6,8 @@
   "scripts": {
     "start": "npx webpack serve",
     "test": "jest --coverage",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "build": "npx webpack --mode=production"
   },
   "repository": {
     "type": "git",
