@@ -1,6 +1,6 @@
 # ~~super~~ Simple slider
 ## gh-pages
-[example](https://gamabuntat.github.io/shitty-slider/)
+[example](https://gamabuntat.github.io/super-slider/)
 ## install
 ```
 $ git clone https://github.com/gamabuntat/shitty-slider
