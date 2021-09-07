@@ -1,4 +1,4 @@
-# ~~Shitty~~ Simple slider
+# ~~super~~ Simple slider
 ## gh-pages
 [example](https://gamabuntat.github.io/shitty-slider/)
 ## install
