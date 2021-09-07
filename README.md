@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # ~~super~~ Simple slider
 ## gh-pages
 [example](https://gamabuntat.github.io/super-slider/)
