@@ -21,6 +21,6 @@ interface IResponse extends TypeRequiredOptions {
 interface JQuery {
   slider(o?: IOptions): JQuery
   destroy(): JQuery
-  subscribe(cb: (r: IResponse) => void): void
+  subscribe(cb: (r: IResponse) => void): JQuery
 }
 

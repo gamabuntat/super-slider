@@ -6,6 +6,7 @@ import numberDecimalPlaces from 'slider/helpers/numberDecimalPlaces';
 import { 
   IService, IValidatedOptions, TypeValidateOptionsKeys 
 } from './IService';
+
 import defaultOptions from './defaultOptions';
 
 class Service extends EventEmitter implements IService {
@@ -47,7 +48,7 @@ class Service extends EventEmitter implements IService {
       ...this.selectedModel = (
         this.models[this.findModelIndex(id)] || { ...this.defaultOptions, id }
       ),
-      ...this.getValedatedOptions(o),
+      ...this.getValidatedOptions(o),
     };
     this.addModel(this.selectedModel);
     this.emit({ ...this.selectedModel });
@@ -74,7 +75,7 @@ class Service extends EventEmitter implements IService {
     return String(Math.floor(Math.random() * Date.now()));
   }
 
-  private getValedatedOptions(o: IOptions): IOptions {
+  private getValidatedOptions(o: IOptions): IOptions {
     const copy = { ...o };
     this.validatedKeys.forEach((k) => (
       copy[k] = this.validateConcreteOption(k, copy))
@@ -93,7 +94,7 @@ class Service extends EventEmitter implements IService {
     const n = numberDecimalPlaces(step);
     return {
       step: () => Math.abs(step),
-      min: () => +min.toFixed(n),
+      min: () => Number(min.toFixed(n)),
       max: () => Math.max(max, min + step),
       from: () => (
         Math.min(
