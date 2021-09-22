@@ -1,8 +1,8 @@
 import { 
   EventEmitter, TypeResponseHandler 
 } from 'slider/EventEmitter/EventEmitter';
-import clamp from 'slider/helpers/clamp';
-import numberDecimalPlaces from 'slider/helpers/numberDecimalPlaces';
+import clamp from 'helpers/clamp';
+import numberDecimalPlaces from 'helpers/numberDecimalPlaces';
 import { 
   IService, IValidatedOptions, TypeValidateOptionsKeys 
 } from './IService';

@@ -219,20 +219,17 @@ $track-size: 6px
 
     &-container
       display: flex
+      position: absolute
       width: 100%
       height: 100%
-      position: absolute
 
     &-button
       display: flex
-      flex-grow: 1
-      justify-content: center
-      align-items: center
+      flex: 1 1 0
       margin: 0
       padding: 0
       background-color: #ffffff00
       border: none
-      overflow: hidden
       cursor: pointer
       outline: none
       font-size: 0.7rem
@@ -240,7 +237,6 @@ $track-size: 6px
 
       &:hover, &:focus
         color: $color-active-scale-label
-        overflow: initial
 
       &--hidden
         display: none

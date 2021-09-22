@@ -1,5 +1,5 @@
-import clamp from 'slider/helpers/clamp';
-import numberDecimalPlaces from 'slider/helpers/numberDecimalPlaces';
+import clamp from 'helpers/clamp';
+import numberDecimalPlaces from 'helpers/numberDecimalPlaces';
 import { IConfig, typeExtremums, IAllPositions } from './IConfig';
 
 abstract class Config {
