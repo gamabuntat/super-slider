@@ -88,7 +88,7 @@ class Service extends EventEmitter implements IService {
   private validateConcreteOption<K extends keyof IValidatedOptions> (
     key: K, o: IOptions
   ): number {
-    const [ step, min, max, from, to ] = [
+    const [step, min, max, from, to] = [
       o.step || this.selectedModel.step, o.min, o.max, o.from, o.to
     ].map(this.preValidate, this);
     const n = numberDecimalPlaces(step);

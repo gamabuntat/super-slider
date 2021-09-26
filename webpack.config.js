@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const alias = {
   'slider': path.resolve(__dirname, './src/slider'),
+  'helpers': path.resolve(__dirname, './src/helpers'),
 };
 
 module.exports = (env, argv) => {
@@ -31,6 +32,8 @@ module.exports = (env, argv) => {
     devServer: {
       compress: true,
       port: 9000,
+      hot: false,
+      liveReload: true,
     },
     optimization: {
       splitChunks: {

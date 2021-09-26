@@ -4,10 +4,10 @@ import Conf from '../conf/Conf';
 
 const options: IOptions[] = [
   {
-    step: 0.1, max: 1e3, min: 0, isInterval: false
+    step: 1, max: 99, min: 1, isInterval: false
   },
   {
-    isVertical: true, max: 2.2
+    step: 0.1, max: 1e3 - 1, min: 0, isInterval: true, isVertical: true
   },
   {
     max: 9.001
