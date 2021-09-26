@@ -10,7 +10,7 @@ class LabelView implements ILabelView {
   }
 
   updateValue(v: string): void {
-    this.component.innerText = v;
+    this.component.textContent = v;
   }
 
   toggleHiddenMode(): void {

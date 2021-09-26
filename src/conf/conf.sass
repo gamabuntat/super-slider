@@ -1,0 +1,66 @@
+@import '../slider/styles/vars'
+
+.conf
+  display: flex
+  flex-direction: column
+  gap: 4px
+
+  &__container
+    display: flex
+    flex-wrap: wrap
+    gap: 4px
+
+  &__numeric
+
+    &-label
+      display: flex
+      width: 120px
+      cursor: pointer
+      font-size: .7rem
+
+    &-sign
+      padding: 4px
+
+    &-input
+      min-width: 0
+      font-family: Unifont, monospace
+      font-size: 1rem
+      border: 1px dashed black
+      outline: none
+      font-size: .7rem
+
+      &:focus
+        border: 1px dashed $color-active-scale-label
+
+  &__switches
+    
+    &-label
+      display: flex
+      cursor: pointer
+      font-size: .7rem
+
+    &-sign
+      padding: 4px
+
+    &-input
+      position: absolute
+      -webkit-appearance: none
+      appearance: none
+      font-size: .7rem
+
+      &:focus
+
+        & + .conf__switches-box
+          border-color: $color-active-scale-label
+
+      &:checked
+        
+        & + .conf__switches-box
+          box-shadow: -30px 0px 0px 0px $color-active inset
+
+    &-box
+      width: 60px
+      border: 1px dashed black
+      background-color: #fff
+      box-shadow: 30px 0px 0px 0px $color-main inset
+

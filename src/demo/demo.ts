@@ -1,10 +1,10 @@
 import './demo.sass';
 
-import Conf from './Conf';
+import Conf from '../conf/Conf';
 
 const options: IOptions[] = [
   {
-    step: 1.333, max: 10.01, min: -1, isInterval: true
+    step: 0.1, max: 1e3, min: 0, isInterval: false
   },
   {
     isVertical: true, max: 2.2

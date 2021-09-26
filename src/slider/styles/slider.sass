@@ -3,6 +3,7 @@
 
 $double-vertical: '.ui-slider--vertical.ui-slider--interval'
 $handle-width: 12px
+$handle-half-width: math.div($handle-width, 2)
 $handle-heigth: 30px
 $label-height: 18px
 $label-gap: 14px
@@ -28,7 +29,7 @@ $track-size: 6px
 
   &__main-container
     position: relative
-    padding: 0 math.div($handle-width, 2)
+    padding: 0 $handle-half-width
     display: flex
     flex-direction: column
     justify-content: center
@@ -37,7 +38,7 @@ $track-size: 6px
 
   &--vertical &__main-container
     align-items: center
-    padding: math.div($handle-width, 2) 0
+    padding: $handle-half-width 0
     min-height: 2 * $handle-width
 
   &--interval &__main-container
@@ -112,7 +113,7 @@ $track-size: 6px
   
     &--start
       @extend .ui-slider__handle
-      transform: translate(math.div(-$handle-width, 2))
+      transform: translate(-$handle-half-width)
 
     &--end
       @extend .ui-slider__handle
@@ -132,7 +133,7 @@ $track-size: 6px
     height: $handle-width
 
     &--start
-      transform: translate(0, math.div(-$handle-width, 2))
+      transform: translate(0, -$handle-half-width)
 
   &--interval &__handle
 
@@ -212,20 +213,25 @@ $track-size: 6px
   &__scale
     position: relative
     display: flex
-    box-sizing: border-box
+    align-self: center
+    width: calc(100% - #{$handle-width})
 
     &--hidden
       display: none
 
     &-container
-      display: flex
       position: absolute
+      display: flex
       width: 100%
       height: 100%
 
+    &-label
+      transform: translate(-50%, 0)
+
     &-button
       display: flex
-      flex: 1 1 0
+      align-items: center
+      flex-basis: 100%
       margin: 0
       padding: 0
       background-color: #ffffff00
@@ -241,15 +247,56 @@ $track-size: 6px
       &--hidden
         display: none
 
-  &--vertical &__scale
-    max-width: 50%
+      &:first-child
+        
+        & > *
+          transform: translate(-$handle-half-width, 0)
 
-    &-container
-      flex-direction: column
+      &:last-child
+        justify-content: flex-end
+
+        & > *
+          transform: translate($handle-half-width, 0)
+
+  &--interval &__scale
+    width: calc(100% - (#{$handle-width} * 2))
 
     &-button:first-child
-      align-items: initial
 
+      & > *
+        transform: translate(-$handle-width, 0)
+    
     &-button:last-child
+      
+      & > *
+        transform: translate($handle-width, 0)
+
+  &--vertical &__scale
+    max-width: 50%
+    width: unset
+    align-self: stretch
+    align-items: center
+
+    &-container
+      flex-direction: column-reverse
+      height: calc(100% - #{$handle-width})
+
+    &-label
+      transform: translate(0, 50%)
+
+    &-button
+      justify-content: center
       align-items: flex-end
+
+      &:first-child
+        align-items: flex-end
+
+        & > *
+          transform: translate(0, 50%)
+
+      &:last-child
+        align-items: flex-start
+
+        & > *
+          transform: translate(0, -50%)
 

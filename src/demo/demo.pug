@@ -1,31 +1,11 @@
-mixin conf
-  - 
-    const numericNames = ['min', 'max', 'step', 'from', 'to'];
-    const switchesNames = ['interval', 'vertical', 'label', 'scale'];
-
-  .conf
-    .conf__container
-      each name in numericNames
-        label.conf__numeric-label
-          span.conf__numeric-sign= name
-          input.conf__numeric-input(type='number' name=name data-name=name)
-    .conf__container
-      each name in switchesNames
-        label.conf__switches-label
-          span.conf__switches-sign= name
-          input.conf__switches-input(
-            type='checkbox' 
-            name= name 
-            data-name= name.replace(/^./, (s) => 'is' + s.toUpperCase())
-          )
-          span.conf__switches-box
+include ../conf/conf
 
 doctype html
 html(lang="en")
   head
     meta(charset="UTF-8")
     title demo
-    script(src='https://code.jquery.com/jquery-3.4.1.min.js')
+    script(src="https://code.jquery.com/jquery-3.4.1.min.js")
   body
     .container.js-container
       .slider.js-slider
@@ -33,10 +13,10 @@ html(lang="en")
     .container.js-container
       .slider.js-slider
       +conf
-    .container.js-container
-      .slider.js-slider
-      +conf
-    .container.js-container
-      .slider.js-slider
-      +conf
+    // .container.js-container
+    //   .slider.js-slider
+    //   +conf
+    // .container.js-container
+    //   .slider.js-slider
+    //   +conf
 
