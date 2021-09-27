@@ -5,8 +5,8 @@ import IScaleView from './IScaleView';
 
 abstract class ScaleView extends EventBinder {
   protected buttonSize = 0
-  protected buttons: HTMLCollectionOf<Element>
   protected ap: number[] = []
+  private buttons: HTMLCollectionOf<Element>
   private container: HTMLElement
   private hiddenMod: string
   private buttonClass: string
@@ -51,8 +51,9 @@ abstract class ScaleView extends EventBinder {
   }
 
   private restoreUsability() {
-    this.removeAttrSizes();
     this.container.innerHTML = '';
+    this.nullifyButtonSize();
+    this.removeAttrSizes();
     this.setMaxSizes();
     this.setNButtons();
     this.setStep();
@@ -64,7 +65,7 @@ abstract class ScaleView extends EventBinder {
   }
 
   private setMaxSizes(): void {
-    this.ap.slice(0, 2).concat(this.ap.slice(-2)).forEach((ap) => {
+    this.ap.slice(-2).forEach((ap) => {
       const b = this.createButton(ap);
       this.insertButton(b);
       this.setButtonSize(b);
@@ -85,7 +86,7 @@ abstract class ScaleView extends EventBinder {
   }
 
   private selectAP(
-    ap = this.ap.slice(0, -1), idx = 0, res: number[] = []
+    ap = this.ap.slice(0, -this.step), idx = 0, res: number[] = []
   ): number[] {
     if (idx > ap.length - 1) { return res; }
     res.push(ap[idx]);
@@ -93,9 +94,8 @@ abstract class ScaleView extends EventBinder {
     return this.selectAP(ap, idx + this.step, res);
   }
 
-  private getRelativeSize(lastSelectedAP: number): number {
-    return (this.ap.length - 1 - this.ap.lastIndexOf(lastSelectedAP))
-      / 2 / this.step;
+  private getRelativeSize(ap: number): number {
+    return (this.ap.length - 1 - this.ap.lastIndexOf(ap)) / 2 / this.step;
   }
 
   private bindListeners(): void {
@@ -137,7 +137,11 @@ abstract class ScaleView extends EventBinder {
   }
 
   private resizeButton(btn: HTMLElement, value: number): void {
-    btn.style.flexBasis = `${(value === 1 ? 0.5 : value) * 100}%`;
+    btn.style.flexBasis = `${value * 100}%`;
+  }
+
+  private nullifyButtonSize(): void {
+    this.buttonSize = 0;
   }
 
   private removeAttrSizes(): void {
