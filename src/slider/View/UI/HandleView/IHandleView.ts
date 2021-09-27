@@ -5,6 +5,7 @@ interface IHandleView extends IEventBinder {
   getFocusStatus(): boolean
   calcPosition(containerCoord: number, containerSize: number): number
   move(position: number): void
+  fixPointer(pointerID: number): void
   swap(): IHandleView
 }
 

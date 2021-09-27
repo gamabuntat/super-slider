@@ -47,47 +47,39 @@ $track-size: 6px
   #{$double-vertical} &__main-container
     padding: $handle-width 0
 
-  %sub-giglet
-    content: ''
-    display: block
-    flex-basis: 50%
-
   &__giglet
     display: flex
     position: absolute
-    left: 0
-    width: 100%
+    width: 50%
     height: $track-size
     background-color: $color-main
 
-    &::before
-      @extend %sub-giglet
-      background-color: $color-main
+    &--start
+      @extend .ui-slider__giglet
+      left: 0
 
-    &::after
-      @extend %sub-giglet
+    &--end
+      @extend .ui-slider__giglet
+      right: 0
       background-color: $color-accent
 
   &--vertical &__giglet
     flex-direction: column
     width: $track-size
-    height: 100%
+    height: 50%
     left: unset
+    right: unset
 
-    &::before
+    &--start
+      bottom: 0
+
+    &--end
+      top: 0
       background-color: $color-accent
-
-    &::after
-      background-color: $color-main
 
   &--interval &__giglet
 
-    &::before
-      background-color: $color-accent
-
-  #{$double-vertical} &__giglet
-    
-    &::after
+    &--start
       background-color: $color-accent
 
   &__container
@@ -189,6 +181,7 @@ $track-size: 6px
     background-color: $color-accent
     width: 100%
     height: $track-size
+    touch-action: none
 
   &--vertical &__track
     flex-direction: column

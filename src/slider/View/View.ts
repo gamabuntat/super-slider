@@ -1,4 +1,5 @@
 import { EventEmitter } from 'slider/EventEmitter/EventEmitter';
+
 import treeTemplate from './treeTemplate';
 import IView from './interfaces/IView';
 import IViewTreeTemplate from './interfaces/IViewTreeTemplate';
@@ -18,6 +19,8 @@ import LabelView from './UI/LabelView/LabelView';
 import ILabelView from './UI/LabelView/ILabelView';
 import { HorizontalScaleView } from './UI/ScaleView/ScaleView';
 import IScaleView from './UI/ScaleView/IScaleView';
+import { HorizontalTrackView } from './UI/TrackView/TrackView';
+import ITrackView from './UI/TrackView/ITrackView';
 
 class View extends EventEmitter implements IView {
   private static tree: IViewTreeTemplate = treeTemplate
@@ -30,6 +33,7 @@ class View extends EventEmitter implements IView {
   private progressBars: IProgressBarView[]
   private labels: ILabelView[]
   private scale: IScaleView
+  private track: ITrackView
 
   constructor(response: IResponse, root: HTMLElement) {
     super();
@@ -52,6 +56,7 @@ class View extends EventEmitter implements IView {
     this.labels = [this.components.labelStart, this.components.labelEnd]
       .map((c) => new LabelView(c));
     this.scale = new HorizontalScaleView(this.components.scale);
+    this.track = new HorizontalTrackView(this.components.track);
     this.parseResponse(response);
     this.bindListeners();
     root.id = response.id;
@@ -83,6 +88,7 @@ class View extends EventEmitter implements IView {
     this.handles = this.handles.map((hv) => hv.swap());
     this.progressBars.reverse();
     this.scale = this.scale.swap();
+    this.track = this.track.swap();
   }
 
   private createSlider(
@@ -125,6 +131,11 @@ class View extends EventEmitter implements IView {
       .bind('keydown', this.handleHandleKeydown)
     );
     this.scale.bind('click', this.handleScaleClick);
+    this.track.bind('pointerdown', this.handleTrackPointerdown);
+    this.components.gigletStart
+      .addEventListener('pointerdown', this.handleGigletStartPointerdown);
+    this.components.gigletEnd
+      .addEventListener('pointerdown', this.handleGigletEndPointerdown);
   }
 
   private unbindListeners(): void {
@@ -133,6 +144,11 @@ class View extends EventEmitter implements IView {
       .unbind('keydown', this.handleHandleKeydown)
     );
     this.scale.unbind('click', this.handleScaleClick);
+    this.track.unbind('pointerdown', this.handleTrackPointerdown);
+    this.components.gigletStart
+      .removeEventListener('pointerdown', this.handleGigletStartPointerdown);
+    this.components.gigletEnd
+      .removeEventListener('pointerdown', this.handleGigletEndPointerdown);
   }
 
   private handleHandlePointermove = (): void => {
@@ -144,8 +160,7 @@ class View extends EventEmitter implements IView {
           ) 
           : p;
       }));
-      this.setInMotion();
-      this.emit(this.config.getResponse());
+      this.moveAndSendResponse();
     }
   }
 
@@ -162,23 +177,76 @@ class View extends EventEmitter implements IView {
       if (backCodes.includes(ev.code)) { return this.config.getPrev(p); }
       return p;
     }));
-    this.setInMotion();
-    this.emit(this.config.getResponse());
+    this.moveAndSendResponse();
   }
 
   private handleScaleClick = (): void => {
-    const lastPosition = this.config.calcPosition(this.scale.getLastPosition());
+    this.updateActiveHandlePosition(
+      this.config.calcPosition(this.scale.getLastPosition())
+    );
+    this.moveAndSendResponse();
+  }
+
+  private handleTrackPointerdown = (): void => {
+    const lastPosition = this.track.getLastPosition();
+    const handlePositions = this.config.getPositions();
+    const handleIDX = this.defineActiveHandleIDX(lastPosition, handlePositions);
+    this.updateActiveHandlePosition(
+      lastPosition, 
+      handlePositions,
+      handleIDX
+    );
+    this.handles[handleIDX].fixPointer(this.track.getPointerID());
+    this.moveAndSendResponse();
+  }
+
+  private handleGigletStartPointerdown = (
+    { pointerId }: PointerEvent
+  ): void => {
+    this.config.setPositions([
+      Number(this.config.getResponse().isVertical),
+      this.config.getPositions()[1]
+    ]);
+    this.handles[0].fixPointer(pointerId);
+    this.moveAndSendResponse();
+  }
+
+  private handleGigletEndPointerdown = ({ pointerId }: PointerEvent) => {
+    const response = this.config.getResponse();
+    const handleIDX = Number(response.isInterval);
     const positions = this.config.getPositions();
-    const diffs = positions.map((p) => Math.abs(p - lastPosition) || Infinity);
+    positions[handleIDX] = Number(!response.isVertical);
+    this.config.setPositions(positions);
+    this.handles[handleIDX].fixPointer(pointerId);
+    this.moveAndSendResponse();
+  }
+
+  private updateActiveHandlePosition(
+    lastPosition: number,
+    handlePositions = this.config.getPositions(),
+    idx = this.defineActiveHandleIDX(lastPosition, handlePositions)
+  ): void {
+    handlePositions[idx] = lastPosition;
+    this.config.setPositions(handlePositions);
+  }
+
+  private defineActiveHandleIDX(
+    lastPosition: number,
+    handlePositions = this.config.getPositions()
+  ): number {
+    const diffs = handlePositions
+      .map((p) => Math.abs(p - lastPosition) || Infinity);
     let idx = diffs.indexOf(Math.min(...diffs));
-    if (positions[0] === positions[1]) { 
-      if (lastPosition > positions[1]) { idx = 1; }
-      if (lastPosition < positions[0]) { idx = 0; }
+    if (handlePositions[0] === handlePositions[1]) { 
+      if (lastPosition > handlePositions[1]) { idx = 1; }
+      if (lastPosition < handlePositions[0]) { idx = 0; }
       if (this.config.getResponse().isVertical) { idx = +!idx; }
     }
     if (!this.config.getResponse().isInterval) { idx = 0; }
-    positions[idx] = lastPosition;
-    this.config.setPositions(positions);
+    return idx;
+  }
+
+  private moveAndSendResponse(): void {
     this.setInMotion();
     this.emit(this.config.getResponse());
   }

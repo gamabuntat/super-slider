@@ -1,5 +1,6 @@
-import IHandleView from './IHandleView';
 import EventBinder from 'slider/EventBinder/EventBinder';
+
+import IHandleView from './IHandleView';
 
 abstract class HandleView extends EventBinder {
   protected shiftX = 0
@@ -28,6 +29,11 @@ abstract class HandleView extends EventBinder {
     ) / containerSize || 0;
   }
 
+  fixPointer(pointerID: number): void {
+    this.component.setPointerCapture(pointerID);
+    this.isCapture = true;
+  }
+
   protected resetPositions(): void {
     this.component.style.left = '';
     this.component.style.top = '';
@@ -53,7 +59,6 @@ abstract class HandleView extends EventBinder {
 
   private handleComponentPointerdown = (ev: PointerEvent): void => {
     this.setShifts(ev);
-    this.isCapture = true;
     this.fixPointer(ev.pointerId);
   }
 
@@ -81,10 +86,6 @@ abstract class HandleView extends EventBinder {
   private setPointerCoords(ev: PointerEvent): void {
     this.pointerCoordX = ev.x ?? 0;
     this.pointerCoordY = ev.y ?? 0;
-  }
-
-  private fixPointer(pointerID: number): void {
-    this.component.setPointerCapture(pointerID);
   }
 
   abstract move(position: number): void

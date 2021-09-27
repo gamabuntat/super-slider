@@ -9,7 +9,11 @@ const treeTemplate: IViewTreeTemplate = {
       elementType: 'div',
       childs: [
         {
-          name: 'giglet',
+          name: 'gigletStart',
+          elementType: 'div',
+        },
+        {
+          name: 'gigletEnd',
           elementType: 'div',
         },
         {
