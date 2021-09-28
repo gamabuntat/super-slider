@@ -2,8 +2,25 @@
 
 .conf
   display: flex
-  flex-direction: column
-  gap: 4px
+  min-width: 40vw
+  gap: 10px
+
+  &_vertical
+    flex-grow: 1
+
+    & .conf__slider
+      flex-grow: 1
+      min-height: 120px
+
+  &__main-container
+    display: flex
+    flex-direction: column
+    gap: 4px
+
+  &__slider
+    display: flex
+    flex-direction: column
+    border: .5px dashed pink
 
   &__container
     display: flex

@@ -3,20 +3,22 @@ mixin conf
     const numericNames = ['min', 'max', 'step', 'from', 'to'];
     const switchesNames = ['interval', 'vertical', 'label', 'scale'];
 
-  .conf
-    .conf__container
-      each name in numericNames
-        label.conf__numeric-label
-          span.conf__numeric-sign= name
-          input.conf__numeric-input(type="number" name=name data-name=name)
-    .conf__container
-      each name in switchesNames
-        label.conf__switches-label
-          span.conf__switches-sign= name
-          input.conf__switches-input(
-            type="checkbox" 
-            name= name 
-            data-name= name.replace(/^./, (s) => "is" + s.toUpperCase())
-          )
-          span.conf__switches-box
+  .conf.js-conf
+    .conf__main-container
+      .conf__slider.js-conf__slider
+      .conf__container
+        each name in numericNames
+          label.conf__numeric-label
+            span.conf__numeric-sign= name
+            input.conf__numeric-input(type="number" name=name data-name=name)
+      .conf__container
+        each name in switchesNames
+          label.conf__switches-label
+            span.conf__switches-sign= name
+            input.conf__switches-input(
+              type="checkbox" 
+              name= name 
+              data-name= name.replace(/^./, (s) => "is" + s.toUpperCase())
+            )
+            span.conf__switches-box
 

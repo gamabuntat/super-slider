@@ -7,12 +7,14 @@ class Conf implements IConf {
   private inputs: HTMLInputElement[]
   private intervalInput: HTMLInputElement
   private toInput: HTMLInputElement
+  private fromInput: HTMLInputElement
 
   constructor(private root: HTMLElement) {
-    this.$slider = this.getJqueryElement('.js-slider');
+    this.$slider = this.getJqueryElement('.js-conf__slider');
     this.inputs = [...this.getInputs('input')];
     this.intervalInput = this.getInputs('[name="interval"]')[0];
     this.toInput = this.getInputs('[name="to"]')[0];
+    this.fromInput = this.getInputs('[name="from"]')[0];
     this.subscribe();
     this.bindListeners();
   }
@@ -32,14 +34,26 @@ class Conf implements IConf {
   }
 
   private handleSliderUpdate = (response: IResponse): void => {
-    Object.entries(response).forEach((entr) => {
-      const input = this.inputs.find((i) => i.dataset.name === entr[0]);
+    Object.entries(response).forEach(([key, value]) => {
+      if (key == 'step') { this.updateStepAttr(value); }
+      if (key == 'min') { this.updateMinAttr(value); }
+      const input = this.inputs.find((i) => i.dataset.name === key);
       if (!input) { return; }
-      if (typeof entr[1] == 'number') { input.value = String(entr[1]); }
-      if (typeof entr[1] == 'boolean') { input.checked = entr[1]; }
+      if (typeof value == 'number') { input.value = String(value); }
+      if (typeof value == 'boolean') { input.checked = value; }
     });
     this.handleIntervalInputChange();
     this.toggleRootVerticalMod(response.isVertical);
+  }
+
+  private updateStepAttr(step: number): void {
+    this.toInput.step = String(step);
+    this.fromInput.step = String(step);
+  }
+
+  private updateMinAttr(min: number): void {
+    this.toInput.min = String(min);
+    this.fromInput.min = String(min);
   }
 
   private bindListeners(): void {
@@ -69,8 +83,8 @@ class Conf implements IConf {
 
   private toggleRootVerticalMod(flag: boolean): void {
     flag 
-      ? this.root.classList.add('container_vertical')
-      : this.root.classList.remove('container_vertical');
+      ? this.root.classList.add('conf_vertical')
+      : this.root.classList.remove('conf_vertical');
   }
 
   private getJqueryElement(selector: string): JQuery {
