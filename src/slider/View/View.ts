@@ -111,13 +111,15 @@ class View extends EventEmitter implements IView {
   }
 
   private getClass(name: string): string {
-    return this.sliderBEMBlockName + '__' + name
-      .replace(/(?<=.)[A-Z]/g, '-$&')
-      .toLowerCase()
-      .replace(
-        /(?<base1>.*(?=-(start|end)))(?<mod>-(start|end))(?<base2>.*)/,
-        "$<base1>$<base2>-$<mod>"
-      );
+    return `${this.sliderBEMBlockName}__${
+      name
+        .replace(/(?<=.)[A-Z]/g, '-$&')
+        .toLowerCase()
+        .replace(
+          /(?<base1>.*(?=-(start|end)))(?<mod>-(start|end))(?<base2>.*)/,
+          '$<base1>$<base2>-$<mod>'
+        )
+    }`;
   }
 
   private rebindListeners(): void {
@@ -165,7 +167,7 @@ class View extends EventEmitter implements IView {
   }
 
   private checkCaptureStatus(): boolean {
-    return !!this.handles.find((h) => h.getCaptureStatus());
+    return Boolean(this.handles.find((h) => h.getCaptureStatus()));
   }
 
   private handleHandleKeydown = (ev: KeyboardEvent): void => {
@@ -187,7 +189,8 @@ class View extends EventEmitter implements IView {
     this.moveAndSendResponse();
   }
 
-  private handleTrackPointerdown = (): void => {
+  private handleTrackPointerdown = (e: PointerEvent): void => {
+    e.preventDefault();
     const lastPosition = this.track.getLastPosition();
     const handlePositions = this.config.getPositions();
     const handleIDX = this.defineActiveHandleIDX(lastPosition, handlePositions);
@@ -200,24 +203,24 @@ class View extends EventEmitter implements IView {
     this.moveAndSendResponse();
   }
 
-  private handleGigletStartPointerdown = (
-    { pointerId }: PointerEvent
-  ): void => {
+  private handleGigletStartPointerdown = (e: PointerEvent): void => {
+    e.preventDefault();
     this.config.setPositions([
       Number(this.config.getResponse().isVertical),
       this.config.getPositions()[1]
     ]);
-    this.handles[0].fixPointer(pointerId);
+    this.handles[0].fixPointer(e.pointerId);
     this.moveAndSendResponse();
   }
 
-  private handleGigletEndPointerdown = ({ pointerId }: PointerEvent) => {
+  private handleGigletEndPointerdown = (e: PointerEvent) => {
+    e.preventDefault();
     const response = this.config.getResponse();
     const handleIDX = Number(response.isInterval);
     const positions = this.config.getPositions();
     positions[handleIDX] = Number(!response.isVertical);
     this.config.setPositions(positions);
-    this.handles[handleIDX].fixPointer(pointerId);
+    this.handles[handleIDX].fixPointer(e.pointerId);
     this.moveAndSendResponse();
   }
 

@@ -6,8 +6,8 @@ class SliderView implements ISliderView {
 
   constructor(protected component: HTMLElement) {
     const BEMBlockName = this.component.classList[0];
-    this.BEMVerticalMod =  BEMBlockName + '--vertical';
-    this.BEMIntervalMod = BEMBlockName + '--interval';
+    this.BEMVerticalMod =  `${BEMBlockName}--vertical`;
+    this.BEMIntervalMod = `${BEMBlockName}--interval`;
   }
 
   toggleVerticalMod(): void {

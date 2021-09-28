@@ -1,5 +1,6 @@
 import clamp from 'helpers/clamp';
 import numberDecimalPlaces from 'helpers/numberDecimalPlaces';
+
 import { IConfig, typeExtremums, IAllPositions } from './IConfig';
 
 abstract class Config {

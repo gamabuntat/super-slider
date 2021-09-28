@@ -3,10 +3,10 @@ import {
 } from 'slider/EventEmitter/EventEmitter';
 import clamp from 'helpers/clamp';
 import numberDecimalPlaces from 'helpers/numberDecimalPlaces';
+
 import { 
   IService, IValidatedOptions, TypeValidateOptionsKeys 
 } from './IService';
-
 import defaultOptions from './defaultOptions';
 
 class Service extends EventEmitter implements IService {
@@ -26,19 +26,19 @@ class Service extends EventEmitter implements IService {
 
   subscribe(preID: string, cb: TypeResponseHandler): string {
     const id = preID || this.generateID();
-    this.on('sub' + id, cb);
+    this.on(`sub${id}`, cb);
     return id;
   }
 
   removeModel(id: string): void {
     this.events[id] = [];
-    this.events['sub' + id] = [];
+    this.events[`sub${id}`] = [];
     this.models.splice(this.findModelIndex(id), +(this.selectedIndex !== -1));
   }
 
   updateModel(response: IResponse): void {
     this.addModel({ ...response });
-    this.emit({ ...response }, 'sub' + response.id);
+    this.emit({ ...response }, `sub${response.id}`);
   }
 
   add(preID: string, o: IOptions): { model: IResponse, isNew: boolean } {
@@ -52,7 +52,7 @@ class Service extends EventEmitter implements IService {
     };
     this.addModel(this.selectedModel);
     this.emit({ ...this.selectedModel });
-    this.emit({ ...this.selectedModel }, 'sub' + this.selectedModel.id);
+    this.emit({ ...this.selectedModel }, `sub${this.selectedModel.id}`);
     return {
       model: { ...this.selectedModel },
       isNew: prevLength !== this.models.length
