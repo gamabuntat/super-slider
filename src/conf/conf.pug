@@ -18,7 +18,7 @@ mixin conf
             input.conf__switches-input(
               type="checkbox" 
               name= name 
-              data-name= name.replace(/^./, (s) => "is" + s.toUpperCase())
+              data-name= name.replace(/^./, (s) => `is${s.toUpperCase()}`)
             )
             span.conf__switches-box
 
