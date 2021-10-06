@@ -200,7 +200,7 @@ class HorizontalScaleView extends ScaleView implements IScaleView {
 
   protected setButtonSize(button: HTMLElement): void {
     this.buttonSize = Math.max(
-      button.children[0].getBoundingClientRect().width * 2,
+      button.children[0].getBoundingClientRect().width * 1.5,
       this.buttonSize
     );
   }
