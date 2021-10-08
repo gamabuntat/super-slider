@@ -123,8 +123,10 @@ class Service extends EventEmitter implements IService {
     model.to = Math.min(
       max,
       Number(
-        (Math.ceil((clamp(from, to, max) - min) / step)
-        * step + min).toFixed(this.decimalPlaces)
+        (
+          Math.ceil((clamp(from, to, max) - min) / step)
+          * step + min
+        ).toFixed(this.decimalPlaces)
       )
     );
   }
