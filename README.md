@@ -1,6 +1,6 @@
 # ~~super~~ simple slider
 ## description
-I am learning typescript)))0
+just a training project jquery slider
 ## demo
 [example](https://gamabuntat.github.io/super-slider/)
 ## install
