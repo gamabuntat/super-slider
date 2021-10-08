@@ -11,8 +11,9 @@ interface IValidatedOptions {
 }
 
 type TypeValidateOptionsKeys = keyof {
-  [K in keyof IValidatedOptions]-?: IValidatedOptions[K] 
-};
+  [k in keyof IValidatedOptions]-?: IValidatedOptions[k] 
+}
+  
 
 interface IService extends IEventEmitter {
   subscribe(preID: string, cb: TypeResponseHandler): string

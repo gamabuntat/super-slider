@@ -4,7 +4,7 @@ import Conf from '../conf/Conf';
 
 const options: IOptions[] = [
   {
-    step: 1, max: 99, min: 1, isInterval: true
+    max: 99, min: 1, isInterval: true
   },
   {
     step: 0.1, max: 1e3 - 1, min: 0, isInterval: true, isVertical: true

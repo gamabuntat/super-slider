@@ -10,7 +10,11 @@ mixin conf
         each name in numericNames
           label.conf__numeric-label
             span.conf__numeric-sign= name
-            input.conf__numeric-input(type="number" name=name data-name=name)
+            input.conf__numeric-input(
+              type="number" 
+              name=name 
+              data-name=name
+            )
       .conf__container
         each name in switchesNames
           label.conf__switches-label

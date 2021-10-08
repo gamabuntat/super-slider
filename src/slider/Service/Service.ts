@@ -4,9 +4,7 @@ import {
 import clamp from 'helpers/clamp';
 import numberDecimalPlaces from 'helpers/numberDecimalPlaces';
 
-import { 
-  IService, IValidatedOptions, TypeValidateOptionsKeys 
-} from './IService';
+import { IService, TypeValidateOptionsKeys } from './IService';
 import defaultOptions from './defaultOptions';
 
 class Service extends EventEmitter implements IService {
@@ -15,8 +13,13 @@ class Service extends EventEmitter implements IService {
   private selectedModel: IResponse = { ...this.defaultOptions, id: '' }
   private models: IResponse[] = []
   private selectedIndex = -1
+  private decimalPlaces = 0
   private validatedKeys:(TypeValidateOptionsKeys)[] = [
-    'step', 'min', 'max', 'from', 'to'
+    'step', 
+    'min',
+    'max',
+    'from',
+    'to'
   ]
 
   static getInstance(): Service {
@@ -44,12 +47,9 @@ class Service extends EventEmitter implements IService {
   add(preID: string, o: IOptions): { model: IResponse, isNew: boolean } {
     const id = preID || this.generateID();
     const prevLength = this.models.length;
-    this.selectedModel = { 
-      ...this.selectedModel = (
-        this.models[this.findModelIndex(id)] || { ...this.defaultOptions, id }
-      ),
-      ...this.getValidatedOptions(o),
-    };
+    this.selectedModel = this.models[this.findModelIndex(id)] 
+      || { ...this.defaultOptions, id };
+    this.selectedModel = this.getValidatedOptions(o);
     this.addModel(this.selectedModel);
     this.emit({ ...this.selectedModel });
     this.emit({ ...this.selectedModel }, `sub${this.selectedModel.id}`);
@@ -75,48 +75,56 @@ class Service extends EventEmitter implements IService {
     return String(Math.floor(Math.random() * Date.now()));
   }
 
-  private getValidatedOptions(o: IOptions): IOptions {
-    const copy = { ...o };
-    this.validatedKeys.forEach((k) => (
-      copy[k] = this.validateConcreteOption(k, copy))
-    );
-    const isInterval = o.isInterval ?? this.selectedModel.isInterval;
-    if (isInterval === false) { copy.to = copy.max; }
+  private getValidatedOptions(o: IOptions): IResponse {
+    const copy = { ...this.selectedModel, ...o };
+    this.validateStep(copy);
+    this.setDecimalPlaces(copy.step);
+    this.validateMin(copy);
+    this.validateMax(copy);
+    this.validateFrom(copy);
+    copy.isInterval ? this.validateTo(copy) : copy.to = copy.max;
     return copy;
   }
 
-  private validateConcreteOption<K extends keyof IValidatedOptions> (
-    key: K, o: IOptions
-  ): number {
-    const [step, min, max, from, to] = [
-      o.step || this.selectedModel.step, o.min, o.max, o.from, o.to
-    ].map(this.preValidate, this);
-    const n = numberDecimalPlaces(step);
-    return {
-      step: () => Math.abs(step),
-      min: () => Number(min.toFixed(n)),
-      max: () => Math.max(max, min + step),
-      from: () => (
-        Math.min(
-          max,
-          +(Math.ceil((Math.max(min, from) - min) / step) 
-            * step + min).toFixed(n)
-        )
-      ),
-      to: () => (
-        Math.min(
-          max,
-          +(Math.ceil((clamp(from, to, max) - min) / step)
-            * step + min).toFixed(n)
-        )
-      ),
-    }[key]();
+  private setDecimalPlaces(step: number): void {
+    this.decimalPlaces = numberDecimalPlaces(step);
   }
 
-  // eslint-disable-next-line
-  private preValidate(v: any, idx: number): number {
-    if (typeof v == 'number' && isFinite(v)) { return v; }
-    return this.selectedModel[this.validatedKeys[idx]];
+  private validateStep(model: IResponse): void {
+    model.step = Math.abs(model.step || this.selectedModel.step);
+  }
+
+  private validateMin(model: IResponse): void {
+    model.min = Number(model.min.toFixed(this.decimalPlaces));
+  }
+
+  private validateMax(model: IResponse): void {
+    const { min, max } = model;
+    model.max = max > min ? max : min + 1;
+  }
+
+  private validateFrom(model: IResponse): void {
+    const { from, min, max, step } = model;
+    model.from = Math.min(
+      max,
+      Number(
+        (
+          Math.ceil((clamp(min, from, this.selectedModel.to) - min) / step) 
+          * step + min
+        ).toFixed(this.decimalPlaces)
+      )
+    );
+  }
+
+  private validateTo(model: IResponse): void {
+    const { to, from, min, max, step } = model;
+    model.to = Math.min(
+      max,
+      Number(
+        (Math.ceil((clamp(from, to, max) - min) / step)
+        * step + min).toFixed(this.decimalPlaces)
+      )
+    );
   }
 }
 

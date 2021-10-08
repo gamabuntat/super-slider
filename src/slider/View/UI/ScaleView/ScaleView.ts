@@ -229,7 +229,7 @@ class VerticalScaleView extends ScaleView implements IScaleView {
 
   protected setButtonSize(button: HTMLElement): void {
     this.buttonSize = Math.max(
-      button.children[0].getBoundingClientRect().height * 2,
+      button.children[0].getBoundingClientRect().height * 1.5,
       this.buttonSize
     );
   }
