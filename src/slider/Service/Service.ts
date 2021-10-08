@@ -101,8 +101,8 @@ class Service extends EventEmitter implements IService {
   }
 
   private validateMax(model: IResponse): void {
-    const { min, max } = model;
-    model.max = max > min ? max : min + 1;
+    const { min, max, step } = model;
+    model.max = max > min ? max : min + step;
   }
 
   private validateFrom(model: IResponse): void {
