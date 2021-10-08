@@ -36,7 +36,9 @@ class Service extends EventEmitter implements IService {
   removeModel(id: string): void {
     this.events[id] = [];
     this.events[`sub${id}`] = [];
-    this.models.splice(this.findModelIndex(id), +(this.selectedIndex !== -1));
+    this.models.splice(
+      this.findModelIndex(id), Number(this.selectedIndex !== -1)
+    );
   }
 
   updateModel(response: IResponse): void {
@@ -62,7 +64,7 @@ class Service extends EventEmitter implements IService {
   private addModel(model: IResponse): void {
     this.models.splice(
       this.findModelIndex(model.id),
-      +(this.selectedIndex !== -1),
+      Number(this.selectedIndex !== -1),
       model
     );
   }

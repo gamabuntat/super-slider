@@ -21,7 +21,7 @@ abstract class Config {
     this.n = numberDecimalPlaces(step);
     this.divisionNumber = this.getDivisionNumber();
     this.relativeStep = 1 / this.divisionNumber;
-    this.fakeDiff = +(this.divisionNumber * step).toFixed(this.n);
+    this.fakeDiff = Number((this.divisionNumber * step).toFixed(this.n));
     this.positions = [from, to].map(this.calcPosition, this);
     this.extremums = this.getExtremums();
   }
@@ -58,7 +58,7 @@ abstract class Config {
     const minN = numberDecimalPlaces(min);
     const maxN = numberDecimalPlaces(max);
     return Math.ceil(
-      +(max - min).toFixed(Math.max(minN, maxN)) / this.response.step
+      Number((max - min).toFixed(Math.max(minN, maxN))) / this.response.step
     );
   }
 
@@ -133,8 +133,9 @@ class HorizontalConfig extends Config implements IConfig {
 
   protected calcAbsolutePosition(p: number): number {
     return Math.min(
-      +(this.sampling(p) * this.fakeDiff + this.response.min)
-        .toFixed(this.n),
+      Number(
+        (this.sampling(p) * this.fakeDiff + this.response.min).toFixed(this.n),
+      ),
       this.response.max
     );
   }
@@ -192,8 +193,10 @@ class VerticalConfig extends Config implements IConfig {
 
   protected calcAbsolutePosition(p: number): number {
     return Math.min(
-      +((1 - this.sampling(p)) * this.fakeDiff + this.response.min)
-        .toFixed(this.n),
+      Number(
+        ((1 - this.sampling(p)) * this.fakeDiff + this.response.min)
+          .toFixed(this.n)
+      ),
       this.response.max
     );
   }

@@ -243,7 +243,7 @@ class View extends EventEmitter implements IView {
     if (handlePositions[0] === handlePositions[1]) { 
       if (lastPosition > handlePositions[1]) { idx = 1; }
       if (lastPosition < handlePositions[0]) { idx = 0; }
-      if (this.config.getResponse().isVertical) { idx = +!idx; }
+      if (this.config.getResponse().isVertical) { idx = Number(!idx); }
     }
     if (!this.config.getResponse().isInterval) { idx = 0; }
     return idx;
