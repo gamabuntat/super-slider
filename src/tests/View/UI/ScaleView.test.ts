@@ -40,14 +40,6 @@ const getAP = (length: number) => Array.from({ length }).map((i, idx) => idx);
 test('update when all buttons are placed in the scale', () => {
   scaleView.update(getAP(11));
   expect(scale.querySelectorAll('.-button').length).toBe(11);
-  expect(scale.querySelectorAll('.-button--hidden').length).toBe(0);
-});
-
-test('update when no button fits', () => {
-  swap({});
-  scaleView.update(getAP(3));
-  expect(scale.querySelectorAll('.-button').length).toBe(3);
-  expect(scale.querySelectorAll('.-button--hidden').length).toBe(3);
 });
 
 test('get last position', () => {
