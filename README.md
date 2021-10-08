@@ -5,12 +5,12 @@ I am learning typescript)))0
 [example](https://gamabuntat.github.io/super-slider/)
 ## install
 ```
-$ git clone https://github.com/gamabuntat/shitty-slider
-$ cd shitty-slider
+$ git clone https://github.com/gamabuntat/super-slider
+$ cd super-slider
 $ npm i
 ```
 ## npm scripts
-- build project with production mod
+- build project with production mod in dist directory)
 `$ npm run build`
 
 - check code errors
