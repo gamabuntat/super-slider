@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "npx webpack serve",
-    "test": "jest --coverage",
+    "test": "npx jest --coverage",
     "lint": "eslint src",
     "build": "npx webpack --mode=production"
   },
