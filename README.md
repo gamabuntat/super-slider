@@ -39,7 +39,7 @@ $ npm i
 ## init
 Simple way without js:
 You need the date-attribute to be present `data-super-slider`.
-This code will create a slider with no labels and with a minimum value of 1 (the remaining options will be default).
+This code will create a slider with no labels and with a minimum value of 3 (the remaining options will be default).
 ```html
 <div id="slider" data-super-slider data-is-label="false" data-min="3"></div>
 ```
@@ -59,11 +59,12 @@ $(sliderID).slider().destroy();
 /* ------------------------------------------- */
 const cb = (response) => console.log(response);
 $(sliderID).slider().subscribe(cb); \\ subscribe to updates
-$(sliderID).slider({ isScale: false });
-// console.log:
-//   {
-//     id: sliderId,
-//     ...options
+$(sliderID).slider({ isScale: false }); \\ hide scale
+// cb call console.log will be
+//  {
+//    id: sliderId,
+//    isScale: false,
+//    ...options
 //   }
 // yes, the answer also contains a slider ID
 ```
