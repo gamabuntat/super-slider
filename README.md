@@ -37,6 +37,14 @@ $ npm i
 }
 ```
 ## init
+Simple way without js:
+You need the date-attribute to be present `data-super-slider`.
+This code will create a slider with no labels and with a minimum value of 1 (the remaining options will be default).
+```html
+<div id="slider" data-super-slider data-is-label="false" data-min="3"></div>
+```
+
+Way with js:
 ```javascript
 $(sliderID).slider({}); \\ with default options
 $(sliderID).slider({
