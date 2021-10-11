@@ -4,30 +4,30 @@ import getLastItem from 'helpers/getLastItem';
 import IScaleView from './IScaleView';
 
 abstract class ScaleView extends EventBinder {
-  protected buttonSize = 0
+  protected divisionSize = 0
   protected ap: number[] = []
-  private buttons: HTMLCollectionOf<Element>
+  private divisions: HTMLCollectionOf<Element>
   private container: HTMLElement
   private hiddenMod: string
+  private divisionClass: string
   private buttonClass: string
-  private labelClass: string
   private lastPosition = 0
   private resizeObserver: ResizeObserver
   private step = 0
   private timer!: ReturnType<typeof setTimeout>
   private delay = 100
-  private nButtons = 0
+  private nDivisions = 0
 
   constructor(component: HTMLElement) {
     super(component);
     this.component.innerHTML = '';
     this.hiddenMod = this.getElemClass('--hidden');
+    this.divisionClass = this.getElemClass('-division');
     this.buttonClass = this.getElemClass('-button');
-    this.labelClass = this.getElemClass('-label');
     this.container = this.getContainer();
     this.component.insertAdjacentElement('beforeend', this.container);
     this.resizeObserver = new ResizeObserver(this.handleScaleResize);
-    this.buttons = this.findButtons();
+    this.divisions = this.findDivisions();
     this.bindListeners();
   }
 
@@ -52,37 +52,37 @@ abstract class ScaleView extends EventBinder {
 
   private restoreUsability() {
     this.container.innerHTML = '';
-    this.nullifyButtonSize();
+    this.nullifyDivisionSize();
     this.removeAttrSizes();
     this.setMaxSizes();
-    this.setNButtons();
+    this.setNDivisions();
     this.setStep();
     const size = this.getRelativeSize(getLastItem(this.selectAP()));
-    this.insertButton(this.createButton(getLastItem(this.ap)));
-    [...this.buttons].slice(-2).forEach((b) => {
-      if (b instanceof HTMLElement) { this.resizeButton(b, size); }
+    this.insertDivision(this.createDivision(getLastItem(this.ap)));
+    [...this.divisions].slice(-2).forEach((d) => {
+      if (d instanceof HTMLElement) { this.resizeDivision(d, size); }
     });
   }
 
   private setMaxSizes(): void {
     this.ap.slice(-2).forEach((ap) => {
-      const b = this.createButton(ap);
-      this.insertButton(b);
-      this.setButtonSize(b);
-      this.setAttrSize(b);
-      b.remove();
+      const division = this.createDivision(ap);
+      this.insertDivision(division);
+      this.setDivisionSize(division);
+      this.setAttrSize(division);
+      division.remove();
     });
   }
 
-  private setNButtons(): void {
-    this.nButtons = Math.min(
-      Math.floor(this.getSize() / (this.buttonSize) || 0),
+  private setNDivisions(): void {
+    this.nDivisions = Math.min(
+      Math.floor(this.getSize() / (this.divisionSize) || 0),
       this.ap.length
     );
   }
 
   private setStep() {
-    this.step = Math.ceil(this.ap.length / this.nButtons);
+    this.step = Math.ceil(this.ap.length / this.nDivisions);
   }
 
   private selectAP(
@@ -90,7 +90,7 @@ abstract class ScaleView extends EventBinder {
   ): number[] {
     if (idx > ap.length - 1) { return res; }
     res.push(ap[idx]);
-    this.insertButton(this.createButton(getLastItem(res)));
+    this.insertDivision(this.createDivision(getLastItem(res)));
     return this.selectAP(ap, idx + this.step, res);
   }
 
@@ -106,42 +106,39 @@ abstract class ScaleView extends EventBinder {
 
   private handleScaleClick = (e: MouseEvent): void => {
     const button = (<HTMLElement>e.target).closest(`.${this.buttonClass}`);
-    if (button) {
-      this.lastPosition =  Number(button.getAttribute('data-position'));
+    if (!button) { 
+      e.stopImmediatePropagation();
+      return;
     }
+    this.lastPosition = Number(button.getAttribute('data-position'));
   }
 
   private handleScaleResize = (): void => {
     if (this.component.classList.contains(this.hiddenMod)) { return; }
     clearTimeout(this.timer);
-    this.timer = setTimeout(
-      () => (
-        this.restoreUsability()
-      ),
-      this.delay
-    );
+    this.timer = setTimeout(() => this.restoreUsability(), this.delay);
   }
 
-  private createButton(ap: number): HTMLElement {
+  private createDivision(ap: number): HTMLElement {
+    const division = this.getDivision();
     const b = this.getButton();
-    const label = this.getLabel();
     const sap = String(ap);
-    label.textContent = sap;
     b.dataset.position = sap;
-    b.insertAdjacentElement('beforeend', label);
-    return b;
+    b.textContent = sap;
+    division.insertAdjacentElement('beforeend', b);
+    return division;
   }
 
-  private insertButton(b: HTMLElement): void {
-    this.container.insertAdjacentElement('beforeend', b);
+  private insertDivision(division: HTMLElement): void {
+    this.container.insertAdjacentElement('beforeend', division);
   }
 
-  private resizeButton(btn: HTMLElement, value: number): void {
-    btn.style.flexBasis = `${value * 100}%`;
+  private resizeDivision(division: HTMLElement, value: number): void {
+    division.style.flexBasis = `${value * 100}%`;
   }
 
-  private nullifyButtonSize(): void {
-    this.buttonSize = 0;
+  private nullifyDivisionSize(): void {
+    this.divisionSize = 0;
   }
 
   private removeAttrSizes(): void {
@@ -161,27 +158,27 @@ abstract class ScaleView extends EventBinder {
     return c;
   }
 
+  private getDivision(): HTMLElement {
+    const division = document.createElement('div');
+    division.classList.add(this.divisionClass);
+    return division;
+  }
+
   private getButton(): HTMLElement {
     const b = document.createElement('button');
     b.classList.add(this.buttonClass);
     return b;
   }
 
-  private getLabel(): HTMLElement {
-    const label = document.createElement('span');
-    label.classList.add(this.labelClass);
-    return label;
-  }
-
-  private findButtons(): HTMLCollectionOf<Element> {
-    return this.component.getElementsByClassName(this.buttonClass);
+  private findDivisions(): HTMLCollectionOf<Element> {
+    return this.component.getElementsByClassName(this.divisionClass);
   }
 
   abstract swap(): IScaleView
 
   protected abstract getSize(): number
 
-  protected abstract setButtonSize(button: HTMLElement): void
+  protected abstract setDivisionSize(button: HTMLElement): void
 
   protected abstract setAttrSize(button: HTMLElement): void
 
@@ -198,17 +195,17 @@ class HorizontalScaleView extends ScaleView implements IScaleView {
     return this.component.getBoundingClientRect().width;
   }
 
-  protected setButtonSize(button: HTMLElement): void {
-    this.buttonSize = Math.max(
-      button.children[0].getBoundingClientRect().width * 1.5,
-      this.buttonSize
+  protected setDivisionSize(division: HTMLElement): void {
+    this.divisionSize = Math.max(
+      division.children[0].getBoundingClientRect().width * 1.5,
+      this.divisionSize
     );
   }
 
-  protected setAttrSize(button: HTMLElement): void {
+  protected setAttrSize(division: HTMLElement): void {
     this.component.style.height = `${Math.max(
       parseFloat(getComputedStyle(this.component).height),
-      button.children[0].getBoundingClientRect().height
+      division.children[0].getBoundingClientRect().height
     )}px`;
   }
 
@@ -227,17 +224,17 @@ class VerticalScaleView extends ScaleView implements IScaleView {
     return this.component.getBoundingClientRect().height;
   }
 
-  protected setButtonSize(button: HTMLElement): void {
-    this.buttonSize = Math.max(
-      button.children[0].getBoundingClientRect().height * 1.5,
-      this.buttonSize
+  protected setDivisionSize(division: HTMLElement): void {
+    this.divisionSize = Math.max(
+      division.children[0].getBoundingClientRect().height * 1.5,
+      this.divisionSize
     );
   }
 
-  protected setAttrSize(button: HTMLElement): void {
+  protected setAttrSize(division: HTMLElement): void {
     this.component.style.width = `${Math.max(
       parseFloat(getComputedStyle(this.component).width),
-      button.children[0].getBoundingClientRect().width
+      division.children[0].getBoundingClientRect().width
     )}px`;
   }
 
