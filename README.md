@@ -10,7 +10,7 @@ $ cd super-slider
 $ npm i
 ```
 ## npm scripts
-- build project with production mod in dist directory)
+- build project with production mod in dist directory
 `$ npm run build`
 
 - check code errors
