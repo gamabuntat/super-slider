@@ -1,3 +1,4 @@
+import defaultOptions from 'slider/defaultOptions';
 import { 
   EventEmitter, TypeResponseHandler 
 } from 'slider/EventEmitter/EventEmitter';
@@ -5,7 +6,6 @@ import clamp from 'helpers/clamp';
 import numberDecimalPlaces from 'helpers/numberDecimalPlaces';
 
 import { IService, TypeValidateOptionsKeys } from './IService';
-import defaultOptions from './defaultOptions';
 
 class Service extends EventEmitter implements IService {
   private static instance: Service
