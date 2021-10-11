@@ -1,4 +1,3 @@
-// eslint-disable
 import './demo.sass';
 
 import Conf from '../conf/Conf';
@@ -20,7 +19,7 @@ const options: IOptions[] = [
 
 console.log(options, Conf);
 
-// document
-//   .querySelectorAll<HTMLElement>('.js-conf')
-//   .forEach((c, idx) => new Conf(c).init(options[idx]));
+document
+  .querySelectorAll<HTMLElement>('.js-conf')
+  .forEach((c, idx) => new Conf(c).init(options[idx]));
 
