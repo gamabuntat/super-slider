@@ -1,6 +1,14 @@
 import defaultOptions from 'slider/defaultOptions';
 
 function init(): void {
+  if (document.readyState == 'loading') { 
+    document.addEventListener('DOMContentLoaded', create);
+    return;
+  }
+  create();
+}
+
+function create() {
   document.querySelectorAll("[data-super-slider]").forEach((s) => {
     const data = (<HTMLElement>s).dataset;
     const options: { [k: string]: number | boolean } = {};
