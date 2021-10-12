@@ -17,8 +17,6 @@ const options: IOptions[] = [
   },
 ];
 
-console.log(options, Conf);
-
 document
   .querySelectorAll<HTMLElement>('.js-conf')
   .forEach((c, idx) => new Conf(c).init(options[idx]));

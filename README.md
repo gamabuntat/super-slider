@@ -65,7 +65,7 @@ $(sliderID).slider({ isScale: false }); \\ hide scale
 //    id: sliderId,
 //    isScale: false,
 //    ...options
-//   }
+//  }
 // yes, the answer also contains a slider ID
 ```
 
