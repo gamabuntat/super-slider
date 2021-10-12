@@ -65,7 +65,7 @@ abstract class ScaleView extends EventBinder {
   }
 
   private setMaxSizes(): void {
-    this.ap.slice(-2).forEach((ap) => {
+    this.ap.slice(-2).concat(this.ap.slice(0, 2)).forEach((ap) => {
       const division = this.createDivision(ap);
       this.insertDivision(division);
       this.setDivisionSize(division);

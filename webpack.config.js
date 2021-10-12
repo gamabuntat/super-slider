@@ -23,7 +23,7 @@ module.exports = (env, argv) => {
       assetModuleFilename: 'images/[name][ext][query]'
     },
     resolve: {
-      extensions: [ '.ts', '.js' ],
+      extensions: ['.ts', '.js'],
       alias
     },
     externals: {
