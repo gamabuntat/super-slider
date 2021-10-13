@@ -64,6 +64,6 @@ describe('remove test model', () => {
     service.removeModel(id1);
     service.removeModel(id2);
     expect(id1).not.toBe(id2);
-  })
+  });
 });
 

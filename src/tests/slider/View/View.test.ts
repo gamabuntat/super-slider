@@ -7,7 +7,7 @@ const scaleToggleHiddenMod = jest.fn();
 const scaleSwap = jest.fn();
 let scaleLastPosition = 0;
 const scaleGetLastPosition = () => scaleLastPosition;
-const trackSwap = jest.fn()
+const trackSwap = jest.fn();
 let trackLastPosition = 0;
 const trackGetLastPosition = () => trackLastPosition;
 
