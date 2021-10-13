@@ -1,4 +1,4 @@
-import View from '../../slider/View/View';
+import View from '../../../slider/View/View';
 
 type TypeMap = { [k: string]: string }
 type TypeComponents = { [k in keyof TypeMap ]: HTMLElement | null  }
@@ -6,12 +6,24 @@ type TypeComponents = { [k in keyof TypeMap ]: HTMLElement | null  }
 const scaleToggleHiddenMod = jest.fn();
 const scaleSwap = jest.fn();
 let scaleLastPosition = 0;
-const scaleGetLastPositon = () => scaleLastPosition;
+const scaleGetLastPosition = () => scaleLastPosition;
+const trackSwap = jest.fn()
+let trackLastPosition = 0;
+const trackGetLastPosition = () => trackLastPosition;
 
-jest.mock( '../../slider/View/UI/ScaleView/ScaleView', () => {
+
+jest.mock('../../slider/View/UI/ScaleView/ScaleView', () => {
   return {
     HorizontalScaleView: jest.fn().mockImplementation(() => {
       return hsv;
+    })
+  };
+});
+
+jest.mock('../../slider/View/UI/TrackView/TrackView', () => {
+  return {
+    HorizontalTrackView: jest.fn().mockImplementation(() => {
+      return htv;
     })
   };
 });
@@ -25,7 +37,18 @@ const hsv = {
     scaleSwap();
     return this;
   },
-  getLastPosition: scaleGetLastPositon,
+  getLastPosition: scaleGetLastPosition,
+};
+
+const htv = {
+  getLastPosition: trackGetLastPosition,
+  unbind: () => { return; },
+  bind: () => { return; },
+  getPointerID: () => { return 1; },
+  swap: function () {
+    trackSwap();
+    return this;
+  }
 };
 
 const response = {
@@ -45,11 +68,8 @@ const root = document.createElement('div');
 
 describe('check rendered components', () => {
   const view = new View(response, root);
-
   const bemBlock = 'ui-slider';
-
   const intervalMod = '--interval';
-
   const getComponent = (bemElement: string): HTMLElement | null => {
     return root.querySelector(`.${bemBlock}${bemElement}`);
   };
@@ -62,6 +82,7 @@ describe('check rendered components', () => {
     scale: '__scale',
     labelStart: '__label--start',
     labelEnd: '__label--end',
+    track: '__track',
   };
 
   const components: TypeComponents = Object.entries(map).reduce((acc, entr) => {
@@ -185,7 +206,7 @@ describe('check rendered components', () => {
 
     test('handle scale click', () => {
       if (components.handleStart && components.scale) {
-        const scaleBind = ( evName: string, cb: () => void) => (
+        const scaleBind = (evName: string, cb: () => void) => (
           (<HTMLElement>components.scale).addEventListener('click', cb)
         );
         hsv.bind = scaleBind as () => void;
@@ -200,6 +221,23 @@ describe('check rendered components', () => {
         scaleLastPosition = response.max;
         components.scale.dispatchEvent(evt);
         expect(getHandlePosition(handle)).toBe('100%');
+      }
+    });
+
+    test('', () => {
+      if (components.track) {
+        const trackBind = (evName: string, cb: () => void) => (
+          (<HTMLElement>components.track).addEventListener('pointerdown', cb)
+        );
+        htv.bind = trackBind as () => void;
+        const root = document.createElement('div');
+        new View(response, root);
+        const handle = <HTMLElement>root
+          .querySelector('.ui-slider__handle--start');
+        handle.setPointerCapture = function () { return; };
+        trackLastPosition = 0.9;
+        components.track.dispatchEvent(new Event('pointerdown'));
+        expect(getHandlePosition(handle)).toBe('90%');
       }
     });
   });

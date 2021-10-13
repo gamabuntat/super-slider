@@ -1,7 +1,7 @@
 import {
   HorizontalScaleView 
-} from '../../../slider/View/UI/ScaleView/ScaleView';
-import IScaleView from '../../../slider/View/UI/ScaleView/IScaleView';
+} from '../../../../slider/View/UI/ScaleView/ScaleView';
+import IScaleView from '../../../../slider/View/UI/ScaleView/IScaleView';
 
 type TypeLs = () => void;
 type TypeOptionalRect = { [k in keyof DOMRect]+?: DOMRect[k] };
@@ -47,6 +47,8 @@ test('get last position', () => {
   const button = <HTMLButtonElement>scale.querySelectorAll('.-button')[1];
   const evt = new MouseEvent('click', { bubbles: true });
   button.dispatchEvent(evt);
+  expect(scaleView.getLastPosition()).toBe(1);
+  scale.dispatchEvent(new Event('click'));
   expect(scaleView.getLastPosition()).toBe(1);
 });
 

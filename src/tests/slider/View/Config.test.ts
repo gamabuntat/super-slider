@@ -1,4 +1,4 @@
-import { HorizontalConfig } from '../../slider/View/Config/Config';
+import { HorizontalConfig } from '../../../slider/View/Config/Config';
 
 const response: IResponse = {
   id: 'test',

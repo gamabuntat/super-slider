@@ -1,4 +1,4 @@
-import Service from '../../slider/Service/Service';
+import Service from '../../../slider/Service/Service';
 
 test('create one instance (singleton)', () => {
   const instance1 = Service.getInstance();
@@ -41,5 +41,29 @@ describe('remove test model', () => {
     expect(cb.mock.calls[1][0].max).toBe(999.999);
     expect(cb.mock.calls[1][0].from).toBe(-123);
   });
+
+  test('validate to value correctly', () => {
+    const { model } = Service.getInstance().add('test', {
+      to: 9, isInterval: true 
+    });
+    expect(model.to).toBe(9);
+  });
+
+  test('validate step value correctly', () => {
+    const service = Service.getInstance();
+    const model1 = service.add('test', { step: 0 }).model;
+    expect(model1.step).not.toBe(0);
+  });
+
+  test('added various models whith various id', () => {
+    const service = Service.getInstance();
+    const model1 = service.add('', {}).model;
+    const model2 = service.add('', {}).model;
+    const id1 = model1.id;
+    const id2 = model2.id;
+    service.removeModel(id1);
+    service.removeModel(id2);
+    expect(id1).not.toBe(id2);
+  })
 });
 

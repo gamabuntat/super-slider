@@ -1,6 +1,6 @@
 import { 
   HorizontalHandleView 
-} from '../../../slider/View/UI/HandleView/HandleView';
+} from '../../../../slider/View/UI/HandleView/HandleView';
 
 const handle = document.createElement('button');
 /* eslint-disable-next-line */
