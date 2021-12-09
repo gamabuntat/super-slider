@@ -1,6 +1,4 @@
-import { 
-  HorizontalHandleView 
-} from '../../../../slider/View/UI/HandleView/HandleView';
+import { HorizontalHandleView } from '../../../../slider/View/UI/HandleView/HandleView';
 
 const handle = document.createElement('button');
 /* eslint-disable-next-line */
@@ -40,4 +38,3 @@ test('move handle correctly', () => {
   hv.swap().move(10.1);
   expect(getComputedStyle(handle).top).toBe('1010%');
 });
-

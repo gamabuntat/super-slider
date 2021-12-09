@@ -1,12 +1,13 @@
 import ILabelView from './ILabelView';
 
 class LabelView implements ILabelView {
-  private hiddenMod: string
+  private hiddenMod: string;
 
   constructor(protected component: HTMLElement) {
-    this.hiddenMod = `${
-      this.component.classList[0].replace(/--.*/, '')
-    }--hidden`;
+    this.hiddenMod = `${this.component.classList[0].replace(
+      /--.*/,
+      ''
+    )}--hidden`;
   }
 
   updateValue(v: string): void {
@@ -19,4 +20,3 @@ class LabelView implements ILabelView {
 }
 
 export default LabelView;
-

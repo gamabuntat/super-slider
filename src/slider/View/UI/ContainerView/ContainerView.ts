@@ -3,11 +3,11 @@ import IContainerView from './IContainerView';
 abstract class ContainerView {
   constructor(protected component: HTMLElement) {}
 
-  abstract getCoord(): number
+  abstract getCoord(): number;
 
-  abstract getSize(): number
+  abstract getSize(): number;
 
-  abstract swap(): IContainerView
+  abstract swap(): IContainerView;
 }
 
 class HorizontalContainerView extends ContainerView implements IContainerView {
@@ -39,4 +39,3 @@ class VerticalContainerView extends ContainerView implements IContainerView {
 }
 
 export { HorizontalContainerView, VerticalContainerView };
-

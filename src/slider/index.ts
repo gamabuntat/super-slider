@@ -23,7 +23,7 @@ import init from './init';
       const { isNew, model } = Service.getInstance().add(this[0].id, o);
       if (isNew) {
         new Presenter(
-          Service.getInstance(), 
+          Service.getInstance(),
           new View(model, this[0]),
           model.id
         );
@@ -35,4 +35,3 @@ import init from './init';
 
   init();
 })(jQuery);
-

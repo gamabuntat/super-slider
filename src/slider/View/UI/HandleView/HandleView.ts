@@ -3,12 +3,17 @@ import EventBinder from 'slider/EventBinder/EventBinder';
 import IHandleView from './IHandleView';
 
 abstract class HandleView extends EventBinder {
-  protected shiftX = 0
-  protected shiftY = 0
-  protected pointerCoordX = 0
-  protected pointerCoordY = 0
-  private isCapture = false
-  private InFocus = false
+  protected shiftX = 0;
+
+  protected shiftY = 0;
+
+  protected pointerCoordX = 0;
+
+  protected pointerCoordY = 0;
+
+  private isCapture = false;
+
+  private InFocus = false;
 
   constructor(component: HTMLElement) {
     super(component);
@@ -23,10 +28,14 @@ abstract class HandleView extends EventBinder {
     return this.InFocus;
   }
 
-  calcPosition(containerCoord: number, containerSize: number,): number {
-    return (this.getPointerCoord() 
-      - containerCoord - this.getShift() - this.getOffset()
-    ) / containerSize || 0;
+  calcPosition(containerCoord: number, containerSize: number): number {
+    return (
+      (this.getPointerCoord() -
+        containerCoord -
+        this.getShift() -
+        this.getOffset()) /
+        containerSize || 0
+    );
   }
 
   fixPointer(pointerID: number): void {
@@ -40,8 +49,7 @@ abstract class HandleView extends EventBinder {
   }
 
   protected unbindListeners(): void {
-    this
-      .unbind('pointerdown', this.handleComponentPointerdown)
+    this.unbind('pointerdown', this.handleComponentPointerdown)
       .unbind('pointermove', this.handleComponentPointermove)
       .unbind('lostpointercapture', this.handleComponentLostpointercapture)
       .unbind('focusin', this.handleComponentFocusin)
@@ -49,8 +57,7 @@ abstract class HandleView extends EventBinder {
   }
 
   private bindListeners(): void {
-    this
-      .bind('pointerdown', this.handleComponentPointerdown)
+    this.bind('pointerdown', this.handleComponentPointerdown)
       .bind('pointermove', this.handleComponentPointermove)
       .bind('lostpointercapture', this.handleComponentLostpointercapture)
       .bind('focusin', this.handleComponentFocusin)
@@ -60,23 +67,23 @@ abstract class HandleView extends EventBinder {
   private handleComponentPointerdown = (ev: PointerEvent): void => {
     this.setShifts(ev);
     this.fixPointer(ev.pointerId);
-  }
+  };
 
   private handleComponentPointermove = (ev: PointerEvent): void => {
     this.setPointerCoords(ev);
-  }
+  };
 
   private handleComponentLostpointercapture = (): void => {
     this.isCapture = false;
-  }
+  };
 
   private handleComponentFocusin = (): void => {
     this.InFocus = true;
-  }
+  };
 
   private handleComponentFocusout = (): void => {
     this.InFocus = false;
-  }
+  };
 
   private setShifts(ev: PointerEvent): void {
     this.shiftX = ev.offsetX ?? 0;
@@ -88,15 +95,15 @@ abstract class HandleView extends EventBinder {
     this.pointerCoordY = ev.y ?? 0;
   }
 
-  abstract move(position: number): void
+  abstract move(position: number): void;
 
-  abstract swap(): IHandleView
+  abstract swap(): IHandleView;
 
-  protected abstract getPointerCoord(): number
+  protected abstract getPointerCoord(): number;
 
-  protected abstract getShift(): number
+  protected abstract getShift(): number;
 
-  protected abstract getOffset(): number
+  protected abstract getOffset(): number;
 }
 
 class HorizontalHandleView extends HandleView implements IHandleView {
@@ -148,4 +155,3 @@ class VerticalHandleView extends HandleView implements IHandleView {
 }
 
 export { HorizontalHandleView, VerticalHandleView };
-

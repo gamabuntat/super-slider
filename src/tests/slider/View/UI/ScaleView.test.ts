@@ -1,6 +1,4 @@
-import {
-  HorizontalScaleView 
-} from '../../../../slider/View/UI/ScaleView/ScaleView';
+import { HorizontalScaleView } from '../../../../slider/View/UI/ScaleView/ScaleView';
 import IScaleView from '../../../../slider/View/UI/ScaleView/IScaleView';
 
 type TypeLs = () => void;
@@ -12,17 +10,23 @@ let resizeListener: TypeLs;
   constructor(private ls: TypeLs) {
     resizeListener = ls;
   }
-  observe() { return; }
-  unobserve() { return; }
-  disconnect() { return; }
+  observe() {
+    return;
+  }
+  unobserve() {
+    return;
+  }
+  disconnect() {
+    return;
+  }
 };
 
 const scale = document.createElement('div');
 const rect = scale.getBoundingClientRect();
 const updateRect = (o: TypeOptionalRect = {}) => {
-  scale.getBoundingClientRect = (
-    function () { return { ...rect, ...o }; }
-  );
+  scale.getBoundingClientRect = function () {
+    return { ...rect, ...o };
+  };
 };
 let scaleView: IScaleView = new HorizontalScaleView(scale);
 
@@ -67,4 +71,3 @@ test('handle resize scale', () => {
   resizeListener();
   expect(setTimeout).toHaveBeenCalledTimes(1);
 });
-

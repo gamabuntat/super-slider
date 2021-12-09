@@ -1,6 +1,5 @@
 interface IProgressBarView {
-  resize(p: number): void
+  resize(p: number): void;
 }
 
 export default IProgressBarView;
-

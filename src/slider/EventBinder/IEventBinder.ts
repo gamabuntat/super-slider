@@ -1,16 +1,15 @@
 interface IEventBinder {
   bind<K extends keyof HTMLElementEventMap>(
-    type: K, 
+    type: K,
     listener: (ev: HTMLElementEventMap[K]) => void,
     options?: boolean | AddEventListenerOptions
-  ): this
+  ): this;
 
   unbind<K extends keyof HTMLElementEventMap>(
-    type: K, 
+    type: K,
     listener: (ev: HTMLElementEventMap[K]) => void,
     options?: boolean | AddEventListenerOptions
-  ): this
+  ): this;
 }
 
 export default IEventBinder;
-

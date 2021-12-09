@@ -3,7 +3,7 @@ import IProgressBarView from './IProgressBarView';
 abstract class ProgressBarView {
   constructor(protected component: HTMLElement) {}
 
-  abstract resize(p: number): void
+  abstract resize(p: number): void;
 }
 
 class StartProgressBarView extends ProgressBarView implements IProgressBarView {
@@ -19,4 +19,3 @@ class EndProgressBarView extends ProgressBarView implements IProgressBarView {
 }
 
 export { StartProgressBarView, EndProgressBarView };
-

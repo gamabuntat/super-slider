@@ -1,15 +1,15 @@
 import clamp from 'helpers/clamp';
 import numberDecimalPlaces from 'helpers/numberDecimalPlaces';
 
-import { IConfig, typeExtremums, IAllPositions } from './IConfig';
+import { IConfig, TypeExtremums, IAllPositions } from './IConfig';
 
 abstract class Config {
-  protected n!: number
-  protected divisionNumber!: number
-  protected relativeStep!: number
-  protected fakeDiff!: number
-  protected positions!: number[]
-  protected extremums!: typeExtremums
+  protected n!: number;
+  protected divisionNumber!: number;
+  protected relativeStep!: number;
+  protected fakeDiff!: number;
+  protected positions!: number[];
+  protected extremums!: TypeExtremums;
 
   constructor(protected response: IResponse) {
     this.update(response);
@@ -41,7 +41,7 @@ abstract class Config {
   }
 
   protected sampling(p: number): number {
-    return 1 / this.divisionNumber * Math.round(p * this.divisionNumber);
+    return (1 / this.divisionNumber) * Math.round(p * this.divisionNumber);
   }
 
   protected generateAllPositions(v = 0): number[] {
@@ -53,8 +53,7 @@ abstract class Config {
   }
 
   private getDivisionNumber(): number {
-    const min = this.response.min;
-    const max = this.response.max;
+    const { min, max } = this.response;
     const minN = numberDecimalPlaces(min);
     const maxN = numberDecimalPlaces(max);
     return Math.ceil(
@@ -75,21 +74,21 @@ abstract class Config {
     this.response.to = this.calcAbsolutePosition(this.positions[1]);
   }
 
-  abstract swap(): void
+  abstract swap(): void;
 
-  abstract getPrev(p: number): number
+  abstract getPrev(p: number): number;
 
-  abstract getNext(p: number): number
+  abstract getNext(p: number): number;
 
-  abstract getAllPositions(): IAllPositions
+  abstract getAllPositions(): IAllPositions;
 
-  abstract calcPosition(ap: number): number
+  abstract calcPosition(ap: number): number;
 
-  protected abstract calcAbsolutePosition(p: number): number
+  protected abstract calcAbsolutePosition(p: number): number;
 
-  protected abstract updateExtremums(): void
+  protected abstract updateExtremums(): void;
 
-  protected abstract getExtremums(): typeExtremums
+  protected abstract getExtremums(): TypeExtremums;
 }
 
 class HorizontalConfig extends Config implements IConfig {
@@ -97,35 +96,32 @@ class HorizontalConfig extends Config implements IConfig {
     return new VerticalConfig(this.response);
   }
 
-  getPrev(p: number): number {
-    return Math.max(0, this.sampling(p) - this.relativeStep);
+  getPrev(p: number, m = 1): number {
+    return Math.max(0, this.sampling(p) - this.relativeStep * m);
   }
 
-  getNext(p: number): number {
-    return Math.min(1, this.sampling(p) + this.relativeStep);
+  getNext(p: number, m = 1): number {
+    return Math.min(1, this.sampling(p) + this.relativeStep * m);
   }
 
   getAllPositions(): IAllPositions {
     const positions = this.generateAllPositions(0);
     return {
       absolutePositions: positions.map(this.calcAbsolutePosition, this),
-      positions
+      positions,
     };
   }
 
   calcPosition(ap: number): number {
     return clamp(
-      0, 
+      0,
       this.sampling(
-        Math.round(
-          (
-            ap == this.response.max
-              ? this.fakeDiff
-              : ap - this.response.min
-          ) 
-          / this.response.step
-        ) 
-        * this.response.step / this.fakeDiff
+        (Math.round(
+          (ap === this.response.max ? this.fakeDiff : ap - this.response.min) /
+            this.response.step
+        ) *
+          this.response.step) /
+          this.fakeDiff
       ),
       1
     );
@@ -134,7 +130,7 @@ class HorizontalConfig extends Config implements IConfig {
   protected calcAbsolutePosition(p: number): number {
     return Math.min(
       Number(
-        (this.sampling(p) * this.fakeDiff + this.response.min).toFixed(this.n),
+        (this.sampling(p) * this.fakeDiff + this.response.min).toFixed(this.n)
       ),
       this.response.max
     );
@@ -145,10 +141,10 @@ class HorizontalConfig extends Config implements IConfig {
     this.extremums[1].min = this.positions[0] + this.relativeStep;
   }
 
-  protected getExtremums(): typeExtremums {
+  protected getExtremums(): TypeExtremums {
     return [
       { min: 0, max: this.positions[1] - this.relativeStep },
-      { min: this.positions[0] + this.relativeStep, max: 1 }
+      { min: this.positions[0] + this.relativeStep, max: 1 },
     ];
   }
 }
@@ -170,23 +166,22 @@ class VerticalConfig extends Config implements IConfig {
     const positions = this.generateAllPositions(1).reverse();
     return {
       absolutePositions: positions.map(this.calcAbsolutePosition, this),
-      positions
+      positions,
     };
   }
 
   calcPosition(ap: number): number {
     return clamp(
-      0, 
+      0,
       this.sampling(
-        1 - Math.round(
-          (
-            ap == this.response.max 
+        1 -
+          (Math.round(
+            (ap === this.response.max
               ? this.fakeDiff
-              : ap - this.response.min
-          ) 
-          / this.response.step
-        ) 
-        * this.response.step / this.fakeDiff
+              : ap - this.response.min) / this.response.step
+          ) *
+            this.response.step) /
+            this.fakeDiff
       ),
       1
     );
@@ -195,8 +190,9 @@ class VerticalConfig extends Config implements IConfig {
   protected calcAbsolutePosition(p: number): number {
     return Math.min(
       Number(
-        ((1 - this.sampling(p)) * this.fakeDiff + this.response.min)
-          .toFixed(this.n)
+        ((1 - this.sampling(p)) * this.fakeDiff + this.response.min).toFixed(
+          this.n
+        )
       ),
       this.response.max
     );
@@ -207,13 +203,12 @@ class VerticalConfig extends Config implements IConfig {
     this.extremums[1].max = this.positions[0] - this.relativeStep;
   }
 
-  protected getExtremums(): typeExtremums {
+  protected getExtremums(): TypeExtremums {
     return [
       { min: this.positions[1] + this.relativeStep, max: 1 },
-      { min: 0, max: this.positions[0] - this.relativeStep }
+      { min: 0, max: this.positions[0] - this.relativeStep },
     ];
   }
 }
 
 export { HorizontalConfig, VerticalConfig };
-

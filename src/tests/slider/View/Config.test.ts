@@ -13,8 +13,9 @@ const response: IResponse = {
   isScale: true,
 };
 
-const truthfulAbsolutePositions = Array.from({ length: 11 })
-  .map((i, idx) => idx);
+const truthfulAbsolutePositions = Array.from({ length: 11 }).map(
+  (i, idx) => idx
+);
 const reverseTruthful = truthfulAbsolutePositions.slice().reverse();
 
 const getUpdatedResponse = (o: IOptions): IResponse => ({ ...response, ...o });
@@ -33,37 +34,33 @@ test('calc correctly position', () => {
 
 test('get next position correctly', () => {
   truthfulAbsolutePositions.forEach((p, idx) => {
-    expect(config.calcPosition(
-      truthfulAbsolutePositions[idx + 1] ?? p
-    ))
-      .toBeCloseTo(config.getNext(config.calcPosition(p)));
+    expect(
+      config.calcPosition(truthfulAbsolutePositions[idx + 1] ?? p)
+    ).toBeCloseTo(config.getNext(config.calcPosition(p)));
   });
 });
 
 test('get next vertical positions correctly', () => {
   truthfulAbsolutePositions.forEach((p, idx) => {
-    expect(verticalConfig.calcPosition(
-      truthfulAbsolutePositions[idx + 1] ?? p
-    ))
-      .toBeCloseTo(verticalConfig.getNext(verticalConfig.calcPosition(p)));
+    expect(
+      verticalConfig.calcPosition(truthfulAbsolutePositions[idx + 1] ?? p)
+    ).toBeCloseTo(verticalConfig.getNext(verticalConfig.calcPosition(p)));
   });
 });
 
 test('get prev position correctly', () => {
   reverseTruthful.forEach((p, idx) => {
-    expect(config.calcPosition(
-      reverseTruthful[idx + 1] ?? p
-    ))
-      .toBeCloseTo(config.getPrev(config.calcPosition(p)));
+    expect(config.calcPosition(reverseTruthful[idx + 1] ?? p)).toBeCloseTo(
+      config.getPrev(config.calcPosition(p))
+    );
   });
 });
 
 test('get prev vertical position correctly', () => {
   reverseTruthful.forEach((p, idx) => {
-    expect(verticalConfig.calcPosition(
-      reverseTruthful[idx + 1] ?? p
-    ))
-      .toBeCloseTo(verticalConfig.getPrev(verticalConfig.calcPosition(p)));
+    expect(
+      verticalConfig.calcPosition(reverseTruthful[idx + 1] ?? p)
+    ).toBeCloseTo(verticalConfig.getPrev(verticalConfig.calcPosition(p)));
   });
 });
 
@@ -95,4 +92,3 @@ test('update correctly', () => {
   config.update(getUpdatedResponse(newOptions));
   expect(config.getResponse().max).toBe(newOptions.max);
 });
-

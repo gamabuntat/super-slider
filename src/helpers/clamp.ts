@@ -3,4 +3,3 @@ function clamp(min: number, v: number, max: number): number {
 }
 
 export default clamp;
-

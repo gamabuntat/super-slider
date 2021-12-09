@@ -1,22 +1,26 @@
 import defaultOptions from 'slider/defaultOptions';
-import { 
-  EventEmitter, TypeResponseHandler 
+import {
+  EventEmitter,
+  TypeResponseHandler,
 } from 'slider/EventEmitter/EventEmitter';
 import clamp from 'helpers/clamp';
 import numberDecimalPlaces from 'helpers/numberDecimalPlaces';
 
-import { IService } from './IService';
+import IService from './IService';
+
 class Service extends EventEmitter implements IService {
-  private static instance: Service
-  private readonly defaultOptions: TypeRequiredOptions = defaultOptions 
-  private selectedModel: IResponse = { ...this.defaultOptions, id: '' }
-  private models: IResponse[] = []
-  private selectedIndex = -1
-  private decimalPlaces = 0
+  private static instance: Service;
+  private readonly defaultOptions: TypeRequiredOptions = defaultOptions;
+  private selectedModel: IResponse = { ...this.defaultOptions, id: '' };
+  private models: IResponse[] = [];
+  private selectedIndex = -1;
+  private decimalPlaces = 0;
 
   static getInstance(): Service {
-    if (!Service.instance) { Service.instance = new Service(); }
-    return Service.instance; 
+    if (!Service.instance) {
+      Service.instance = new Service();
+    }
+    return Service.instance;
   }
 
   subscribe(preID: string, cb: TypeResponseHandler): string {
@@ -29,7 +33,8 @@ class Service extends EventEmitter implements IService {
     this.events[id] = [];
     this.events[`sub${id}`] = [];
     this.models.splice(
-      this.findModelIndex(id), Number(this.selectedIndex !== -1)
+      this.findModelIndex(id),
+      Number(this.selectedIndex !== -1)
     );
   }
 
@@ -38,18 +43,20 @@ class Service extends EventEmitter implements IService {
     this.emit({ ...response }, `sub${response.id}`);
   }
 
-  add(preID: string, o: IOptions): { model: IResponse, isNew: boolean } {
+  add(preID: string, o: IOptions): { model: IResponse; isNew: boolean } {
     const id = preID || this.generateID();
     const prevLength = this.models.length;
-    this.selectedModel = this.models[this.findModelIndex(id)] 
-      || { ...this.defaultOptions, id };
+    this.selectedModel = this.models[this.findModelIndex(id)] || {
+      ...this.defaultOptions,
+      id,
+    };
     this.selectedModel = this.getValidatedOptions(o);
     this.addModel(this.selectedModel);
     this.emit({ ...this.selectedModel });
     this.emit({ ...this.selectedModel }, `sub${this.selectedModel.id}`);
     return {
       model: { ...this.selectedModel },
-      isNew: prevLength !== this.models.length
+      isNew: prevLength !== this.models.length,
     };
   }
 
@@ -62,7 +69,8 @@ class Service extends EventEmitter implements IService {
   }
 
   private findModelIndex(id: string): number {
-    return this.selectedIndex = this.models.findIndex((m) => m.id === id);
+    this.selectedIndex = this.models.findIndex((m) => m.id === id);
+    return this.selectedIndex;
   }
 
   private generateID(): string {
@@ -76,7 +84,11 @@ class Service extends EventEmitter implements IService {
     this.validateMin(copy);
     this.validateMax(copy);
     this.validateFrom(copy);
-    copy.isInterval ? this.validateTo(copy) : copy.to = copy.max;
+    if (copy.isInterval) {
+      this.validateTo(copy);
+    } else {
+      copy.to = copy.max;
+    }
     return copy;
   }
 
@@ -103,8 +115,9 @@ class Service extends EventEmitter implements IService {
       max,
       Number(
         (
-          Math.ceil((clamp(min, from, this.selectedModel.to) - min) / step) 
-          * step + min
+          Math.ceil((clamp(min, from, this.selectedModel.to) - min) / step) *
+            step +
+          min
         ).toFixed(this.decimalPlaces)
       )
     );
@@ -115,14 +128,12 @@ class Service extends EventEmitter implements IService {
     model.to = Math.min(
       max,
       Number(
-        (
-          Math.ceil((clamp(from, to, max) - min) / step)
-          * step + min
-        ).toFixed(this.decimalPlaces)
+        (Math.ceil((clamp(from, to, max) - min) / step) * step + min).toFixed(
+          this.decimalPlaces
+        )
       )
     );
   }
 }
 
 export default Service;
-

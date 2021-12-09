@@ -26,9 +26,9 @@ const treeTemplate: IViewTreeTemplate = {
               childs: [
                 {
                   name: 'labelStart',
-                  elementType: 'div'
-                }
-              ]
+                  elementType: 'div',
+                },
+              ],
             },
             {
               name: 'handleEnd',
@@ -36,9 +36,9 @@ const treeTemplate: IViewTreeTemplate = {
               childs: [
                 {
                   name: 'labelEnd',
-                  elementType: 'div'
-                }
-              ]
+                  elementType: 'div',
+                },
+              ],
             },
             {
               name: 'track',
@@ -46,24 +46,23 @@ const treeTemplate: IViewTreeTemplate = {
               childs: [
                 {
                   name: 'progressBarStart',
-                  elementType: 'div'
+                  elementType: 'div',
                 },
                 {
                   name: 'progressBarEnd',
-                  elementType: 'div'
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                  elementType: 'div',
+                },
+              ],
+            },
+          ],
+        },
+      ],
     },
     {
       name: 'scale',
-      elementType: 'div'
-    }
-  ]
+      elementType: 'div',
+    },
+  ],
 };
 
 export default treeTemplate;
-

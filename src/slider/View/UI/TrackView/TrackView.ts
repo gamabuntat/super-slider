@@ -3,8 +3,8 @@ import EventBinder from 'slider/EventBinder/EventBinder';
 import ITrackView from './ITrackView';
 
 abstract class TrackView extends EventBinder {
-  private pointerID = 0
-  protected lastPosition = 0
+  private pointerID = 0;
+  protected lastPosition = 0;
 
   constructor(component: HTMLElement) {
     super(component);
@@ -30,15 +30,15 @@ abstract class TrackView extends EventBinder {
   private handleTrackPointerdown = (e: PointerEvent): void => {
     this.setLastPosition(e);
     this.setPointerID(e);
-  }
+  };
 
   private setPointerID({ pointerId }: PointerEvent): void {
     this.pointerID = pointerId;
   }
 
-  abstract swap(): ITrackView
+  abstract swap(): ITrackView;
 
-  protected abstract setLastPosition(e: MouseEvent): void
+  protected abstract setLastPosition(e: MouseEvent): void;
 }
 
 class HorizontalTrackView extends TrackView implements ITrackView {
@@ -80,4 +80,3 @@ class VerticalTrackView extends TrackView implements ITrackView {
 }
 
 export { HorizontalTrackView, VerticalTrackView };
-

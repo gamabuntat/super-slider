@@ -11,4 +11,3 @@ const defaultOptions: TypeRequiredOptions = {
 };
 
 export default defaultOptions;
-

@@ -1,10 +1,10 @@
-import IEventBinder from './EventBinder';
+import IEventBinder from './IEventBinder';
 
 class EventBinder implements IEventBinder {
   constructor(protected component: HTMLElement) {}
 
   bind<K extends keyof HTMLElementEventMap>(
-    type: K, 
+    type: K,
     listener: (ev: HTMLElementEventMap[K]) => void,
     options?: boolean | AddEventListenerOptions
   ): this {
@@ -13,7 +13,7 @@ class EventBinder implements IEventBinder {
   }
 
   unbind<K extends keyof HTMLElementEventMap>(
-    type: K, 
+    type: K,
     listener: (ev: HTMLElementEventMap[K]) => void,
     options?: boolean | AddEventListenerOptions
   ): this {
@@ -23,4 +23,3 @@ class EventBinder implements IEventBinder {
 }
 
 export default EventBinder;
-

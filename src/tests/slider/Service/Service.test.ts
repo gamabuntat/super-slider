@@ -44,7 +44,8 @@ describe('remove test model', () => {
 
   test('validate to value correctly', () => {
     const { model } = Service.getInstance().add('test', {
-      to: 9, isInterval: true 
+      to: 9,
+      isInterval: true,
     });
     expect(model.to).toBe(9);
   });
@@ -66,4 +67,3 @@ describe('remove test model', () => {
     expect(id1).not.toBe(id2);
   });
 });
-

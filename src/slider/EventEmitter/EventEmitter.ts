@@ -1,11 +1,11 @@
 type TypeResponseHandler = (response: IResponse) => void;
 
 interface IEventEmitter {
-  on(ev: string, listener: TypeResponseHandler): this
+  on(ev: string, listener: TypeResponseHandler): this;
 }
 
 class EventEmitter implements IEventEmitter {
-  protected events: { [id: string]: TypeResponseHandler[] } = {}
+  protected events: { [id: string]: TypeResponseHandler[] } = {};
 
   on(id: string, handler: TypeResponseHandler): this {
     (this.events[id] || (this.events[id] = [])).push(handler);
@@ -13,10 +13,10 @@ class EventEmitter implements IEventEmitter {
   }
 
   protected emit(arg: IResponse, id: string = arg.id): void {
-    (this.events[id] || [])
-      .forEach((handler: TypeResponseHandler) => handler(arg));
+    (this.events[id] || []).forEach((handler: TypeResponseHandler) =>
+      handler(arg)
+    );
   }
 }
 
 export { EventEmitter, IEventEmitter, TypeResponseHandler };
-
