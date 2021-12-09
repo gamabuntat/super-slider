@@ -5,8 +5,7 @@ import {
 import clamp from 'helpers/clamp';
 import numberDecimalPlaces from 'helpers/numberDecimalPlaces';
 
-import { IService, TypeValidateOptionsKeys } from './IService';
-
+import { IService } from './IService';
 class Service extends EventEmitter implements IService {
   private static instance: Service
   private readonly defaultOptions: TypeRequiredOptions = defaultOptions 
@@ -14,13 +13,6 @@ class Service extends EventEmitter implements IService {
   private models: IResponse[] = []
   private selectedIndex = -1
   private decimalPlaces = 0
-  private validatedKeys:(TypeValidateOptionsKeys)[] = [
-    'step', 
-    'min',
-    'max',
-    'from',
-    'to'
-  ]
 
   static getInstance(): Service {
     if (!Service.instance) { Service.instance = new Service(); }

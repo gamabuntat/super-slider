@@ -10,9 +10,7 @@ interface IOptions {
   isScale?: boolean
 }
 
-type TypeRequiredOptions = {
-  [K in keyof IOptions]-?: IOptions[K]
-}
+type TypeRequiredOptions = Required<IOptions>;
 
 interface IResponse extends TypeRequiredOptions {
   id: string

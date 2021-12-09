@@ -141,13 +141,14 @@ class HorizontalConfig extends Config implements IConfig {
   }
 
   protected updateExtremums(): void {
-    this.extremums[0].max = this.positions[1];
-    this.extremums[1].min = this.positions[0];
+    this.extremums[0].max = this.positions[1] - this.relativeStep;
+    this.extremums[1].min = this.positions[0] + this.relativeStep;
   }
 
   protected getExtremums(): typeExtremums {
     return [
-      { min: 0, max: this.positions[1] }, { min: this.positions[0], max: 1 }
+      { min: 0, max: this.positions[1] - this.relativeStep },
+      { min: this.positions[0] + this.relativeStep, max: 1 }
     ];
   }
 }
@@ -202,13 +203,14 @@ class VerticalConfig extends Config implements IConfig {
   }
 
   protected updateExtremums(): void {
-    this.extremums[0].min = this.positions[1];
-    this.extremums[1].max = this.positions[0];
+    this.extremums[0].min = this.positions[1] + this.relativeStep;
+    this.extremums[1].max = this.positions[0] - this.relativeStep;
   }
 
   protected getExtremums(): typeExtremums {
     return [
-      { min: this.positions[1], max: 1 }, { min: 0, max: this.positions[0] }
+      { min: this.positions[1] + this.relativeStep, max: 1 },
+      { min: 0, max: this.positions[0] - this.relativeStep }
     ];
   }
 }
