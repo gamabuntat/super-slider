@@ -1,8 +1,8 @@
 import EventBinder from 'slider/EventBinder/EventBinder';
 
-import ITrackView from './ITrackView';
+import ITrack from './ITrack';
 
-abstract class TrackView extends EventBinder {
+abstract class Track extends EventBinder {
   private pointerID = 0;
   protected lastPosition = 0;
 
@@ -36,15 +36,15 @@ abstract class TrackView extends EventBinder {
     this.pointerID = pointerId;
   }
 
-  abstract swap(): ITrackView;
+  abstract swap(): ITrack;
 
   protected abstract setLastPosition(e: MouseEvent): void;
 }
 
-class HorizontalTrackView extends TrackView implements ITrackView {
-  swap(): ITrackView {
+class HorizontalTrack extends Track implements ITrack {
+  swap(): ITrack {
     this.unbindListeners();
-    return new VerticalTrackView(this.component);
+    return new VerticalTrack(this.component);
   }
 
   protected setLastPosition({ x }: MouseEvent): void {
@@ -60,10 +60,10 @@ class HorizontalTrackView extends TrackView implements ITrackView {
   }
 }
 
-class VerticalTrackView extends TrackView implements ITrackView {
-  swap(): ITrackView {
+class VerticalTrack extends Track implements ITrack {
+  swap(): ITrack {
     this.unbindListeners();
-    return new HorizontalTrackView(this.component);
+    return new HorizontalTrack(this.component);
   }
 
   protected setLastPosition({ y }: MouseEvent): void {
@@ -79,4 +79,4 @@ class VerticalTrackView extends TrackView implements ITrackView {
   }
 }
 
-export { HorizontalTrackView, VerticalTrackView };
+export { HorizontalTrack, VerticalTrack };

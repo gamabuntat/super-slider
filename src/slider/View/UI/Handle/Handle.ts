@@ -1,8 +1,8 @@
 import EventBinder from 'slider/EventBinder/EventBinder';
 
-import IHandleView from './IHandleView';
+import IHandle from './IHandle';
 
-abstract class HandleView extends EventBinder {
+abstract class Handle extends EventBinder {
   protected shiftX = 0;
 
   protected shiftY = 0;
@@ -97,7 +97,7 @@ abstract class HandleView extends EventBinder {
 
   abstract move(position: number): void;
 
-  abstract swap(): IHandleView;
+  abstract swap(): IHandle;
 
   protected abstract getPointerCoord(): number;
 
@@ -106,15 +106,15 @@ abstract class HandleView extends EventBinder {
   protected abstract getOffset(): number;
 }
 
-class HorizontalHandleView extends HandleView implements IHandleView {
+class HorizontalHandle extends Handle implements IHandle {
   move(position: number): void {
     this.component.style.left = `${position * 100}%`;
   }
 
-  swap(): IHandleView {
+  swap(): IHandle {
     this.unbindListeners();
     this.resetPositions();
-    return new VerticalHandleView(this.component);
+    return new VerticalHandle(this.component);
   }
 
   protected getPointerCoord(): number {
@@ -130,15 +130,15 @@ class HorizontalHandleView extends HandleView implements IHandleView {
   }
 }
 
-class VerticalHandleView extends HandleView implements IHandleView {
+class VerticalHandle extends Handle implements IHandle {
   move(position: number): void {
     this.component.style.top = `${position * 100}%`;
   }
 
-  swap(): IHandleView {
+  swap(): IHandle {
     this.unbindListeners();
     this.resetPositions();
-    return new HorizontalHandleView(this.component);
+    return new HorizontalHandle(this.component);
   }
 
   protected getPointerCoord(): number {
@@ -154,4 +154,4 @@ class VerticalHandleView extends HandleView implements IHandleView {
   }
 }
 
-export { HorizontalHandleView, VerticalHandleView };
+export { HorizontalHandle, VerticalHandle };

@@ -1,6 +1,6 @@
-interface ISliderView {
+interface ISlider {
   toggleVerticalMod(): void;
   toggleIntervalMod(): void;
 }
 
-export default ISliderView;
+export default ISlider;

@@ -1,6 +1,6 @@
-import ISliderView from './ISliderView';
+import ISlider from './ISlider';
 
-class SliderView implements ISliderView {
+class Slider implements ISlider {
   private BEMVerticalMod: string;
   private BEMIntervalMod: string;
 
@@ -19,4 +19,4 @@ class SliderView implements ISliderView {
   }
 }
 
-export default SliderView;
+export default Slider;

@@ -1,6 +1,6 @@
-interface ILabelView {
+interface ILabel {
   updateValue(v: string): void;
   toggleHiddenMode(): void;
 }
 
-export default ILabelView;
+export default ILabel;

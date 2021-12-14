@@ -1,9 +1,9 @@
 import IEventBinder from 'slider/EventBinder/IEventBinder';
 
-interface ITrackView extends IEventBinder {
-  swap(): ITrackView;
+interface ITrack extends IEventBinder {
+  swap(): ITrack;
   getLastPosition(): number;
   getPointerID(): number;
 }
 
-export default ITrackView;
+export default ITrack;

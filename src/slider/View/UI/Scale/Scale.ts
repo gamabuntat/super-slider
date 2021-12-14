@@ -2,9 +2,9 @@ import EventBinder from 'slider/EventBinder/EventBinder';
 import type { AllPositions } from 'slider/View/Config/IConfig';
 import getLastItem from 'helpers/getLastItem';
 
-import IScaleView from './IScaleView';
+import IScale from './IScale';
 
-abstract class ScaleView extends EventBinder {
+abstract class Scale extends EventBinder {
   protected divisionSize = 0;
   protected ap: number[] = [];
   private divisions: HTMLCollectionOf<Element>;
@@ -188,7 +188,7 @@ abstract class ScaleView extends EventBinder {
     return this.component.getElementsByClassName(this.divisionClass);
   }
 
-  abstract swap(): IScaleView;
+  abstract swap(): IScale;
 
   protected abstract getSize(): number;
 
@@ -199,10 +199,10 @@ abstract class ScaleView extends EventBinder {
   protected abstract setAP(ap: number[]): void;
 }
 
-class HorizontalScaleView extends ScaleView implements IScaleView {
-  swap(): IScaleView {
+class HorizontalScale extends Scale implements IScale {
+  swap(): IScale {
     this.unbindListeners();
-    return new VerticalScaleView(this.component);
+    return new VerticalScale(this.component);
   }
 
   protected getSize(): number {
@@ -228,10 +228,10 @@ class HorizontalScaleView extends ScaleView implements IScaleView {
   }
 }
 
-class VerticalScaleView extends ScaleView implements IScaleView {
-  swap(): IScaleView {
+class VerticalScale extends Scale implements IScale {
+  swap(): IScale {
     this.unbindListeners();
-    return new HorizontalScaleView(this.component);
+    return new HorizontalScale(this.component);
   }
 
   protected getSize(): number {
@@ -256,4 +256,4 @@ class VerticalScaleView extends ScaleView implements IScaleView {
     this.ap = ap.reverse();
   }
 }
-export { HorizontalScaleView, VerticalScaleView };
+export { HorizontalScale, VerticalScale };

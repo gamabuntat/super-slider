@@ -5,36 +5,36 @@ import IView from './interfaces/IView';
 import IViewTreeTemplate from './interfaces/IViewTreeTemplate';
 import { HorizontalConfig } from './Config/Config';
 import { IConfig } from './Config/IConfig';
-import SliderView from './UI/SliderView/SliderView';
-import ISliderView from './UI/SliderView/ISliderView';
-import { HorizontalContainerView } from './UI/ContainerView/ContainerView';
-import IContainerView from './UI/ContainerView/IContainerView';
-import { HorizontalHandleView } from './UI/HandleView/HandleView';
-import IHandleView from './UI/HandleView/IHandleView';
+import Slider from './UI/Slider/Slider';
+import ISlider from './UI/Slider/ISlider';
+import { HorizontalContainer } from './UI/Container/Container';
+import IContainer from './UI/Container/IContainer';
+import { HorizontalHandle } from './UI/Handle/Handle';
+import IHandle from './UI/Handle/IHandle';
 import {
-  StartProgressBarView,
-  EndProgressBarView,
-} from './UI/ProgressBarView/ProgressBarView';
-import IProgressBarView from './UI/ProgressBarView/IProgressBarView';
-import LabelView from './UI/LabelView/LabelView';
-import ILabelView from './UI/LabelView/ILabelView';
-import { HorizontalScaleView } from './UI/ScaleView/ScaleView';
-import IScaleView from './UI/ScaleView/IScaleView';
-import { HorizontalTrackView } from './UI/TrackView/TrackView';
-import ITrackView from './UI/TrackView/ITrackView';
+  StartProgressBar,
+  EndProgressBar,
+} from './UI/ProgressBar/ProgressBar';
+import IProgressBar from './UI/ProgressBar/IProgressBar';
+import Label from './UI/Label/Label';
+import ILabel from './UI/Label/ILabel';
+import { HorizontalScale } from './UI/Scale/Scale';
+import IScale from './UI/Scale/IScale';
+import { HorizontalTrack } from './UI/Track/Track';
+import ITrack from './UI/Track/ITrack';
 
 class View extends EventEmitter implements IView {
   private static tree: IViewTreeTemplate = treeTemplate;
   private config: IConfig;
   private components: { [k: string]: HTMLElement } = {};
   private sliderBEMBlockName = 'ui-slider';
-  private slider: ISliderView;
-  private container: IContainerView;
-  private handles: IHandleView[];
-  private progressBars: IProgressBarView[];
-  private labels: ILabelView[];
-  private scale: IScaleView;
-  private track: ITrackView;
+  private slider: ISlider;
+  private container: IContainer;
+  private handles: IHandle[];
+  private progressBars: IProgressBar[];
+  private labels: ILabel[];
+  private scale: IScale;
+  private track: ITrack;
 
   constructor(response: Model, root: HTMLElement) {
     super();
@@ -46,20 +46,20 @@ class View extends EventEmitter implements IView {
       isScale: true,
     });
     root.insertAdjacentElement('beforeend', this.createSlider(View.tree));
-    this.slider = new SliderView(this.components[this.sliderBEMBlockName]);
-    this.container = new HorizontalContainerView(this.components.container);
+    this.slider = new Slider(this.components[this.sliderBEMBlockName]);
+    this.container = new HorizontalContainer(this.components.container);
     this.handles = [this.components.handleStart, this.components.handleEnd].map(
-      (h) => new HorizontalHandleView(h)
+      (h) => new HorizontalHandle(h)
     );
     this.progressBars = [
-      new StartProgressBarView(this.components.progressBarStart),
-      new EndProgressBarView(this.components.progressBarEnd),
+      new StartProgressBar(this.components.progressBarStart),
+      new EndProgressBar(this.components.progressBarEnd),
     ];
     this.labels = [this.components.labelStart, this.components.labelEnd].map(
-      (c) => new LabelView(c)
+      (c) => new Label(c)
     );
-    this.scale = new HorizontalScaleView(this.components.scale);
-    this.track = new HorizontalTrackView(this.components.track);
+    this.scale = new HorizontalScale(this.components.scale);
+    this.track = new HorizontalTrack(this.components.track);
     this.parseResponse(response);
     this.bindListeners();
     root.id = response.id;

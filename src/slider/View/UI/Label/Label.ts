@@ -1,6 +1,6 @@
-import ILabelView from './ILabelView';
+import ILabel from './ILabel';
 
-class LabelView implements ILabelView {
+class Label implements ILabel {
   private hiddenMod: string;
 
   constructor(protected component: HTMLElement) {
@@ -19,4 +19,4 @@ class LabelView implements ILabelView {
   }
 }
 
-export default LabelView;
+export default Label;
