@@ -36,7 +36,7 @@ class View extends EventEmitter implements IView {
   private scale: IScaleView;
   private track: ITrackView;
 
-  constructor(response: IResponse, root: HTMLElement) {
+  constructor(response: ModelResponse, root: HTMLElement) {
     super();
     this.config = new HorizontalConfig({
       ...response,
@@ -65,7 +65,7 @@ class View extends EventEmitter implements IView {
     root.id = response.id;
   }
 
-  parseResponse(response: IResponse): void {
+  parseResponse(response: ModelResponse): void {
     if (this.config.getResponse().isVertical !== response.isVertical) {
       this.updateViewOrientation();
     }
@@ -79,7 +79,7 @@ class View extends EventEmitter implements IView {
       this.labels.forEach((l) => l.toggleHiddenMode());
     }
     this.config.update(response);
-    this.scale.update(this.config.getAllPositions().absolutePositions);
+    this.scale.update(this.config.getAllPositions());
     this.setInMotion();
     this.rebindListeners();
   }

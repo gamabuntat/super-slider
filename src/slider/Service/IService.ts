@@ -6,8 +6,8 @@ import {
 interface IService extends IEventEmitter {
   subscribe(preID: string, cb: TypeResponseHandler): string;
   removeModel(id: string): void;
-  updateModel(response: IResponse): void;
-  add(id: string, o: IOptions): { model: IResponse; isNew: boolean };
+  updateModel(response: ModelResponse): void;
+  add(id: string, o: Options): { model: ModelResponse; isNew: boolean };
 }
 
 export default IService;

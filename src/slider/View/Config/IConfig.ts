@@ -1,20 +1,24 @@
-type TypeExtremums = { min: number; max: number }[];
+type Absolute = number;
 
-interface IAllPositions {
-  positions: number[];
-  absolutePositions: number[];
-}
+type Relative = number;
+
+type TypeExtremums = { min: Relative; max: Relative }[];
+
+type AllPositions = {
+  p: Absolute;
+  idx: number;
+}[];
 
 interface IConfig {
-  update(response: IResponse): void;
-  getPrev(p: number): number;
-  getNext(p: number): number;
+  update(response: ModelResponse): void;
+  getPrev(p: Relative): Relative;
+  getNext(p: Relative): Relative;
   swap(): IConfig;
-  getResponse(): IResponse;
-  getPositions(): number[];
-  getAllPositions(): IAllPositions;
-  calcPosition(ap: number): number;
+  getResponse(): ModelResponse;
+  getPositions(): Relative[];
+  getAllPositions(): AllPositions;
+  calcPosition(ap: Absolute): Relative;
   setPositions(p: number[]): void;
 }
 
-export { IConfig, TypeExtremums, IAllPositions };
+export type { IConfig, TypeExtremums, Absolute, Relative, AllPositions };

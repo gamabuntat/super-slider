@@ -1,4 +1,5 @@
 import EventBinder from 'slider/EventBinder/EventBinder';
+import type { AllPositions } from 'slider/View/Config/IConfig';
 import getLastItem from 'helpers/getLastItem';
 
 import IScaleView from './IScaleView';
@@ -39,9 +40,10 @@ abstract class ScaleView extends EventBinder {
     this.component.classList.toggle(this.hiddenMod);
   }
 
-  update(absolutePositions: number[]): void {
-    this.setAP(absolutePositions);
-    this.restoreUsability();
+  update(absolutePositions: AllPositions): void {
+    console.log(absolutePositions);
+    // this.setAP(absolutePositions);
+    // this.restoreUsability();
   }
 
   protected unbindListeners(): void {

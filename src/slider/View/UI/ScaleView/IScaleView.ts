@@ -1,8 +1,9 @@
 import IEventBinder from 'slider/EventBinder/IEventBinder';
+import type { AllPositions } from 'slider/View/Config/IConfig';
 
 interface IScaleView extends IEventBinder {
   swap(): IScaleView;
-  update(p: number[]): void;
+  update(p: AllPositions): void;
   getLastPosition(): number;
   toggleHiddenMode(): void;
 }

@@ -10,9 +10,9 @@ import IService from './IService';
 
 class Service extends EventEmitter implements IService {
   private static instance: Service;
-  private readonly defaultOptions: TypeRequiredOptions = defaultOptions;
-  private selectedModel: IResponse = { ...this.defaultOptions, id: '' };
-  private models: IResponse[] = [];
+  private readonly defaultOptions: RequiredOptions = defaultOptions;
+  private selectedModel: ModelResponse = { ...this.defaultOptions, id: '' };
+  private models: ModelResponse[] = [];
   private selectedIndex = -1;
   private decimalPlaces = 0;
 
@@ -38,12 +38,12 @@ class Service extends EventEmitter implements IService {
     );
   }
 
-  updateModel(response: IResponse): void {
+  updateModel(response: ModelResponse): void {
     this.addModel({ ...response });
     this.emit({ ...response }, `sub${response.id}`);
   }
 
-  add(preID: string, o: IOptions): { model: IResponse; isNew: boolean } {
+  add(preID: string, o: Options): { model: ModelResponse; isNew: boolean } {
     const id = preID || this.generateID();
     const prevLength = this.models.length;
     this.selectedModel = this.models[this.findModelIndex(id)] || {
@@ -60,7 +60,7 @@ class Service extends EventEmitter implements IService {
     };
   }
 
-  private addModel(model: IResponse): void {
+  private addModel(model: ModelResponse): void {
     this.models.splice(
       this.findModelIndex(model.id),
       Number(this.selectedIndex !== -1),
@@ -77,7 +77,7 @@ class Service extends EventEmitter implements IService {
     return String(Math.floor(Math.random() * Date.now()));
   }
 
-  private getValidatedOptions(o: IOptions): IResponse {
+  private getValidatedOptions(o: Options): ModelResponse {
     const copy = { ...this.selectedModel, ...o };
     this.validateStep(copy);
     this.setDecimalPlaces(copy.step);
@@ -96,20 +96,20 @@ class Service extends EventEmitter implements IService {
     this.decimalPlaces = numberDecimalPlaces(step);
   }
 
-  private validateStep(model: IResponse): void {
-    model.step = Math.abs(model.step || this.selectedModel.step);
+  private validateStep(model: ModelResponse): void {
+    model.step = Math.abs(model.step) || this.selectedModel.step;
   }
 
-  private validateMin(model: IResponse): void {
+  private validateMin(model: ModelResponse): void {
     model.min = Number(model.min.toFixed(this.decimalPlaces));
   }
 
-  private validateMax(model: IResponse): void {
+  private validateMax(model: ModelResponse): void {
     const { min, max, step } = model;
     model.max = max > min ? max : min + step;
   }
 
-  private validateFrom(model: IResponse): void {
+  private validateFrom(model: ModelResponse): void {
     const { from, min, max, step } = model;
     model.from = Math.min(
       max,
@@ -123,7 +123,7 @@ class Service extends EventEmitter implements IService {
     );
   }
 
-  private validateTo(model: IResponse): void {
+  private validateTo(model: ModelResponse): void {
     const { to, from, min, max, step } = model;
     model.to = Math.min(
       max,

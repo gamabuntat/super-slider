@@ -1,4 +1,4 @@
-const defaultOptions: TypeRequiredOptions = {
+const defaultOptions: RequiredOptions = {
   min: 0,
   max: 10,
   from: -Infinity,

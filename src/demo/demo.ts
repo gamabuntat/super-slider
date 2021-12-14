@@ -2,7 +2,7 @@ import './demo.sass';
 
 import Conf from '../conf/Conf';
 
-const options: IOptions[] = [
+const options: Options[] = [
   {
     max: 99,
     min: 1,

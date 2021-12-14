@@ -1,4 +1,4 @@
-type TypeResponseHandler = (response: IResponse) => void;
+type TypeResponseHandler = (response: ModelResponse) => void;
 
 interface IEventEmitter {
   on(ev: string, listener: TypeResponseHandler): this;
@@ -12,7 +12,7 @@ class EventEmitter implements IEventEmitter {
     return this;
   }
 
-  protected emit(arg: IResponse, id: string = arg.id): void {
+  protected emit(arg: ModelResponse, id: string = arg.id): void {
     (this.events[id] || []).forEach((handler: TypeResponseHandler) =>
       handler(arg)
     );

@@ -1,5 +1,5 @@
 interface IConf {
-  init(o: IOptions): void;
+  init(o: Options): void;
 }
 
 class Conf implements IConf {
@@ -19,7 +19,7 @@ class Conf implements IConf {
     this.bindListeners();
   }
 
-  init(o: IOptions): void {
+  init(o: Options): void {
     this.$slider.slider(o);
   }
 
@@ -28,12 +28,12 @@ class Conf implements IConf {
   }
 
   private updateSlider(k: string, v: number | boolean) {
-    const o: { [k: string]: IOptions[keyof IOptions] } = {};
+    const o: { [k: string]: Options[keyof Options] } = {};
     o[k] = v;
     this.init(o);
   }
 
-  private handleSliderUpdate = (response: IResponse): void => {
+  private handleSliderUpdate = (response: ModelResponse): void => {
     Object.entries(response).forEach(([key, value]) => {
       if (key === 'step') {
         this.updateStepAttr(value);

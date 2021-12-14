@@ -6,14 +6,14 @@ import Service from './Service/Service';
 import init from './init';
 
 (function ($) {
-  $.fn.slider = function (o?: IOptions) {
+  $.fn.slider = function (o?: Options) {
     this.destroy = () => {
       this[0].innerHTML = '';
       Service.getInstance().removeModel(this[0].id);
       return this;
     };
 
-    this.subscribe = (cb: (r: IResponse) => void) => {
+    this.subscribe = (cb: (r: ModelResponse) => void) => {
       const id = Service.getInstance().subscribe(this[0].id, cb);
       this[0].id ||= id;
       return this;

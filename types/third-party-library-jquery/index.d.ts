@@ -1,24 +1,24 @@
-interface IOptions {
-  min?: number
-  max?: number
-  from?: number
-  to?: number
-  step?: number
-  isInterval?: boolean
-  isVertical?: boolean
-  isLabel?: boolean
-  isScale?: boolean
+type Options = {
+  min?: number;
+  max?: number;
+  from?: number;
+  to?: number;
+  step?: number;
+  gap?: number;
+  isInterval?: boolean;
+  isVertical?: boolean;
+  isLabel?: boolean;
+  isScale?: boolean;
 }
 
-type TypeRequiredOptions = Required<IOptions>;
+type RequiredOptions = Required<Options>;
 
-interface IResponse extends TypeRequiredOptions {
-  id: string
+type ModelResponse = RequiredOptions & {
+  id: string;
 }
 
 interface JQuery {
-  slider(o?: IOptions): JQuery
-  destroy(): JQuery
-  subscribe(cb: (r: IResponse) => void): JQuery
+  slider(o?: Options): JQuery;
+  destroy(): JQuery;
+  subscribe(cb: (r: ModelResponse) => void): JQuery;
 }
-
