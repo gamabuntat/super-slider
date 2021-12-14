@@ -109,7 +109,11 @@ abstract class Scale extends EventBinder {
   }
 
   private getRelativeSize(ap: AllPositions): number {
-    return (getLastItem(ap).idx - ap[ap.length - 2].idx) / ap[1].idx / 2;
+    return (
+      (getLastItem(ap).idx - ap[Math.max(ap.length - 2, 0)].idx) /
+      (ap[1]?.idx || 1) /
+      2
+    );
   }
 
   private bindListeners(): void {

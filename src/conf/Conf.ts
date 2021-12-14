@@ -27,12 +27,6 @@ class Conf implements IConf {
     this.$slider.slider().subscribe(this.handleSliderUpdate);
   }
 
-  private updateSlider(k: string, v: number | boolean) {
-    const o: { [k: string]: Options[keyof Options] } = {};
-    o[k] = v;
-    this.init(o);
-  }
-
   private handleSliderUpdate = (response: Model): void => {
     Object.entries(response).forEach(([key, value]) => {
       if (key === 'step') {
@@ -78,12 +72,14 @@ class Conf implements IConf {
 
   private handleNumericsChange = (e: Event): void => {
     const target = <HTMLInputElement>e.target;
-    this.updateSlider(target.name, Number(target.value));
+    this.init({ [target.name as NumericalKeys]: Number(target.value) });
   };
 
   private handleSwithesChange = (e: Event): void => {
     const target = <HTMLInputElement>e.target;
-    this.updateSlider(target.dataset.name || '', target.checked);
+    this.init({
+      [target.dataset.name as BooleanKeys]: target.checked,
+    });
   };
 
   private handleIntervalInputChange = (): void => {

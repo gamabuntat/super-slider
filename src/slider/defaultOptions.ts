@@ -4,7 +4,6 @@ const defaultOptions: RequiredOptions = {
   from: -Infinity,
   to: Infinity,
   step: 1,
-  gap: 0,
   isInterval: false,
   isVertical: false,
   isLabel: true,
