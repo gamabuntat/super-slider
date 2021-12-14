@@ -6,7 +6,7 @@ import IScale from './IScale';
 
 abstract class Scale extends EventBinder {
   protected divisionSize = 0;
-  protected ap: number[] = [];
+  protected ap: AllPositions = [];
   private divisions: HTMLCollectionOf<Element>;
   private container: HTMLElement;
   private hiddenMod: string;
@@ -41,9 +41,8 @@ abstract class Scale extends EventBinder {
   }
 
   update(absolutePositions: AllPositions): void {
-    console.log(absolutePositions);
-    // this.setAP(absolutePositions);
-    // this.restoreUsability();
+    this.ap = absolutePositions;
+    this.restoreUsability();
   }
 
   protected unbindListeners(): void {
@@ -59,11 +58,16 @@ abstract class Scale extends EventBinder {
     this.setMaxSizes();
     this.setNDivisions();
     this.setStep();
-    const size = this.getRelativeSize(getLastItem(this.selectAP()));
-    this.insertDivision(this.createDivision(getLastItem(this.ap)));
+    const selectedAP = this.selectAP();
+    selectedAP.forEach(({ p }) => this.insertDivision(this.createDivision(p)));
+    this.insertDivision(this.createDivision(getLastItem(this.ap).p));
+    const relativeSize = this.getRelativeSize([
+      ...selectedAP,
+      getLastItem(this.ap),
+    ]);
     [...this.divisions].slice(-2).forEach((d) => {
       if (d instanceof HTMLElement) {
-        this.resizeDivision(d, size);
+        this.resizeDivision(d, relativeSize);
       }
     });
   }
@@ -72,8 +76,8 @@ abstract class Scale extends EventBinder {
     this.ap
       .slice(-2)
       .concat(this.ap.slice(0, 2))
-      .forEach((ap) => {
-        const division = this.createDivision(ap);
+      .forEach(({ p }) => {
+        const division = this.createDivision(p);
         this.insertDivision(division);
         this.setDivisionSize(division);
         this.setAttrSize(division);
@@ -93,20 +97,19 @@ abstract class Scale extends EventBinder {
   }
 
   private selectAP(
-    ap = this.ap.slice(0, -this.step),
     idx = 0,
-    res: number[] = []
-  ): number[] {
-    if (idx > ap.length - 1) {
+    res: AllPositions = [],
+    aps = this.ap.slice(0, -1)
+  ): AllPositions {
+    if (idx > aps.length - 1) {
       return res;
     }
-    res.push(ap[idx]);
-    this.insertDivision(this.createDivision(getLastItem(res)));
-    return this.selectAP(ap, idx + this.step, res);
+    res.push(aps[idx]);
+    return this.selectAP(idx + this.step, res, aps);
   }
 
-  private getRelativeSize(ap: number): number {
-    return (this.ap.length - 1 - this.ap.lastIndexOf(ap)) / 2 / this.step;
+  private getRelativeSize(ap: AllPositions): number {
+    return (getLastItem(ap).idx - ap[ap.length - 2].idx) / ap[1].idx / 2;
   }
 
   private bindListeners(): void {
@@ -195,8 +198,6 @@ abstract class Scale extends EventBinder {
   protected abstract setDivisionSize(button: HTMLElement): void;
 
   protected abstract setAttrSize(button: HTMLElement): void;
-
-  protected abstract setAP(ap: number[]): void;
 }
 
 class HorizontalScale extends Scale implements IScale {
@@ -221,10 +222,6 @@ class HorizontalScale extends Scale implements IScale {
       parseFloat(getComputedStyle(this.component).height),
       division.children[0].getBoundingClientRect().height
     )}px`;
-  }
-
-  protected setAP(ap: number[]): void {
-    this.ap = ap;
   }
 }
 
@@ -251,9 +248,6 @@ class VerticalScale extends Scale implements IScale {
       division.children[0].getBoundingClientRect().width
     )}px`;
   }
-
-  protected setAP(ap: number[]): void {
-    this.ap = ap.reverse();
-  }
 }
+
 export { HorizontalScale, VerticalScale };
