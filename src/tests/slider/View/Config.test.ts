@@ -1,6 +1,6 @@
 // import { HorizontalConfig } from '../../../slider/View/Config/Config';
 
-// const response: ModelResponse = {
+// const response: Model = {
 //   id: 'test',
 //   min: 0,
 //   max: 10,
@@ -18,7 +18,7 @@
 // );
 // const reverseTruthful = truthfulAbsolutePositions.slice().reverse();
 
-// const getUpdatedResponse = (o: Options): ModelResponse => ({ ...response, ...o });
+// const getUpdatedResponse = (o: Options): Model => ({ ...response, ...o });
 
 // const config = new HorizontalConfig(response);
 // const verticalConfig = config.swap();

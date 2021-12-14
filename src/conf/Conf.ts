@@ -33,7 +33,7 @@ class Conf implements IConf {
     this.init(o);
   }
 
-  private handleSliderUpdate = (response: ModelResponse): void => {
+  private handleSliderUpdate = (response: Model): void => {
     Object.entries(response).forEach(([key, value]) => {
       if (key === 'step') {
         this.updateStepAttr(value as number);

@@ -13,12 +13,12 @@ type Options = {
 
 type RequiredOptions = Required<Options>;
 
-type ModelResponse = RequiredOptions & {
+type Model = RequiredOptions & {
   id: string;
 }
 
 interface JQuery {
   slider(o?: Options): JQuery;
   destroy(): JQuery;
-  subscribe(cb: (r: ModelResponse) => void): JQuery;
+  subscribe(cb: (r: Model) => void): JQuery;
 }

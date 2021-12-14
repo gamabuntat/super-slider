@@ -13,7 +13,7 @@ import init from './init';
       return this;
     };
 
-    this.subscribe = (cb: (r: ModelResponse) => void) => {
+    this.subscribe = (cb: (r: Model) => void) => {
       const id = Service.getInstance().subscribe(this[0].id, cb);
       this[0].id ||= id;
       return this;

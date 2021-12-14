@@ -10,11 +10,11 @@ type AllPositions = {
 }[];
 
 interface IConfig {
-  update(response: ModelResponse): void;
+  update(response: Model): void;
   getPrev(p: Relative): Relative;
   getNext(p: Relative): Relative;
   swap(): IConfig;
-  getResponse(): ModelResponse;
+  getResponse(): Model;
   getPositions(): Relative[];
   getAllPositions(): AllPositions;
   calcPosition(ap: Absolute): Relative;

@@ -7,11 +7,11 @@ class Presenter {
     view.on(id, this.handleViewUpdate);
   }
 
-  private handleModelUpdate = (response: ModelResponse): void => {
+  private handleModelUpdate = (response: Model): void => {
     this.view.parseResponse(response);
   };
 
-  private handleViewUpdate = (response: ModelResponse): void => {
+  private handleViewUpdate = (response: Model): void => {
     this.service.updateModel(response);
   };
 }

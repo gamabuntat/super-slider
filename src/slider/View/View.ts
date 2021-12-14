@@ -36,7 +36,7 @@ class View extends EventEmitter implements IView {
   private scale: IScaleView;
   private track: ITrackView;
 
-  constructor(response: ModelResponse, root: HTMLElement) {
+  constructor(response: Model, root: HTMLElement) {
     super();
     this.config = new HorizontalConfig({
       ...response,
@@ -65,7 +65,7 @@ class View extends EventEmitter implements IView {
     root.id = response.id;
   }
 
-  parseResponse(response: ModelResponse): void {
+  parseResponse(response: Model): void {
     if (this.config.getResponse().isVertical !== response.isVertical) {
       this.updateViewOrientation();
     }

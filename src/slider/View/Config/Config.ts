@@ -20,11 +20,11 @@ abstract class Config {
   protected positions!: Relative[];
   protected extremums!: TypeExtremums;
 
-  constructor(protected response: ModelResponse) {
+  constructor(protected response: Model) {
     this.update(response);
   }
 
-  update(response: ModelResponse = this.response): void {
+  update(response: Model = this.response): void {
     this.response = response;
     const { step, from, to } = response;
     this.n = numberDecimalPlaces(step);
@@ -37,7 +37,7 @@ abstract class Config {
     this.extremums = this.getExtremums();
   }
 
-  getResponse(): ModelResponse {
+  getResponse(): Model {
     return { ...this.response };
   }
 
