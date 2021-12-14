@@ -4,8 +4,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const alias = {
-  'slider': path.resolve(__dirname, './src/slider'),
-  'helpers': path.resolve(__dirname, './src/helpers'),
+  slider: path.resolve(__dirname, './src/slider'),
+  helpers: path.resolve(__dirname, './src/helpers'),
 };
 
 module.exports = (env, argv) => {
@@ -20,11 +20,11 @@ module.exports = (env, argv) => {
     output: {
       filename: '[name].js',
       path: path.resolve(__dirname, 'dist'),
-      assetModuleFilename: 'images/[name][ext][query]'
+      assetModuleFilename: 'images/[name][ext][query]',
     },
     resolve: {
       extensions: ['.ts', '.js'],
-      alias
+      alias,
     },
     externals: {
       jquery: 'jQuery',
@@ -34,6 +34,9 @@ module.exports = (env, argv) => {
       port: 9090,
       hot: false,
       liveReload: true,
+      client: {
+        overlay: false,
+      },
     },
     optimization: {
       splitChunks: {
@@ -43,24 +46,18 @@ module.exports = (env, argv) => {
             chunks: 'all',
           },
         },
-      }
+      },
     },
     module: {
       rules: [
         {
           test: /\.tsx?$/,
-          use: [
-            {loader: 'ts-loader', options: {transpileOnly: true}}
-          ],
+          use: [{ loader: 'ts-loader', options: { transpileOnly: true } }],
           exclude: /node_modules/,
         },
         {
           test: /\.sass/i,
-          use: [
-            MiniCssExtractPlugin.loader,
-            'css-loader',
-            'sass-loader'
-          ],
+          use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
         },
         {
           test: /\.pug$/,
@@ -71,7 +68,7 @@ module.exports = (env, argv) => {
           type: 'asset/resource',
           include: path.resolve(__dirname, 'src/fonts'),
           generator: {
-            filename: 'fonts/[name][ext][query]'
+            filename: 'fonts/[name][ext][query]',
           },
         },
       ],
@@ -79,22 +76,21 @@ module.exports = (env, argv) => {
     plugins: [
       new ForkTsCheckerWebpackPlugin({
         eslint: {
-          files: ['./src/**/*.{ts,tsx,js,jsx}']
-        }
+          files: ['./src/**/*.{ts,tsx,js,jsx}'],
+        },
       }),
       new HtmlWebpackPlugin({
         filename: 'index.html',
         template: './src/demo/demo.pug',
         minify: false,
         meta: {
-          viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no'
+          viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no',
         },
         inject: 'body',
       }),
       new MiniCssExtractPlugin({
         filename: '[name].css',
       }),
-    ]
+    ],
   };
 };
-

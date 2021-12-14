@@ -36,10 +36,10 @@ class Conf implements IConf {
   private handleSliderUpdate = (response: ModelResponse): void => {
     Object.entries(response).forEach(([key, value]) => {
       if (key === 'step') {
-        this.updateStepAttr(value);
+        this.updateStepAttr(value as number);
       }
       if (key === 'min') {
-        this.updateMinAttr(value);
+        this.updateMinAttr(value as number);
       }
       const input = this.inputs.find((i) => i.dataset.name === key);
       if (!input) {
