@@ -11,10 +11,7 @@ import { HorizontalContainer } from './UI/Container/Container';
 import IContainer from './UI/Container/IContainer';
 import { HorizontalHandle } from './UI/Handle/Handle';
 import IHandle from './UI/Handle/IHandle';
-import {
-  StartProgressBar,
-  EndProgressBar,
-} from './UI/ProgressBar/ProgressBar';
+import { StartProgressBar, EndProgressBar } from './UI/ProgressBar/ProgressBar';
 import IProgressBar from './UI/ProgressBar/IProgressBar';
 import Label from './UI/Label/Label';
 import ILabel from './UI/Label/ILabel';
@@ -268,9 +265,6 @@ class View extends EventEmitter implements IView {
     if (handlePositions[0] === handlePositions[1]) {
       if (lastPosition > handlePositions[1]) {
         idx = 1;
-      }
-      if (lastPosition < handlePositions[0]) {
-        idx = 0;
       }
       if (this.config.getResponse().isVertical) {
         idx = Number(!idx);
