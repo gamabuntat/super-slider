@@ -99,7 +99,7 @@ abstract class Scale extends EventBinder {
   private selectAP(
     idx = 0,
     res: AllPositions = [],
-    aps = this.ap.slice(0, -1)
+    aps = this.ap.slice(0, -this.step)
   ): AllPositions {
     if (idx > aps.length - 1) {
       return res;
