@@ -1,6 +1,6 @@
 interface ISwappable<T> {
-  swap(): ISwappable<T>
-  get(): T
+  swap(): ISwappable<T>;
+  get(): T;
 }
 
 class Swappable<T> implements ISwappable<T> {
