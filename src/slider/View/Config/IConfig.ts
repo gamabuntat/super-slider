@@ -2,7 +2,7 @@ type Absolute = number;
 
 type Relative = number;
 
-type TypeExtremums = { min: Relative; max: Relative }[];
+type Extremums = { min: Relative; max: Relative }[];
 
 type AllPositions = {
   p: Absolute;
@@ -13,7 +13,6 @@ interface IConfig {
   update(response: Model): void;
   getPrev(p: Relative): Relative;
   getNext(p: Relative): Relative;
-  swap(): IConfig;
   getResponse(): Model;
   getPositions(): Relative[];
   getAllPositions(): AllPositions;
@@ -21,4 +20,4 @@ interface IConfig {
   setPositions(p: number[]): void;
 }
 
-export type { IConfig, TypeExtremums, Absolute, Relative, AllPositions };
+export type { IConfig, Extremums, Absolute, Relative, AllPositions };

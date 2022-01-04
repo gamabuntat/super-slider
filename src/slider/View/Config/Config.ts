@@ -1,13 +1,10 @@
-import clamp from 'helpers/clamp';
-import numberDecimalPlaces from 'helpers/numberDecimalPlaces';
-import getLastItem from 'helpers/getLastItem';
+import { clamp, sampling, decimalPlaces } from 'helpers/calc';
 
 import type {
-  IConfig,
-  TypeExtremums,
-  AllPositions,
   Absolute,
   Relative,
+  Extremums,
+  AllPositions,
 } from './IConfig';
 
 abstract class Config {
@@ -18,27 +15,29 @@ abstract class Config {
   protected relativeStep!: Relative;
   protected fakeDiff!: Absolute;
   protected positions!: Relative[];
-  protected extremums!: TypeExtremums;
+  protected extremums!: Extremums;
 
-  constructor(protected response: Model) {
-    this.update(response);
+  constructor(protected r: Model) {
+    this.update(r);
   }
 
-  update(response: Model = this.response): void {
-    this.response = response;
-    const { step, from, to } = response;
-    this.n = numberDecimalPlaces(step);
+  update(r: Model = this.r): void {
+    this.r = r;
+    this.n = Math.max(...[this.r.min, this.r.step].map(decimalPlaces));
     this.divisionNumber = this.getDivisionNumber();
     const maxSize = Math.min(this.divisionNumber + 1, Config.max);
     this.multiplier = Math.ceil((this.divisionNumber + 1) / maxSize);
     this.relativeStep = 1 / this.divisionNumber;
-    this.fakeDiff = Number((this.divisionNumber * step).toFixed(this.n));
-    this.positions = [from, to].map(this.calcPosition, this);
+    this.fakeDiff = this.divisionNumber * this.r.step;
+    this.positions = [
+      this.r.from,
+      this.r.isInterval ? this.r.to : this.r.max,
+    ].map(this.calcPosition, this);
     this.extremums = this.getExtremums();
   }
 
   getResponse(): Model {
-    return { ...this.response };
+    return { ...this.r };
   }
 
   getPositions(): number[] {
@@ -51,35 +50,30 @@ abstract class Config {
     this.updateResponse();
   }
 
-  protected sampling(p: Relative): Relative {
-    return (1 / this.divisionNumber) * Math.round(p * this.divisionNumber);
-  }
-
   private getDivisionNumber(): number {
-    const { min, max } = this.response;
     return Math.ceil(
       Number(
-        (max - min).toFixed(Math.max(...[min, max].map(numberDecimalPlaces)))
-      ) / this.response.step
+        (this.r.max - this.r.min).toFixed(
+          Math.max(...[this.r.min, this.r.max].map(decimalPlaces))
+        )
+      ) / this.r.step
     );
   }
 
   private validate(p: number, idx: number): number {
     return clamp(
       this.extremums[idx].min,
-      this.sampling(p),
+      sampling(this.relativeStep, p),
       this.extremums[idx].max
     );
   }
 
   private updateResponse(): void {
-    [this.response.from, this.response.to] = this.positions.map(
+    [this.r.from, this.r.to] = this.positions.map(
       this.calcAbsolutePosition,
       this
     );
   }
-
-  abstract swap(): void;
 
   abstract getPrev(p: Relative): Relative;
 
@@ -93,149 +87,7 @@ abstract class Config {
 
   protected abstract updateExtremums(): void;
 
-  protected abstract getExtremums(): TypeExtremums;
+  protected abstract getExtremums(): Extremums;
 }
 
-class HorizontalConfig extends Config implements IConfig {
-  swap(): IConfig {
-    return new VerticalConfig(this.response);
-  }
-
-  getPrev(p: Relative, m = 1): Relative {
-    return Math.max(0, this.sampling(p) - this.relativeStep * m);
-  }
-
-  getNext(p: Relative, m = 1): Relative {
-    return Math.min(1, this.sampling(p) + this.relativeStep * m);
-  }
-
-  getAllPositions(
-    prev = 0,
-    res: AllPositions = [{ p: this.response.min, idx: 0 }]
-  ): AllPositions {
-    if (getLastItem(res).p === this.response.max) {
-      return res;
-    }
-    const next = this.getNext(prev, this.multiplier);
-    return this.getAllPositions(next, [
-      ...res,
-      {
-        p: this.calcAbsolutePosition(next),
-        idx: Math.min(
-          getLastItem(res).idx + this.multiplier,
-          this.divisionNumber
-        ),
-      },
-    ]);
-  }
-
-  calcPosition(ap: Absolute): Relative {
-    return clamp(
-      0,
-      this.sampling(
-        (Math.round(
-          (ap === this.response.max ? this.fakeDiff : ap - this.response.min) /
-            this.response.step
-        ) *
-          this.response.step) /
-          this.fakeDiff
-      ),
-      1
-    );
-  }
-
-  protected calcAbsolutePosition(p: Relative): Absolute {
-    return Math.min(
-      Number(
-        (this.sampling(p) * this.fakeDiff + this.response.min).toFixed(this.n)
-      ),
-      this.response.max
-    );
-  }
-
-  protected updateExtremums(): void {
-    [this.extremums[1].min, this.extremums[0].max] = this.positions;
-  }
-
-  protected getExtremums(): TypeExtremums {
-    return [
-      { min: 0, max: this.positions[1] },
-      { min: this.positions[0], max: 1 },
-    ];
-  }
-}
-
-class VerticalConfig extends Config implements IConfig {
-  swap(): IConfig {
-    return new HorizontalConfig(this.response);
-  }
-
-  getPrev(p: Relative, m = 1): Relative {
-    return Math.min(1, this.sampling(p) + this.relativeStep * m);
-  }
-
-  getNext(p: Relative, m = 1): Relative {
-    return Math.max(0, this.sampling(p) - this.relativeStep * m);
-  }
-
-  getAllPositions(
-    prev = 1,
-    res: AllPositions = [{ p: this.response.min, idx: 0 }]
-  ): AllPositions {
-    if (getLastItem(res).p === this.response.max) {
-      return res;
-    }
-    const next = this.getNext(prev, this.multiplier);
-    return this.getAllPositions(next, [
-      ...res,
-      {
-        p: this.calcAbsolutePosition(next),
-        idx: Math.min(
-          getLastItem(res).idx + this.multiplier,
-          this.divisionNumber
-        ),
-      },
-    ]);
-  }
-
-  calcPosition(ap: Absolute): Relative {
-    return clamp(
-      0,
-      this.sampling(
-        1 -
-          (Math.round(
-            (ap === this.response.max
-              ? this.fakeDiff
-              : ap - this.response.min) / this.response.step
-          ) *
-            this.response.step) /
-            this.fakeDiff
-      ),
-      1
-    );
-  }
-
-  protected calcAbsolutePosition(p: Relative): Absolute {
-    return Math.min(
-      Number(
-        ((1 - this.sampling(p)) * this.fakeDiff + this.response.min).toFixed(
-          this.n
-        )
-      ),
-      this.response.max
-    );
-  }
-
-  protected updateExtremums(): void {
-    [this.extremums[1].max, this.extremums[0].min] = this.positions;
-  }
-
-  protected getExtremums(): TypeExtremums {
-    return [
-      { min: this.positions[1], max: 1 },
-      { min: 0, max: this.positions[0] },
-    ];
-  }
-}
-
-export { HorizontalConfig, VerticalConfig };
+export default Config;
