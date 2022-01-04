@@ -3,8 +3,7 @@ import {
   EventEmitter,
   TypeResponseHandler,
 } from 'slider/EventEmitter/EventEmitter';
-import clamp from 'helpers/clamp';
-import numberDecimalPlaces from 'helpers/numberDecimalPlaces';
+import { clamp, decimalPlaces, sampling } from 'helpers/calc';
 
 import IService from './IService';
 
@@ -79,60 +78,52 @@ class Service extends EventEmitter implements IService {
 
   private getValidatedOptions(o: Options): Model {
     const copy = { ...this.selectedModel, ...o };
-    this.validateStep(copy);
-    this.setDecimalPlaces(copy.step);
-    this.validateMin(copy);
-    this.validateMax(copy);
-    this.validateFrom(copy);
-    if (copy.isInterval) {
-      this.validateTo(copy);
-    } else {
-      copy.to = copy.max;
+    if (copy.min >= copy.max || copy.step <= 0) {
+      return this.selectedModel;
     }
+    copy.step = this.validetaStep(copy);
+    this.setDecimalPlaces(copy);
+    copy.gap = this.validateGap(copy);
+    copy.from = this.validateFrom(copy);
+    copy.to = this.validateTo(copy);
     return copy;
   }
 
-  private setDecimalPlaces(step: number): void {
-    this.decimalPlaces = numberDecimalPlaces(step);
+  private setDecimalPlaces({ min, step }: Model): void {
+    this.decimalPlaces = Math.max(...[min, step].map(decimalPlaces));
   }
 
-  private validateStep(model: Model): void {
-    model.step = Math.abs(model.step) || this.selectedModel.step;
-  }
-
-  private validateMin(model: Model): void {
-    model.min = Number(model.min.toFixed(this.decimalPlaces));
-  }
-
-  private validateMax(model: Model): void {
-    const { min, max, step } = model;
-    model.max = max > min ? max : min + step;
-  }
-
-  private validateFrom(model: Model): void {
-    const { from, min, max, step } = model;
-    model.from = Math.min(
-      max,
-      Number(
-        (
-          Math.ceil((clamp(min, from, this.selectedModel.to) - min) / step) *
-            step +
-          min
-        ).toFixed(this.decimalPlaces)
-      )
+  private validetaStep({ step, min, max }: Model): number {
+    return Math.min(
+      step,
+      Number((max - min).toFixed(Math.max(...[min, max].map(decimalPlaces))))
     );
   }
 
-  private validateTo(model: Model): void {
-    const { to, from, min, max, step } = model;
-    model.to = Math.min(
-      max,
-      Number(
-        (Math.ceil((clamp(from, to, max) - min) / step) * step + min).toFixed(
-          this.decimalPlaces
-        )
-      )
-    );
+  private validateGap({ gap, min, max }: Model): number {
+    return clamp(0, gap, Number((max - min).toFixed(this.decimalPlaces)));
+  }
+
+  private validateFrom({ from, min, max, step, isInterval }: Model): number {
+    return from === max
+      ? max
+      : clamp(
+          min,
+          Number(
+            (sampling(step, from - min) + min).toFixed(this.decimalPlaces)
+          ),
+          isInterval ? Math.min(this.selectedModel.to, max) : max
+        );
+  }
+
+  private validateTo({ to, from, min, max, step }: Model): number {
+    return to === max
+      ? max
+      : clamp(
+          from,
+          Number((sampling(step, to - min) + min).toFixed(this.decimalPlaces)),
+          max
+        );
   }
 }
 
