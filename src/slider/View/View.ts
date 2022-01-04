@@ -1,9 +1,11 @@
+import Swappable, { ISwappable } from 'helpers/Swappable';
 import { EventEmitter } from 'slider/EventEmitter/EventEmitter';
 
-import treeTemplate from './treeTemplate';
+import tree from './treeTemplate';
 import IView from './interfaces/IView';
 import IViewTreeTemplate from './interfaces/IViewTreeTemplate';
-import { HorizontalConfig } from './Config/Config';
+import HorizontalConfig from './Config/HorizontalConfig';
+import VerticalConfig from './Config/VerticalConfig';
 import { IConfig } from './Config/IConfig';
 import Slider from './UI/Slider/Slider';
 import ISlider from './UI/Slider/ISlider';
@@ -21,10 +23,8 @@ import { HorizontalTrack } from './UI/Track/Track';
 import ITrack from './UI/Track/ITrack';
 
 class View extends EventEmitter implements IView {
-  private static tree: IViewTreeTemplate = treeTemplate;
-  private config: IConfig;
-  private components: { [k: string]: HTMLElement } = {};
-  private sliderBEMBlockName = 'ui-slider';
+  private config: ISwappable<IConfig>;
+  private components: Record<string, HTMLElement> = {};
   private slider: ISlider;
   private container: IContainer;
   private handles: IHandle[];
@@ -35,15 +35,19 @@ class View extends EventEmitter implements IView {
 
   constructor(response: Model, root: HTMLElement) {
     super();
-    this.config = new HorizontalConfig({
+    const initResponse = {
       ...response,
       isVertical: false,
       isInterval: false,
       isLabel: true,
       isScale: true,
-    });
-    root.insertAdjacentElement('beforeend', this.createSlider(View.tree));
-    this.slider = new Slider(this.components[this.sliderBEMBlockName]);
+    };
+    this.config = new Swappable<IConfig>(
+      new HorizontalConfig(initResponse),
+      new VerticalConfig(initResponse)
+    );
+    this.createSlider(tree, root);
+    this.slider = new Slider(this.components[tree.name]);
     this.container = new HorizontalContainer(this.components.container);
     this.handles = [this.components.handleStart, this.components.handleEnd].map(
       (h) => new HorizontalHandle(h)
@@ -63,26 +67,27 @@ class View extends EventEmitter implements IView {
   }
 
   parseResponse(response: Model): void {
-    if (this.config.getResponse().isVertical !== response.isVertical) {
-      this.updateViewOrientation();
-    }
-    if (this.config.getResponse().isInterval !== response.isInterval) {
+    const old = this.config.get().getResponse();
+    if (old.isInterval !== response.isInterval) {
       this.slider.toggleIntervalMod();
     }
-    if (this.config.getResponse().isScale !== response.isScale) {
+    if (old.isScale !== response.isScale) {
       this.scale.toggleHiddenMode();
     }
-    if (this.config.getResponse().isLabel !== response.isLabel) {
+    if (old.isLabel !== response.isLabel) {
       this.labels.forEach((l) => l.toggleHiddenMode());
     }
-    this.config.update(response);
-    this.scale.update(this.config.getAllPositions());
+    if (old.isVertical !== response.isVertical) {
+      this.updateViewOrientation();
+    }
+    this.config.get().update(response);
+    this.scale.update(this.config.get().getAllPositions());
     this.setInMotion();
     this.rebindListeners();
   }
 
   private updateViewOrientation(): void {
-    this.config = this.config.swap();
+    this.config.swap();
     this.slider.toggleVerticalMod();
     this.container = this.container.swap();
     this.handles = this.handles.map((hv) => hv.swap());
@@ -92,36 +97,25 @@ class View extends EventEmitter implements IView {
   }
 
   private createSlider(
-    { name, elementType, childs = [] }: IViewTreeTemplate,
-    parent?: HTMLElement
+    { name, elementType = 'div', childs = [] }: IViewTreeTemplate,
+    parent: HTMLElement
   ): HTMLElement {
     const elem = document.createElement(elementType);
-    this.saveComponent(
-      parent
-        ? name
-        : (this.sliderBEMBlockName = name || this.sliderBEMBlockName),
-      elem
-    );
-    elem.classList.add(parent ? this.getClass(name) : this.sliderBEMBlockName);
-    if (parent) {
-      parent.insertAdjacentElement('beforeend', elem);
-    }
+    this.components[name] = elem;
+    elem.classList.add(this.getClass(name));
+    parent.insertAdjacentElement('beforeend', elem);
     childs.forEach((node) => this.createSlider(node, elem));
     return elem;
   }
 
-  private saveComponent(name: string, elem: HTMLElement): void {
-    this.components[name] = elem;
-  }
-
   private getClass(name: string): string {
-    return `${this.sliderBEMBlockName}__${name
+    return `${tree.name}__${name
       .replace(/(?<=.)[A-Z]/g, '-$&')
       .toLowerCase()
       .replace(
         /(?<base1>.*(?=-(start|end)))(?<mod>-(start|end))(?<base2>.*)/,
         '$<base1>$<base2>-$<mod>'
-      )}`;
+      )}`.replace(new RegExp(`__${tree.name}$`), '');
   }
 
   private rebindListeners(): void {
@@ -167,8 +161,9 @@ class View extends EventEmitter implements IView {
 
   private handleHandlePointermove = (): void => {
     if (this.checkCaptureStatus()) {
-      this.config.setPositions(
+      this.config.get().setPositions(
         this.config
+          .get()
           .getPositions()
           .map((p, idx) =>
             this.handles[idx].getCaptureStatus()
@@ -190,26 +185,29 @@ class View extends EventEmitter implements IView {
   private handleHandleKeydown = (ev: KeyboardEvent): void => {
     const forwardCodes = ['ArrowUp', 'ArrowRight'];
     const backCodes = ['ArrowDown', 'ArrowLeft'];
-    this.config.setPositions(
-      this.config.getPositions().map((p, idx) => {
-        if (!this.handles[idx].getFocusStatus()) {
+    this.config.get().setPositions(
+      this.config
+        .get()
+        .getPositions()
+        .map((p, idx) => {
+          if (!this.handles[idx].getFocusStatus()) {
+            return p;
+          }
+          if (forwardCodes.includes(ev.code)) {
+            return this.config.get().getNext(p);
+          }
+          if (backCodes.includes(ev.code)) {
+            return this.config.get().getPrev(p);
+          }
           return p;
-        }
-        if (forwardCodes.includes(ev.code)) {
-          return this.config.getNext(p);
-        }
-        if (backCodes.includes(ev.code)) {
-          return this.config.getPrev(p);
-        }
-        return p;
-      })
+        })
     );
     this.moveAndSendResponse();
   };
 
   private handleScaleClick = (): void => {
     this.updateActiveHandlePosition(
-      this.config.calcPosition(this.scale.getLastPosition())
+      this.config.get().calcPosition(this.scale.getLastPosition())
     );
     this.moveAndSendResponse();
   };
@@ -217,7 +215,7 @@ class View extends EventEmitter implements IView {
   private handleTrackPointerdown = (e: PointerEvent): void => {
     e.preventDefault();
     const lastPosition = this.track.getLastPosition();
-    const handlePositions = this.config.getPositions();
+    const handlePositions = this.config.get().getPositions();
     const handleIDX = this.defineActiveHandleIDX(lastPosition, handlePositions);
     this.updateActiveHandlePosition(lastPosition, handlePositions, handleIDX);
     this.handles[handleIDX].fixPointer(this.track.getPointerID());
@@ -226,37 +224,39 @@ class View extends EventEmitter implements IView {
 
   private handleGigletStartPointerdown = (e: PointerEvent): void => {
     e.preventDefault();
-    this.config.setPositions([
-      Number(this.config.getResponse().isVertical),
-      this.config.getPositions()[1],
-    ]);
+    this.config
+      .get()
+      .setPositions([
+        Number(this.config.get().getResponse().isVertical),
+        this.config.get().getPositions()[1],
+      ]);
     this.handles[0].fixPointer(e.pointerId);
     this.moveAndSendResponse();
   };
 
   private handleGigletEndPointerdown = (e: PointerEvent) => {
     e.preventDefault();
-    const response = this.config.getResponse();
+    const response = this.config.get().getResponse();
     const handleIDX = Number(response.isInterval);
-    const positions = this.config.getPositions();
+    const positions = this.config.get().getPositions();
     positions[handleIDX] = Number(!response.isVertical);
-    this.config.setPositions(positions);
+    this.config.get().setPositions(positions);
     this.handles[handleIDX].fixPointer(e.pointerId);
     this.moveAndSendResponse();
   };
 
   private updateActiveHandlePosition(
     lastPosition: number,
-    handlePositions = this.config.getPositions(),
+    handlePositions = this.config.get().getPositions(),
     idx = this.defineActiveHandleIDX(lastPosition, handlePositions)
   ): void {
     handlePositions[idx] = lastPosition;
-    this.config.setPositions(handlePositions);
+    this.config.get().setPositions(handlePositions);
   }
 
   private defineActiveHandleIDX(
     lastPosition: number,
-    handlePositions = this.config.getPositions()
+    handlePositions = this.config.get().getPositions()
   ): number {
     const diffs = handlePositions.map(
       (p) => Math.abs(p - lastPosition) || Infinity
@@ -266,11 +266,11 @@ class View extends EventEmitter implements IView {
       if (lastPosition > handlePositions[1]) {
         idx = 1;
       }
-      if (this.config.getResponse().isVertical) {
+      if (this.config.get().getResponse().isVertical) {
         idx = Number(!idx);
       }
     }
-    if (!this.config.getResponse().isInterval) {
+    if (!this.config.get().getResponse().isInterval) {
       idx = 0;
     }
     return idx;
@@ -278,13 +278,13 @@ class View extends EventEmitter implements IView {
 
   private moveAndSendResponse(): void {
     this.setInMotion();
-    this.emit(this.config.getResponse());
+    this.emit(this.config.get().getResponse());
   }
 
   private setInMotion(): void {
-    const { from, to } = this.config.getResponse();
+    const { from, to } = this.config.get().getResponse();
     [from, to].forEach((v, idx) => {
-      const position = this.config.getPositions()[idx];
+      const position = this.config.get().getPositions()[idx];
       this.handles[idx].move(position);
       this.progressBars[idx].resize(position);
       this.labels[idx].updateValue(String(v));

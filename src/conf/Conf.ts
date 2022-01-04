@@ -61,9 +61,9 @@ class Conf implements IConf {
   }
 
   private bindListeners(): void {
-    const containers = this.root.querySelectorAll('.conf__container');
-    containers[0].addEventListener('change', this.handleNumericsChange);
-    containers[1].addEventListener('change', this.handleSwithesChange);
+    const [numerics, switches] = this.root.querySelectorAll('.conf__container');
+    numerics.addEventListener('change', this.handleNumericsChange);
+    switches.addEventListener('change', this.handleSwithesChange);
     this.intervalInput.addEventListener(
       'change',
       this.handleIntervalInputChange

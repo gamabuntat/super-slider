@@ -1,6 +1,6 @@
 import EventBinder from 'slider/EventBinder/EventBinder';
 import type { AllPositions } from 'slider/View/Config/IConfig';
-import getLastItem from 'helpers/getLastItem';
+import { last } from 'helpers/handyKit';
 
 import IScale from './IScale';
 
@@ -60,11 +60,8 @@ abstract class Scale extends EventBinder {
     this.setStep();
     const selectedAP = this.selectAP();
     selectedAP.forEach(({ p }) => this.insertDivision(this.createDivision(p)));
-    this.insertDivision(this.createDivision(getLastItem(this.ap).p));
-    const relativeSize = this.getRelativeSize([
-      ...selectedAP,
-      getLastItem(this.ap),
-    ]);
+    this.insertDivision(this.createDivision(last(this.ap).p));
+    const relativeSize = this.getRelativeSize([...selectedAP, last(this.ap)]);
     [...this.divisions].slice(-2).forEach((d) => {
       if (d instanceof HTMLElement) {
         this.resizeDivision(d, relativeSize);
@@ -87,7 +84,7 @@ abstract class Scale extends EventBinder {
 
   private setNDivisions(): void {
     this.nDivisions = Math.min(
-      Math.floor(this.getSize() / this.divisionSize || 0),
+      Math.max(Math.floor(this.getSize() / this.divisionSize || 0), 2),
       this.ap.length
     );
   }
@@ -110,7 +107,7 @@ abstract class Scale extends EventBinder {
 
   private getRelativeSize(ap: AllPositions): number {
     return (
-      (getLastItem(ap).idx - ap[Math.max(ap.length - 2, 0)].idx) /
+      (last(ap).idx - ap[Math.max(ap.length - 2, 0)].idx) /
       (ap[1]?.idx || 1) /
       2
     );
