@@ -3,7 +3,7 @@ import type { Absolute, Relative } from 'helpers/calc';
 import { last } from 'helpers/handyKit';
 
 import Config from './Config';
-import type { IConfig, AllPositions, TypeExtremums } from './IConfig';
+import type { IConfig, AllPositions, Extremums } from './IConfig';
 
 class HorizontalConfig extends Config implements IConfig {
   getPrev(p: Relative, m = 1): Relative {
@@ -49,7 +49,7 @@ class HorizontalConfig extends Config implements IConfig {
     [this.extremums[1].min, this.extremums[0].max] = this.positions;
   }
 
-  protected getExtremums(): TypeExtremums {
+  protected getExtremums(): Extremums {
     return [
       { min: 0, max: this.positions[1] },
       { min: this.positions[0], max: 1 },

@@ -1,11 +1,6 @@
 import { clamp, sampling, decimalPlaces } from 'helpers/calc';
 
-import type {
-  Absolute,
-  Relative,
-  Extremums,
-  AllPositions,
-} from './IConfig';
+import type { Absolute, Relative, Extremums, AllPositions } from './IConfig';
 
 abstract class Config {
   private static max = 100;
@@ -61,11 +56,13 @@ abstract class Config {
   }
 
   private validate(p: number, idx: number): number {
-    return clamp(
-      this.extremums[idx].min,
-      sampling(this.relativeStep, p),
-      this.extremums[idx].max
-    );
+    return p === 1 || p === 0
+      ? p
+      : clamp(
+          this.extremums[idx].min,
+          sampling(this.relativeStep, p),
+          this.extremums[idx].max
+        );
   }
 
   private updateResponse(): void {
