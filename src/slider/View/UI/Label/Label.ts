@@ -1,21 +1,16 @@
+import s from 'slider/styles/Slider.module.sass';
+
 import ILabel from './ILabel';
 
 class Label implements ILabel {
-  private hiddenMod: string;
-
-  constructor(protected component: HTMLElement) {
-    this.hiddenMod = `${this.component.classList[0].replace(
-      /--.*/,
-      ''
-    )}--hidden`;
-  }
+  constructor(protected component: HTMLElement) {}
 
   updateValue(v: string): void {
     this.component.textContent = v;
   }
 
   toggleHiddenMode(): void {
-    this.component.classList.toggle(this.hiddenMod);
+    this.component.classList.toggle(s.LabelHidden);
   }
 }
 

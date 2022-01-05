@@ -1,56 +1,65 @@
-import IViewTreeTemplate from './interfaces/IViewTreeTemplate';
+import s from 'slider/styles/Slider.module.sass';
 
-const treeTemplate: IViewTreeTemplate = {
-  name: 'ui-slider',
-  elementType: 'div',
+type TreeTemplate = {
+  name: string;
+  classes?: string[];
+  elementType?: string;
+  childs?: TreeTemplate[];
+};
+
+const treeTemplate: TreeTemplate = {
+  name: 'slider',
+  classes: [s.Slider],
   childs: [
     {
       name: 'mainContainer',
-      elementType: 'div',
+      classes: [s.MainContainer],
       childs: [
         {
-          name: 'gigletStart',
-          elementType: 'div',
+          name: 'fillerStart',
+          classes: [s.Filler, s.FillerStateStart],
         },
         {
-          name: 'gigletEnd',
-          elementType: 'div',
+          name: 'fillerEnd',
+          classes: [s.Filler, s.FillerStateEnd],
         },
         {
           name: 'container',
-          elementType: 'div',
+          classes: [s.Container],
           childs: [
             {
               name: 'handleStart',
+              classes: [s.Handle, s.HandleStateStart],
               elementType: 'button',
               childs: [
                 {
                   name: 'labelStart',
-                  elementType: 'div',
+                  classes: [s.Label, s.LabelStateStart],
                 },
               ],
             },
             {
               name: 'handleEnd',
+              classes: [s.Handle, s.HandleStateEnd],
               elementType: 'button',
               childs: [
                 {
                   name: 'labelEnd',
-                  elementType: 'div',
+                  classes: [s.Label, s.LabelStateEnd],
                 },
               ],
             },
             {
               name: 'track',
-              elementType: 'div',
+              classes: [s.Track],
               childs: [
                 {
                   name: 'progressBarStart',
-                  elementType: 'div',
+                  classes: [s.ProgressBar],
                 },
                 {
                   name: 'progressBarEnd',
-                  elementType: 'div',
+                  classes: [s.ProgressBar],
                 },
               ],
             },
@@ -60,9 +69,11 @@ const treeTemplate: IViewTreeTemplate = {
     },
     {
       name: 'scale',
-      elementType: 'div',
+      classes: [s.Scale],
     },
   ],
 };
 
 export default treeTemplate;
+
+export type { TreeTemplate };

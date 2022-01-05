@@ -1,5 +1,3 @@
-import './styles/slider.sass';
-
 import Presenter from './Presenter/Presenter';
 import View from './View/View';
 import Service from './Service/Service';
@@ -21,6 +19,7 @@ import init from './init';
 
     if (o) {
       const { isNew, model } = Service.getInstance().add(this[0].id, o);
+
       if (isNew) {
         new Presenter(
           Service.getInstance(),

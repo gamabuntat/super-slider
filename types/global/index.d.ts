@@ -1,3 +1,8 @@
+declare module'*.sass' {
+  const content: Record<string, string>;
+  export = content;
+};
+
 type Options = {
   min?: number;
   max?: number;

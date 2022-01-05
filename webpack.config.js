@@ -57,7 +57,20 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.sass/i,
-          use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+          use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: 'css-loader',
+              options: {
+                modules: {
+                  mode: 'local',
+                  auto: true,
+                  localIdentName: isProd ? '[hash:base64]' : '[name]__[local]',
+                },
+              },
+            },
+            'sass-loader',
+          ],
         },
         {
           test: /\.pug$/,

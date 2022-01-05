@@ -1,6 +1,7 @@
+import s from 'slider/styles/Slider.module.sass';
+import { last } from 'helpers/handyKit';
 import EventBinder from 'slider/EventBinder/EventBinder';
 import type { AllPositions } from 'slider/View/Config/IConfig';
-import { last } from 'helpers/handyKit';
 
 import IScale from './IScale';
 
@@ -9,9 +10,6 @@ abstract class Scale extends EventBinder {
   protected ap: AllPositions = [];
   private divisions: HTMLCollectionOf<Element>;
   private container: HTMLElement;
-  private hiddenMod: string;
-  private divisionClass: string;
-  private buttonClass: string;
   private lastPosition = 0;
   private resizeObserver: ResizeObserver;
   private step = 0;
@@ -22,9 +20,6 @@ abstract class Scale extends EventBinder {
   constructor(component: HTMLElement) {
     super(component);
     this.component.innerHTML = '';
-    this.hiddenMod = this.getElemClass('--hidden');
-    this.divisionClass = this.getElemClass('-division');
-    this.buttonClass = this.getElemClass('-button');
     this.container = this.getContainer();
     this.component.insertAdjacentElement('beforeend', this.container);
     this.resizeObserver = new ResizeObserver(this.handleScaleResize);
@@ -37,7 +32,7 @@ abstract class Scale extends EventBinder {
   }
 
   toggleHiddenMode(): void {
-    this.component.classList.toggle(this.hiddenMod);
+    this.component.classList.toggle(s.ScaleHidden);
   }
 
   update(absolutePositions: AllPositions): void {
@@ -120,7 +115,7 @@ abstract class Scale extends EventBinder {
   }
 
   private handleScaleClick = (e: MouseEvent): void => {
-    const button = (<HTMLElement>e.target).closest(`.${this.buttonClass}`);
+    const button = (<HTMLElement>e.target).closest(`.${s.ScaleButton}`);
     if (!button) {
       e.stopImmediatePropagation();
       return;
@@ -129,7 +124,7 @@ abstract class Scale extends EventBinder {
   };
 
   private handleScaleResize = (): void => {
-    if (this.component.classList.contains(this.hiddenMod)) {
+    if (this.component.classList.contains(s.ScaleHidden)) {
       return;
     }
     clearTimeout(this.timer);
@@ -163,33 +158,26 @@ abstract class Scale extends EventBinder {
     this.component.style.height = '';
   }
 
-  private getElemClass(postfix: string): string {
-    return `${(this.component.classList[0] || '').replace(
-      /--.*/,
-      ''
-    )}${postfix}`;
-  }
-
   private getContainer(): HTMLElement {
     const c = document.createElement('div');
-    c.classList.add(this.getElemClass('-container'));
+    c.classList.add(s.ScaleContainer);
     return c;
   }
 
   private getDivision(): HTMLElement {
     const division = document.createElement('div');
-    division.classList.add(this.divisionClass);
+    division.classList.add(s.ScaleDivision);
     return division;
   }
 
   private getButton(): HTMLElement {
     const b = document.createElement('button');
-    b.classList.add(this.buttonClass);
+    b.classList.add(s.ScaleButton);
     return b;
   }
 
   private findDivisions(): HTMLCollectionOf<Element> {
-    return this.component.getElementsByClassName(this.divisionClass);
+    return this.component.getElementsByClassName(s.ScaleDivision);
   }
 
   abstract swap(): IScale;

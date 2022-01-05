@@ -1,5 +1,5 @@
 import IService from 'slider/Service/IService';
-import IView from 'slider/View/interfaces/IView';
+import type IView from 'slider/View/IView';
 
 class Presenter {
   constructor(private service: IService, private view: IView, id: string) {

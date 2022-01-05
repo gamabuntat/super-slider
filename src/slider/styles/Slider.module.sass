@@ -2,7 +2,6 @@
 
 @import vars
 
-$double-vertical: '.SliderVertical.SliderInterval'
 $handle-width: 12px
 $handle-half-width: math.div($handle-width, 2)
 $handle-heigth: 30px
@@ -129,7 +128,7 @@ $track-size: 6px
       &Division:last-child > .ScaleButton
         transform: translate($handle-width, 0)
 
-  #{$double-vertical}
+  &Vertical.#{SliderInterval}
 
     & .MainContainer
       padding: $handle-width 0
@@ -142,8 +141,19 @@ $track-size: 6px
       &End
         transform: translate(0, -$handle-width)
 
-    & .ScaleContainer
-      height: calc(100% - #{$handle-width} * 2)
+    & .Scale
+      width: unset
+
+      &Container
+        height: calc(100% - #{$handle-width} * 2)
+
+      &Division
+
+        &:first-child > .ScaleButton
+            transform: translate(0, 50%)
+
+        &:last-child > .ScaleButton
+            transform: translate(0, -50%)
 
 .MainContainer
   position: relative

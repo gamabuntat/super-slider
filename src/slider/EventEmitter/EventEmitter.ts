@@ -19,4 +19,6 @@ class EventEmitter implements IEventEmitter {
   }
 }
 
-export { EventEmitter, IEventEmitter, TypeResponseHandler };
+export default EventEmitter;
+
+export type { IEventEmitter, TypeResponseHandler };

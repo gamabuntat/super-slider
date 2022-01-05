@@ -1,6 +1,5 @@
 import defaultOptions from 'slider/defaultOptions';
-import {
-  EventEmitter,
+import EventEmitter, {
   TypeResponseHandler,
 } from 'slider/EventEmitter/EventEmitter';
 import { clamp, decimalPlaces, sampling } from 'helpers/calc';
@@ -83,7 +82,6 @@ class Service extends EventEmitter implements IService {
     }
     copy.step = this.validetaStep(copy);
     this.setDecimalPlaces(copy);
-    copy.gap = this.validateGap(copy);
     copy.from = this.validateFrom(copy);
     copy.to = this.validateTo(copy);
     return copy;
@@ -98,10 +96,6 @@ class Service extends EventEmitter implements IService {
       step,
       Number((max - min).toFixed(Math.max(...[min, max].map(decimalPlaces))))
     );
-  }
-
-  private validateGap({ gap, min, max }: Model): number {
-    return clamp(0, gap, Number((max - min).toFixed(this.decimalPlaces)));
   }
 
   private validateFrom({ from, min, max, step, isInterval }: Model): number {

@@ -1,14 +1,12 @@
+import s from 'slider/styles/Slider.module.sass';
 import Swappable, { ISwappable } from 'helpers/Swappable';
-import { EventEmitter } from 'slider/EventEmitter/EventEmitter';
+import EventEmitter from 'slider/EventEmitter/EventEmitter';
 
-import tree from './treeTemplate';
-import IView from './interfaces/IView';
-import IViewTreeTemplate from './interfaces/IViewTreeTemplate';
+import IView from './IView';
+import tree, { TreeTemplate } from './treeTemplate';
 import HorizontalConfig from './Config/HorizontalConfig';
 import VerticalConfig from './Config/VerticalConfig';
 import { IConfig } from './Config/IConfig';
-import Slider from './UI/Slider/Slider';
-import ISlider from './UI/Slider/ISlider';
 import { HorizontalContainer } from './UI/Container/Container';
 import IContainer from './UI/Container/IContainer';
 import { HorizontalHandle } from './UI/Handle/Handle';
@@ -25,7 +23,6 @@ import ITrack from './UI/Track/ITrack';
 class View extends EventEmitter implements IView {
   private config: ISwappable<IConfig>;
   private components: Record<string, HTMLElement> = {};
-  private slider: ISlider;
   private container: IContainer;
   private handles: IHandle[];
   private progressBars: IProgressBar[];
@@ -47,7 +44,6 @@ class View extends EventEmitter implements IView {
       new VerticalConfig(initResponse)
     );
     this.createSlider(tree, root);
-    this.slider = new Slider(this.components[tree.name]);
     this.container = new HorizontalContainer(this.components.container);
     this.handles = [this.components.handleStart, this.components.handleEnd].map(
       (h) => new HorizontalHandle(h)
@@ -69,7 +65,7 @@ class View extends EventEmitter implements IView {
   parseResponse(response: Model): void {
     const old = this.config.get().getResponse();
     if (old.isInterval !== response.isInterval) {
-      this.slider.toggleIntervalMod();
+      this.components.slider.classList.toggle(s.SliderInterval);
     }
     if (old.isScale !== response.isScale) {
       this.scale.toggleHiddenMode();
@@ -88,7 +84,7 @@ class View extends EventEmitter implements IView {
 
   private updateViewOrientation(): void {
     this.config.swap();
-    this.slider.toggleVerticalMod();
+    this.components.slider.classList.toggle(s.SliderVertical);
     this.container = this.container.swap();
     this.handles = this.handles.map((hv) => hv.swap());
     this.progressBars.reverse();
@@ -97,25 +93,15 @@ class View extends EventEmitter implements IView {
   }
 
   private createSlider(
-    { name, elementType = 'div', childs = [] }: IViewTreeTemplate,
+    { name, classes = [], elementType = 'div', childs = [] }: TreeTemplate,
     parent: HTMLElement
   ): HTMLElement {
     const elem = document.createElement(elementType);
     this.components[name] = elem;
-    elem.classList.add(this.getClass(name));
+    elem.classList.add(...classes);
     parent.insertAdjacentElement('beforeend', elem);
     childs.forEach((node) => this.createSlider(node, elem));
     return elem;
-  }
-
-  private getClass(name: string): string {
-    return `${tree.name}__${name
-      .replace(/(?<=.)[A-Z]/g, '-$&')
-      .toLowerCase()
-      .replace(
-        /(?<base1>.*(?=-(start|end)))(?<mod>-(start|end))(?<base2>.*)/,
-        '$<base1>$<base2>-$<mod>'
-      )}`.replace(new RegExp(`__${tree.name}$`), '');
   }
 
   private rebindListeners(): void {
@@ -131,13 +117,13 @@ class View extends EventEmitter implements IView {
     );
     this.scale.bind('click', this.handleScaleClick);
     this.track.bind('pointerdown', this.handleTrackPointerdown);
-    this.components.gigletStart.addEventListener(
+    this.components.fillerStart.addEventListener(
       'pointerdown',
-      this.handleGigletStartPointerdown
+      this.handlefillerStartPointerdown
     );
-    this.components.gigletEnd.addEventListener(
+    this.components.fillerEnd.addEventListener(
       'pointerdown',
-      this.handleGigletEndPointerdown
+      this.handlefillerEndPointerdown
     );
   }
 
@@ -149,13 +135,13 @@ class View extends EventEmitter implements IView {
     );
     this.scale.unbind('click', this.handleScaleClick);
     this.track.unbind('pointerdown', this.handleTrackPointerdown);
-    this.components.gigletStart.removeEventListener(
+    this.components.fillerStart.removeEventListener(
       'pointerdown',
-      this.handleGigletStartPointerdown
+      this.handlefillerStartPointerdown
     );
-    this.components.gigletEnd.removeEventListener(
+    this.components.fillerEnd.removeEventListener(
       'pointerdown',
-      this.handleGigletEndPointerdown
+      this.handlefillerEndPointerdown
     );
   }
 
@@ -222,7 +208,7 @@ class View extends EventEmitter implements IView {
     this.moveAndSendResponse();
   };
 
-  private handleGigletStartPointerdown = (e: PointerEvent): void => {
+  private handlefillerStartPointerdown = (e: PointerEvent): void => {
     e.preventDefault();
     this.config
       .get()
@@ -234,7 +220,7 @@ class View extends EventEmitter implements IView {
     this.moveAndSendResponse();
   };
 
-  private handleGigletEndPointerdown = (e: PointerEvent) => {
+  private handlefillerEndPointerdown = (e: PointerEvent) => {
     e.preventDefault();
     const response = this.config.get().getResponse();
     const handleIDX = Number(response.isInterval);

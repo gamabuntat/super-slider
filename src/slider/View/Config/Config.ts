@@ -56,13 +56,13 @@ abstract class Config {
   }
 
   private validate(p: number, idx: number): number {
-    return p === 1 || p === 0
-      ? p
-      : clamp(
-          this.extremums[idx].min,
-          sampling(this.relativeStep, p),
-          this.extremums[idx].max
-        );
+    return clamp(
+      this.extremums[idx].min,
+      p === 1 || this.positions.includes(p)
+        ? p
+        : sampling(this.relativeStep, p),
+      this.extremums[idx].max
+    );
   }
 
   private updateResponse(): void {
