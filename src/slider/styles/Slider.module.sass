@@ -123,15 +123,11 @@ $track-size: 6px
     & .Scale
       width: calc(100% - #{$handle-width} * 2)
 
-      &Division:first-child
-
-        & > .ScaleButton
-          transform: translate(-$handle-width, 0)
+      &Division:first-child > .ScaleButton
+        transform: translate(-$handle-width, 0)
     
-      &Division:last-child
-        
-        & > .ScaleButton
-          transform: translate($handle-width, 0)
+      &Division:last-child > .ScaleButton
+        transform: translate($handle-width, 0)
 
   #{$double-vertical}
 
@@ -275,10 +271,8 @@ $track-size: 6px
     align-items: center
     flex-basis: 100%
 
-    &:first-child
-      
-      & > .ScaleButton
-        transform: translate(-$handle-half-width, 0)
+    &:first-child > .ScaleButton
+      transform: translate(-$handle-half-width, 0)
 
     &:last-child
       justify-content: flex-end
