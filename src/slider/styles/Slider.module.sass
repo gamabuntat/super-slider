@@ -1,0 +1,287 @@
+@use 'sass:math'
+
+@import vars
+
+$double-vertical: '.SliderVertical.SliderInterval'
+$handle-width: 12px
+$handle-half-width: math.div($handle-width, 2)
+$handle-heigth: 30px
+$label-height: 18px
+$label-gap: 14px
+$track-size: 6px
+
+.Slider
+  display: flex
+  flex-direction: column
+  justify-content: center
+  gap: 4px
+  padding: $label-height + $label-gap 0 0
+  box-sizing: border-box
+
+  &Vertical
+    flex-direction: row
+    align-content: stretch
+    justify-content: flex-end
+    align-self: stretch
+    flex-grow: 1
+    flex-basis: 100%
+    padding: max(math.div($label-height - $handle-width, 2), 10px) 0
+    height: 100%
+
+    & .MainContainer
+      align-items: center
+      padding: $handle-half-width 0
+      min-height: 2 * $handle-width
+
+    & .Filler
+      flex-direction: column
+      width: $track-size
+      height: 50%
+      left: unset
+      right: unset
+
+      &State
+
+        &Start
+          bottom: 0
+
+        &End
+          top: 0
+          background-color: $color-accent
+
+    & .Container
+      width: $handle-heigth
+
+    & .Handle
+      width: $handle-heigth
+      height: $handle-width
+
+      &StateStart
+        transform: translate(0, -$handle-half-width)
+
+    & .Label
+      transform: translate(0, -50%)
+      right: calc(100% + #{$label-gap})
+      top: unset
+
+    & .Track
+      flex-direction: column
+      width: $track-size
+      height: 100%
+
+    & .Scale
+      max-width: 50%
+      width: unset
+      align-self: stretch
+      align-items: center
+
+      &Container
+        flex-direction: column-reverse
+        height: calc(100% - #{$handle-width})
+
+      &Button
+        transform: translate(0, 50%)
+
+      &Division
+        justify-content: center
+        align-items: flex-end
+
+        &:first-child
+          align-items: flex-end
+
+          & > .ScaleButton
+            transform: translate(0, 50%)
+
+        &:last-child
+          align-items: flex-start
+
+          & > .ScaleButton
+            transform: translate(0, -50%)
+
+  &Interval
+    
+    & .MainContainer
+      padding: 0 $handle-width
+
+    & .FillerStateStart
+      background-color: $color-accent
+
+    & .HandleState
+
+      &Start
+        transform: translate(-$handle-width)
+
+      &End
+        display: unset
+
+    & .Track
+      background-color: $color-main
+    
+    & .ProgressBar
+      background-color: $color-accent
+
+    & .Scale
+      width: calc(100% - #{$handle-width} * 2)
+
+      &Division:first-child
+
+        & > .ScaleButton
+          transform: translate(-$handle-width, 0)
+    
+      &Division:last-child
+        
+        & > .ScaleButton
+          transform: translate($handle-width, 0)
+
+  #{$double-vertical}
+
+    & .MainContainer
+      padding: $handle-width 0
+
+    & .HandleState
+
+      &Start
+        transform: translate(0)
+  
+      &End
+        transform: translate(0, -$handle-width)
+
+    & .ScaleContainer
+      height: calc(100% - #{$handle-width} * 2)
+
+.MainContainer
+  position: relative
+  padding: 0 $handle-half-width
+  display: flex
+  flex-direction: column
+  justify-content: center
+  min-height: $handle-heigth
+  box-sizing: border-box
+
+.Filler
+  display: flex
+  position: absolute
+  width: 50%
+  height: $track-size
+  background-color: $color-main
+
+  &State
+
+    &Start
+      left: 0
+
+    &End
+      right: 0
+      background-color: $color-accent
+
+.Container
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-basis: 100%
+  position: relative
+
+.Handle
+  position: absolute
+  margin: 0
+  padding: 0
+  width: $handle-width
+  height: $handle-heigth
+  border: none
+  background-color: $color-main
+  touch-action: none
+  cursor: pointer
+
+  &State
+
+    &Start
+      transform: translate(-$handle-half-width)
+
+    &End
+      display: none
+
+  &:focus
+    z-index: 1
+
+    & > .Label
+      color: $color-active
+    
+.Label
+  display: inline-flex
+  align-items: center
+  position: absolute
+  top: -$label-height - $label-gap
+  padding: 0 2px
+  width: max-content
+  height: max-content
+  transform: translate(-50%)
+  background-color: $color-main
+  color: white
+  font-size: 1rem
+  font-family: Unifont, monospace
+
+  &Hidden
+    display: none
+
+  &Active
+    color: $color-active
+
+.Track
+  display: flex
+  justify-content: space-between
+  background-color: $color-accent
+  width: 100%
+  height: $track-size
+  touch-action: none
+
+.ProgressBar
+  background-color: $color-main
+
+.Scale
+  position: relative
+  display: flex
+  align-self: center
+  width: calc(100% - #{$handle-width})
+
+  &Hidden
+    display: none
+
+  &Container
+    position: absolute
+    display: flex
+    width: 100%
+    height: 100%
+
+  &Button
+    position: absolute
+    padding: 0
+    width: min-content
+    background-color: #e6e5e5
+    border: none
+    cursor: pointer
+    outline: none
+    transform: translate(-50%, 0)
+    font-size: 0.7rem
+    font-family: Unifont, monospace
+    box-sizing: border-box
+
+    &:hover,
+    &:focus
+      color: $color-active-scale-label
+
+  &Division
+    position: relative
+    display: flex
+    align-items: center
+    flex-basis: 100%
+
+    &:first-child
+      
+      & > .ScaleButton
+        transform: translate(-$handle-half-width, 0)
+
+    &:last-child
+      justify-content: flex-end
+
+      & > .ScaleButton
+        transform: translate($handle-half-width, 0)
