@@ -49,7 +49,7 @@ module.exports = (env, argv) => {
         },
       },
       minimizer: [
-        // `...`,
+        `...`,
         new CssMinimizerPlugin(),
       ],
     },
