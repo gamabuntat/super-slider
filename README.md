@@ -77,9 +77,9 @@ $(sliderID).slider().subscribe(cb); // subscribe to updates
 $(sliderID).slider({ isScale: false }); // hide scale
 // cb call console.log will be
 //  {
-//    id: sliderId,
-//    cancel: boolean,
 //    isScale: false,
+//    id: sliderId,
+//    cancel?: boolean,
 //    ...options
 //  }
 // yes, the response also contains a slider ID
