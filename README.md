@@ -78,7 +78,7 @@ $(sliderID).slider({ isScale: false }); // hide scale
 
 /* console.log will be:
   {
-    ...options
+    ...options,
     isScale: false,
     id: sliderId,
     cancel?: boolean,
