@@ -29,4 +29,4 @@ const options: Options[] = [
 
 document
   .querySelectorAll<HTMLElement>('.js-conf')
-  .forEach((c, idx) => new Conf(c).init(options[idx]));
+  .forEach((c, idx) => new Conf(c, options[idx]));

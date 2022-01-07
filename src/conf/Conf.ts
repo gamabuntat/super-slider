@@ -1,25 +1,25 @@
-interface IConf {
-  init(o: Options): void;
-}
+type Input = HTMLInputElement & { name: keyof Options };
 
-class Conf implements IConf {
-  private $slider: JQuery;
-  private inputs: HTMLInputElement[];
-  private intervalInput: HTMLInputElement;
-  private toInput: HTMLInputElement;
-  private fromInput: HTMLInputElement;
+class Conf {
+  private $slider!: JQuery;
+  private container!: HTMLDivElement;
+  private inputs!: Input[];
+  private cause!: Input;
 
-  constructor(private root: HTMLElement) {
-    this.$slider = this.getJqueryElement('.js-conf__slider');
-    this.inputs = [...this.getInputs('input')];
-    [this.intervalInput] = this.getInputs('[name="interval"]');
-    [this.toInput] = this.getInputs('[name="to"]');
-    [this.fromInput] = this.getInputs('[name="from"]');
+  constructor(private root: HTMLElement, o: Options) {
+    this.init();
     this.subscribe();
     this.bindListeners();
+    this.update(o);
   }
 
-  init(o: Options): void {
+  private init(): void {
+    this.$slider = $(this.root).find('.js-conf__slider');
+    this.container = this.root.querySelector('.js-conf__input-container')!;
+    this.inputs = [...this.root.querySelectorAll('input')] as Input[];
+  }
+
+  private update(o: Options): void {
     this.$slider.slider(o);
   }
 
@@ -27,79 +27,60 @@ class Conf implements IConf {
     this.$slider.slider().subscribe(this.handleSliderUpdate);
   }
 
-  private handleSliderUpdate = (response: Model): void => {
-    Object.entries(response).forEach(([key, value]) => {
-      if (key === 'step') {
-        this.updateStepAttr(value as number);
-      }
-      if (key === 'min') {
-        this.updateMinAttr(value as number);
-      }
-      const input = this.inputs.find((i) => i.dataset.name === key);
-      if (!input) {
+  private handleSliderUpdate = (r: Model): void => {
+    this.inputs.forEach((i) => {
+      i.classList.remove('conf__numeric-input_wrong');
+      if (this.isNumerical(i.name)) {
+        i.value = String(r[i.name as NumericalKeys]);
         return;
       }
-      if (typeof value === 'number') {
-        input.value = String(value);
-      }
-      if (typeof value === 'boolean') {
-        input.checked = value;
-      }
+      i.checked = r[i.name as BooleanKeys];
     });
     this.handleIntervalInputChange();
-    this.toggleRootVerticalMod(response.isVertical);
+    this.handleVerticalInputChange();
+    this.getInputByName('from').step = String(r.step);
+    this.getInputByName('from').min = String(r.min);
+    this.getInputByName('to').step = String(r.step);
+    this.getInputByName('to').min = String(r.min);
+    if (r.cancel) {
+      this.cause.classList.add('conf__numeric-input_wrong');
+    }
   };
-
-  private updateStepAttr(step: number): void {
-    this.toInput.step = String(step);
-    this.fromInput.step = String(step);
-  }
-
-  private updateMinAttr(min: number): void {
-    this.toInput.min = String(min);
-    this.fromInput.min = String(min);
-  }
 
   private bindListeners(): void {
-    const [numerics, switches] = this.root.querySelectorAll('.conf__container');
-    numerics.addEventListener('change', this.handleNumericsChange);
-    switches.addEventListener('change', this.handleSwithesChange);
-    this.intervalInput.addEventListener(
-      'change',
-      this.handleIntervalInputChange
-    );
+    this.container.addEventListener('change', this.handleInputChange);
   }
 
-  private handleNumericsChange = (e: Event): void => {
-    const target = <HTMLInputElement>e.target;
-    this.init({ [target.name as NumericalKeys]: Number(target.value) });
-  };
-
-  private handleSwithesChange = (e: Event): void => {
-    const target = <HTMLInputElement>e.target;
-    this.init({
-      [target.dataset.name as BooleanKeys]: target.checked,
-    });
+  private handleInputChange = ({ target }: Event): void => {
+    if (target instanceof HTMLInputElement) {
+      this.cause = target as Input;
+      this.update({
+        [target.name]: this.isNumerical(target.name)
+          ? parseFloat(target.value)
+          : target.checked,
+      });
+    }
   };
 
   private handleIntervalInputChange = (): void => {
-    this.toInput.disabled = !this.intervalInput.checked;
+    this.getInputByName('to').disabled =
+      !this.getInputByName('isInterval').checked;
   };
 
-  private toggleRootVerticalMod(flag: boolean): void {
-    if (flag) {
+  private handleVerticalInputChange = (): void => {
+    if (this.getInputByName('isVertical').checked) {
       this.root.classList.add('conf_vertical');
       return;
     }
     this.root.classList.remove('conf_vertical');
+  };
+
+  private getInputByName(name: keyof Options): Input {
+    return this.inputs.find((i) => i.name === name)!;
   }
 
-  private getJqueryElement(selector: string): JQuery {
-    return $(this.root).find(selector);
-  }
-
-  private getInputs(selector: string): NodeListOf<HTMLInputElement> {
-    return this.root.querySelectorAll(selector);
+  private isNumerical(name: string): boolean {
+    return !name.startsWith('is');
   }
 }
 

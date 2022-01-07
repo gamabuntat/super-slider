@@ -2,6 +2,7 @@
 
 .conf
   display: flex
+  flex-direction: column
   min-width: 40vw
   gap: 10px
 
@@ -11,11 +12,6 @@
     & .conf__slider
       flex-grow: 1
       min-height: 120px
-
-  &__main-container
-    display: flex
-    flex-direction: column
-    gap: 4px
 
   &__slider
     display: flex
@@ -47,18 +43,11 @@
       font-size: .7rem
 
       &_wrong
-        animation: .1s 4 wrong-input, 1s www
+        animation: .1s 4 shaking, 1s stipes
 
       &:focus
         border: 1px dashed $color-active-scale-label
-        animation: .1s 4 wrong-input, 1s www
-        @keyframes www
-          0%
-            background: repeating-linear-gradient(45deg, tomato, tomato 8px, white 8px, white 16px)
-          100%
-            background: inital
             
-
   &__switches
     
     &-label
@@ -91,10 +80,16 @@
       background-color: #fff
       box-shadow: 30px 0px 0px 0px $color-main inset
 
-@keyframes wrong-input
-  33%
-    transform: translate(1px)
-  66%
-    transform: translate(-1px)
-  100%
-    transform: translate(0)
+  @keyframes stipes
+    0%
+      background: repeating-linear-gradient(45deg, tomato, tomato 8px, white 8px, white 16px)
+    100%
+      background: inital
+
+  @keyframes shaking
+    33%
+      transform: translate(1px)
+    66%
+      transform: translate(-1px)
+    100%
+      transform: translate(0)

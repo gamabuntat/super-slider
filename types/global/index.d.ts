@@ -1,7 +1,7 @@
-declare module'*.sass' {
+declare module '*.sass' {
   const content: Record<string, string>;
   export = content;
-};
+}
 
 type Options = {
   min?: number;
@@ -19,11 +19,12 @@ type RequiredOptions = Required<Options>;
 
 type Model = RequiredOptions & {
   id: string;
+  cancel?: boolean;
 };
 
 type SelectKeysByType<T> = {
-  [K in keyof Model]: Model[K] extends T ? K : never 
-}[keyof Model];
+  [K in keyof RequiredOptions]: RequiredOptions[K] extends T ? K : never;
+}[keyof RequiredOptions];
 
 type NumericalKeys = SelectKeysByType<number>;
 

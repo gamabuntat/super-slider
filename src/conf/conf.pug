@@ -4,8 +4,8 @@ mixin conf
     const switchesNames = ['interval', 'vertical', 'label', 'scale'];
 
   .conf.js-conf
-    .conf__main-container
-      .conf__slider.js-conf__slider
+    .conf__slider.js-conf__slider
+    .conf__input-container.js-conf__input-container
       .conf__container
         each name in numericNames
           label.conf__numeric-label
@@ -13,7 +13,6 @@ mixin conf
             input.conf__numeric-input(
               type="number" 
               name=name 
-              data-name=name
             )
       .conf__container
         each name in switchesNames
@@ -21,8 +20,6 @@ mixin conf
             span.conf__switches-sign= name
             input.conf__switches-input(
               type="checkbox" 
-              name= name 
-              data-name= name.replace(/^./, (s) => `is${s.toUpperCase()}`)
+              name= name.replace(/^./, (s) => `is${s.toUpperCase()}`) 
             )
             span.conf__switches-box
-

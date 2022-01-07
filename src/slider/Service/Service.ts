@@ -1,6 +1,6 @@
 import defaultOptions from 'slider/defaultOptions';
 import EventEmitter, {
-  TypeResponseHandler,
+  ResponseHandler,
 } from 'slider/EventEmitter/EventEmitter';
 import { clamp, decimalPlaces, sampling } from 'helpers/calc';
 
@@ -8,8 +8,7 @@ import IService from './IService';
 
 class Service extends EventEmitter implements IService {
   private static instance: Service;
-  private readonly defaultOptions: RequiredOptions = defaultOptions;
-  private selectedModel: Model = { ...this.defaultOptions, id: '' };
+  private selectedModel: Model = { ...defaultOptions, id: '' };
   private models: Model[] = [];
   private selectedIndex = -1;
   private decimalPlaces = 0;
@@ -21,7 +20,7 @@ class Service extends EventEmitter implements IService {
     return Service.instance;
   }
 
-  subscribe(preID: string, cb: TypeResponseHandler): string {
+  subscribe(preID: string, cb: ResponseHandler): string {
     const id = preID || this.generateID();
     this.on(`sub${id}`, cb);
     return id;
@@ -45,9 +44,10 @@ class Service extends EventEmitter implements IService {
     const id = preID || this.generateID();
     const prevLength = this.models.length;
     this.selectedModel = this.models[this.findModelIndex(id)] || {
-      ...this.defaultOptions,
+      ...defaultOptions,
       id,
     };
+    this.selectedModel.cancel = false;
     this.selectedModel = this.getValidatedOptions(o);
     this.addModel(this.selectedModel);
     this.emit({ ...this.selectedModel });
@@ -78,7 +78,7 @@ class Service extends EventEmitter implements IService {
   private getValidatedOptions(o: Options): Model {
     const copy = { ...this.selectedModel, ...o };
     if (copy.min >= copy.max || copy.step <= 0) {
-      return this.selectedModel;
+      return { ...this.selectedModel, cancel: true };
     }
     copy.step = this.validetaStep(copy);
     this.setDecimalPlaces(copy);
