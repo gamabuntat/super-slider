@@ -74,15 +74,19 @@ $(sliderID).slider().destroy();
 /* ------------------------------------------- */
 $(sliderID).slider().subscribe(console.log); // subscribe to updates
 $(sliderID).slider({ isScale: false }); // hide scale
-// cb call console.log will be
-//  {
-//    isScale: false,
-//    id: sliderId,
-//    cancel?: boolean,
-//    ...options
-//  }
-// yes, the response also contains a slider ID
-// the response also contains a cancellation field that indicates whether the options passed validation
+/*
+console.log will be:
+  {
+    isScale: false,
+    id: sliderId,
+    cancel?: boolean,
+    ...options
+  }
+
+Yes, the response also contains a slider ID.
+The response also contains a cancellation field 
+that indicates whether the options passed validation.
+*/
 ```
 
 ## architecture
