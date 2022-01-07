@@ -1,4 +1,4 @@
-import IService from 'slider/Service/IService';
+import type IService from 'slider/Service/IService';
 import type IView from 'slider/View/IView';
 
 class Presenter {

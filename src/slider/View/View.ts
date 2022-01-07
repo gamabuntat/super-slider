@@ -13,8 +13,6 @@ import { HorizontalHandle } from './UI/Handle/Handle';
 import IHandle from './UI/Handle/IHandle';
 import { StartProgressBar, EndProgressBar } from './UI/ProgressBar/ProgressBar';
 import IProgressBar from './UI/ProgressBar/IProgressBar';
-import Label from './UI/Label/Label';
-import ILabel from './UI/Label/ILabel';
 import { HorizontalScale } from './UI/Scale/Scale';
 import IScale from './UI/Scale/IScale';
 import { HorizontalTrack } from './UI/Track/Track';
@@ -26,7 +24,7 @@ class View extends EventEmitter implements IView {
   private container: IContainer;
   private handles: IHandle[];
   private progressBars: IProgressBar[];
-  private labels: ILabel[];
+  private labels!: HTMLElement[];
   private scale: IScale;
   private track: ITrack;
 
@@ -52,9 +50,7 @@ class View extends EventEmitter implements IView {
       new StartProgressBar(this.components.progressBarStart),
       new EndProgressBar(this.components.progressBarEnd),
     ];
-    this.labels = [this.components.labelStart, this.components.labelEnd].map(
-      (c) => new Label(c)
-    );
+    this.labels = [this.components.labelStart, this.components.labelEnd];
     this.scale = new HorizontalScale(this.components.scale);
     this.track = new HorizontalTrack(this.components.track);
     this.parseResponse(response);
@@ -71,7 +67,7 @@ class View extends EventEmitter implements IView {
       this.scale.toggleHiddenMode();
     }
     if (old.isLabel !== response.isLabel) {
-      this.labels.forEach((l) => l.toggleHiddenMode());
+      this.labels.forEach((l) => l.classList.toggle(s.LabelHidden));
     }
     if (old.isVertical !== response.isVertical) {
       this.updateViewOrientation();
@@ -273,7 +269,7 @@ class View extends EventEmitter implements IView {
       const position = this.config.get().getPositions()[idx];
       this.handles[idx].move(position);
       this.progressBars[idx].resize(position);
-      this.labels[idx].updateValue(String(v));
+      this.labels[idx].textContent = String(v);
     });
   }
 }
