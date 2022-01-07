@@ -79,9 +79,17 @@ module.exports = (env, argv) => {
         {
           test: /\.(svg|ttf|otf|eot|woff[2]?)$/i,
           type: 'asset/resource',
-          include: path.resolve(__dirname, 'src/fonts'),
+          include: path.resolve(__dirname, 'src/assets/fonts'),
           generator: {
             filename: 'fonts/[name][ext][query]',
+          },
+        },
+        {
+          test: /\.(svg|png|ico|webmanifest)$/i,
+          type: 'asset/resource',
+          include: path.resolve(__dirname, 'src/assets/favicons'),
+          generator: {
+            filename: 'favicons/[name][ext][query]',
           },
         },
       ],
