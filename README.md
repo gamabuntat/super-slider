@@ -71,11 +71,12 @@ $(sliderID).slider({
 
 ```javascript
 $(sliderID).slider().destroy();
-/* ------------------------------------------- */
+
 $(sliderID).slider().subscribe(console.log); // subscribe to updates
+
 $(sliderID).slider({ isScale: false }); // hide scale
-/*
-console.log will be:
+
+/* console.log will be:
   {
     isScale: false,
     id: sliderId,
@@ -85,8 +86,7 @@ console.log will be:
 
 Yes, the response also contains a slider ID.
 The response also contains a cancellation field 
-that indicates whether the options passed validation.
-*/
+that indicates whether the options passed validation. */
 ```
 
 ## architecture
