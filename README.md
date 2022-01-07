@@ -72,8 +72,7 @@ $(sliderID).slider({
 ```javascript
 $(sliderID).slider().destroy();
 /* ------------------------------------------- */
-const cb = (response) => console.log(response);
-$(sliderID).slider().subscribe(cb); // subscribe to updates
+$(sliderID).slider().subscribe(console.log); // subscribe to updates
 $(sliderID).slider({ isScale: false }); // hide scale
 // cb call console.log will be
 //  {
