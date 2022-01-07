@@ -2,6 +2,7 @@ const path = require('path');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 const alias = {
   slider: path.resolve(__dirname, './src/slider'),
@@ -47,6 +48,10 @@ module.exports = (env, argv) => {
           },
         },
       },
+      minimizer: [
+        // `...`,
+        new CssMinimizerPlugin(),
+      ],
     },
     module: {
       rules: [
