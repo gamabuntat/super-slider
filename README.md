@@ -59,7 +59,7 @@ This code will create a slider with no labels and with a minimum value of 3 (the
 Way with js:
 
 ```javascript
-$(sliderID).slider({}); \\ with default options
+$(sliderID).slider({}); // with default options
 $(sliderID).slider({
   from: 3,
   max: 100,
@@ -83,7 +83,7 @@ $(sliderID).slider({ isScale: false }); // hide scale
 //    ...options
 //  }
 // yes, the response also contains a slider ID
-// the response also contains a cancellation field that indicates whether the options pass// ed validation
+// the response also contains a cancellation field that indicates whether the options passed validation
 ```
 
 ## architecture
