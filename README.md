@@ -78,10 +78,10 @@ $(sliderID).slider({ isScale: false }); // hide scale
 
 /* console.log will be:
   {
+    ...options
     isScale: false,
     id: sliderId,
     cancel?: boolean,
-    ...options
   }
 
 Yes, the response also contains a slider ID.
