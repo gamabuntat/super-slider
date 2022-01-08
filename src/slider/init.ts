@@ -7,7 +7,7 @@ function create() {
       Object.entries(defaultOptions).reduce((options, [o, value]) => {
         if (o in data) {
           if (typeof value === 'number') {
-            return { ...options, [o]: Number(data[o]) };
+            return { ...options, [o]: parseFloat(data[o] as string) };
           }
           if (typeof value === 'boolean') {
             return { ...options, [o]: data[o] === 'true' };
