@@ -1,13 +1,8 @@
 import View from './View';
 
 const root = document.createElement('div');
-const scaleToggleHiddenMod = jest.fn();
-const scaleSwap = jest.fn();
 let scaleLastPosition = 0;
-const scaleGetLastPosition = () => scaleLastPosition;
-const trackSwap = jest.fn();
 let trackLastPosition = 0;
-const trackGetLastPosition = () => trackLastPosition;
 
 jest.mock('./UI/Scale/Scale', () => ({
   HorizontalScale: jest.fn().mockImplementation(() => hsv),
@@ -23,16 +18,19 @@ const hsv = {
     root.querySelector('.Scale')?.addEventListener('click', cb);
   },
   unbind() {},
-  toggleHiddenMode: scaleToggleHiddenMod,
+  toggleHiddenMode: jest.fn(),
   swap() {
-    scaleSwap();
     return this;
   },
-  getLastPosition: scaleGetLastPosition,
+  getLastPosition() {
+    return scaleLastPosition;
+  },
 };
 
 const htv = {
-  getLastPosition: trackGetLastPosition,
+  getLastPosition() {
+    return trackLastPosition;
+  },
   unbind() {},
   bind(_: any, cb: (e: PointerEvent) => void) {
     (root.querySelector('.Track') as HTMLElement).addEventListener(
@@ -44,7 +42,6 @@ const htv = {
     return 1;
   },
   swap() {
-    trackSwap();
     return this;
   },
 };
@@ -100,7 +97,7 @@ describe('check rendered components', () => {
 
     test('toggle scale visibility', () => {
       view.parseResponse({ ...response, isScale: false });
-      expect(scaleToggleHiddenMod.mock.calls.length).toBe(1);
+      expect(hsv.toggleHiddenMode.mock.calls.length).toBe(1);
     });
 
     test('toggle labels visibility', () => {
