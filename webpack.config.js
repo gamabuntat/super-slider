@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 const alias = {
+  src: path.resolve(__dirname, './src'),
   slider: path.resolve(__dirname, './src/slider'),
   helpers: path.resolve(__dirname, './src/helpers'),
 };

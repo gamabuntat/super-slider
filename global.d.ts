@@ -1,3 +1,5 @@
+/// <reference types="jest-extended" />
+
 declare module '*.sass' {
   const content: Record<string, string>;
   export = content;

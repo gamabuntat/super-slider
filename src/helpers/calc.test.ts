@@ -1,4 +1,8 @@
-import { sampling, toRelative, toAbsolute } from './calc';
+import { sampling, toRelative, toAbsolute, decimalPlaces } from './calc';
+
+test('big number exponential notation', () => {
+  expect(decimalPlaces(1e-23)).toBe(23);
+});
 
 test('sampling', () => {
   expect(sampling(2, 9)).toBe(10);

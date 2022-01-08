@@ -4,15 +4,10 @@ import IHandle from './IHandle';
 
 abstract class Handle extends EventBinder {
   protected shiftX = 0;
-
   protected shiftY = 0;
-
   protected pointerCoordX = 0;
-
   protected pointerCoordY = 0;
-
   private isCapture = false;
-
   private InFocus = false;
 
   constructor(component: HTMLElement) {

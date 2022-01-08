@@ -24,7 +24,6 @@ class View extends EventEmitter implements IView {
   private container: IContainer;
   private handles: IHandle[];
   private progressBars: IProgressBar[];
-  private labels!: HTMLElement[];
   private scale: IScale;
   private track: ITrack;
 
@@ -50,7 +49,6 @@ class View extends EventEmitter implements IView {
       new StartProgressBar(this.components.progressBarStart),
       new EndProgressBar(this.components.progressBarEnd),
     ];
-    this.labels = [this.components.labelStart, this.components.labelEnd];
     this.scale = new HorizontalScale(this.components.scale);
     this.track = new HorizontalTrack(this.components.track);
     this.parseResponse(response);
@@ -67,7 +65,8 @@ class View extends EventEmitter implements IView {
       this.scale.toggleHiddenMode();
     }
     if (old.isLabel !== response.isLabel) {
-      this.labels.forEach((l) => l.classList.toggle(s.LabelHidden));
+      this.components.labelStart.classList.toggle(s.LabelHidden);
+      this.components.labelEnd.classList.toggle(s.LabelHidden);
     }
     if (old.isVertical !== response.isVertical) {
       this.updateViewOrientation();
@@ -264,13 +263,16 @@ class View extends EventEmitter implements IView {
   }
 
   private setInMotion(): void {
+    this.config
+      .get()
+      .getPositions()
+      .forEach((p, idx) => {
+        this.handles[idx].move(p);
+        this.progressBars[idx].resize(p);
+      });
     const { from, to } = this.config.get().getResponse();
-    [from, to].forEach((v, idx) => {
-      const position = this.config.get().getPositions()[idx];
-      this.handles[idx].move(position);
-      this.progressBars[idx].resize(position);
-      this.labels[idx].textContent = String(v);
-    });
+    this.components.labelStart.textContent = String(from);
+    this.components.labelEnd.textContent = String(to);
   }
 }
 

@@ -1,4 +1,2 @@
 webpack.config.js
-docs/
-src/tests/
-types/
+dist/
