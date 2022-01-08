@@ -10,7 +10,7 @@ function create() {
             return { ...options, [o]: Number(data[o]) };
           }
           if (typeof value === 'boolean') {
-            return { ...options, [o]: data[o] === 'false' };
+            return { ...options, [o]: data[o] === 'true' };
           }
         }
         return options;
