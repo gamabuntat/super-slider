@@ -2,8 +2,8 @@ import s from 'slider/styles/Slider.module.sass';
 import Swappable, { ISwappable } from 'helpers/Swappable';
 import EventEmitter from 'slider/EventEmitter/EventEmitter';
 
-import IView from './IView';
-import tree, { TreeTemplate } from './treeTemplate';
+import IView, { Components } from './IView';
+import tree, { TreeTemplate, TreeNames } from './treeTemplate';
 import HorizontalConfig from './Config/HorizontalConfig';
 import VerticalConfig from './Config/VerticalConfig';
 import { IConfig } from './Config/IConfig';
@@ -20,7 +20,7 @@ import ITrack from './UI/Track/ITrack';
 
 class View extends EventEmitter implements IView {
   private config: ISwappable<IConfig>;
-  private components: Record<string, HTMLElement> = {};
+  private components: Components = {} as Components;
   private container: IContainer;
   private handles: IHandle[];
   private progressBars: IProgressBar[];
@@ -92,7 +92,7 @@ class View extends EventEmitter implements IView {
     parent: HTMLElement
   ): HTMLElement {
     const elem = document.createElement(elementType);
-    this.components[name] = elem;
+    this.components[name as TreeNames] = elem;
     elem.classList.add(...classes);
     parent.insertAdjacentElement('beforeend', elem);
     childs.forEach((node) => this.createSlider(node, elem));

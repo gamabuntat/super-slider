@@ -67,8 +67,7 @@ describe('check rendered components', () => {
   });
 
   test('check for handles presence', () => {
-    expect(root.querySelector('.HandleStateStart')).not.toBeNull();
-    expect(root.querySelector('.HandleStateEnd')).not.toBeNull();
+    expect(root.querySelectorAll('.Handle').length).toBe(2);
   });
 
   test('check for scale presence', () => {
@@ -76,8 +75,7 @@ describe('check rendered components', () => {
   });
 
   test('check for labels presence', () => {
-    expect(root.querySelector('.LabelStateStart')).not.toBeNull();
-    expect(root.querySelector('.LabelStateEnd')).not.toBeNull();
+    expect(root.querySelectorAll('.Label').length).toBe(2);
   });
 
   describe('parse response tests', () => {

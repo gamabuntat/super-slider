@@ -7,7 +7,7 @@ type TreeTemplate = {
   childs?: TreeTemplate[];
 };
 
-const treeTemplate: TreeTemplate = {
+const treeTemplate = {
   name: 'slider',
   classes: [s.Slider],
   childs: [
@@ -34,7 +34,7 @@ const treeTemplate: TreeTemplate = {
               childs: [
                 {
                   name: 'labelStart',
-                  classes: [s.Label, s.LabelStateStart],
+                  classes: [s.Label],
                 },
               ],
             },
@@ -45,7 +45,7 @@ const treeTemplate: TreeTemplate = {
               childs: [
                 {
                   name: 'labelEnd',
-                  classes: [s.Label, s.LabelStateEnd],
+                  classes: [s.Label],
                 },
               ],
             },
@@ -72,8 +72,22 @@ const treeTemplate: TreeTemplate = {
       classes: [s.Scale],
     },
   ],
-};
+} as const;
 
-export default treeTemplate;
+type ExtractChilds<T extends { [k: string]: any }> = {
+  [K in keyof T]: GetTreeNames<T[K]>;
+}[number];
 
-export type { TreeTemplate };
+type GetTreeNames<Tree> = {
+  [K in keyof Tree]: K extends 'name'
+    ? Tree[K]
+    : K extends 'childs'
+    ? ExtractChilds<Tree[K]>
+    : never;
+}[keyof Tree];
+
+type TreeNames = GetTreeNames<typeof treeTemplate>;
+
+export default JSON.parse(JSON.stringify(treeTemplate));
+
+export type { TreeTemplate, TreeNames };
