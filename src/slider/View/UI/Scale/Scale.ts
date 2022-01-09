@@ -1,5 +1,6 @@
 import s from 'slider/styles/Slider.module.sass';
 import { last } from 'helpers/handyKit';
+import { clamp } from 'helpers/calc';
 import EventBinder from 'slider/EventBinder/EventBinder';
 import type { AllPositions } from 'slider/View/Config/IConfig';
 
@@ -7,6 +8,7 @@ import IScale from './IScale';
 
 abstract class Scale extends EventBinder {
   protected divisionSize = 0;
+  protected divisionSizeFactor!: number;
   protected ap: AllPositions = [];
   private divisions: HTMLCollectionOf<Element>;
   private container: HTMLElement;
@@ -16,6 +18,7 @@ abstract class Scale extends EventBinder {
   private timer!: ReturnType<typeof setTimeout>;
   private delay = 100;
   private nDivisions = 0;
+  private minNDivisions = 2;
 
   constructor(component: HTMLElement) {
     super(component);
@@ -78,8 +81,9 @@ abstract class Scale extends EventBinder {
   }
 
   private setNDivisions(): void {
-    this.nDivisions = Math.min(
-      Math.max(Math.floor(this.getSize() / this.divisionSize || 0), 2),
+    this.nDivisions = clamp(
+      this.minNDivisions,
+      Math.floor(this.getSize() / this.divisionSize || 0),
       this.ap.length
     );
   }
@@ -190,6 +194,11 @@ abstract class Scale extends EventBinder {
 }
 
 class HorizontalScale extends Scale implements IScale {
+  constructor(component: HTMLElement) {
+    super(component);
+    this.divisionSizeFactor = 1.5;
+  }
+
   swap(): IScale {
     this.unbindListeners();
     return new VerticalScale(this.component);
@@ -201,7 +210,8 @@ class HorizontalScale extends Scale implements IScale {
 
   protected setDivisionSize(division: HTMLElement): void {
     this.divisionSize = Math.max(
-      division.children[0].getBoundingClientRect().width * 1.5,
+      division.children[0].getBoundingClientRect().width *
+        this.divisionSizeFactor,
       this.divisionSize
     );
   }
@@ -215,6 +225,11 @@ class HorizontalScale extends Scale implements IScale {
 }
 
 class VerticalScale extends Scale implements IScale {
+  constructor(component: HTMLElement) {
+    super(component);
+    this.divisionSizeFactor = 1;
+  }
+
   swap(): IScale {
     this.unbindListeners();
     return new HorizontalScale(this.component);
@@ -226,7 +241,8 @@ class VerticalScale extends Scale implements IScale {
 
   protected setDivisionSize(division: HTMLElement): void {
     this.divisionSize = Math.max(
-      division.children[0].getBoundingClientRect().height * 1.5,
+      division.children[0].getBoundingClientRect().height *
+        this.divisionSizeFactor,
       this.divisionSize
     );
   }

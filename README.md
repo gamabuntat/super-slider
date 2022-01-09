@@ -97,7 +97,7 @@ that indicates whether the options passed validation. */
 
 ## technologies used
 
-- node v16.11.0
+- node
 - webpack
 - sass
 - pug
