@@ -4,17 +4,19 @@ function create() {
   document.querySelectorAll('[data-super-slider]').forEach((s) => {
     const data = (<HTMLElement>s).dataset;
     $(s).slider(
-      Object.entries(defaultOptions).reduce((options, [o, value]) => {
-        if (o in data) {
-          if (typeof value === 'number') {
-            return { ...options, [o]: parseFloat(data[o] as string) };
-          }
-          if (typeof value === 'boolean') {
-            return { ...options, [o]: data[o] === 'true' };
-          }
-        }
-        return options;
-      }, {} as Options)
+      Object.entries(defaultOptions).reduce(
+        (options, [o, v]) =>
+          o in data
+            ? {
+                ...options,
+                [o]:
+                  typeof v === 'number'
+                    ? parseFloat(data[o] || String(v))
+                    : data[o] === 'true' || (data[o] !== 'false' && v),
+              }
+            : options,
+        {} as Options
+      )
     );
   });
 }
