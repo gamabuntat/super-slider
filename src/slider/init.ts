@@ -21,7 +21,7 @@ function create() {
   });
 }
 
-function init(): void {
+function init() {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', create);
     return;
