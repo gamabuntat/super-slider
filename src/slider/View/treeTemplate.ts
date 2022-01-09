@@ -1,7 +1,7 @@
 import s from 'slider/styles/Slider.module.sass';
 
 type TreeTemplate = {
-  name: string;
+  name: TreeNames;
   classes?: string[];
   elementType?: string;
   childs?: TreeTemplate[];

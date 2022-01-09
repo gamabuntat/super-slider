@@ -3,7 +3,7 @@ import Swappable, { ISwappable } from 'helpers/Swappable';
 import EventEmitter from 'slider/EventEmitter/EventEmitter';
 
 import IView, { Components } from './IView';
-import tree, { TreeTemplate, TreeNames } from './treeTemplate';
+import tree, { TreeTemplate } from './treeTemplate';
 import HorizontalConfig from './Config/HorizontalConfig';
 import VerticalConfig from './Config/VerticalConfig';
 import { IConfig } from './Config/IConfig';
@@ -92,7 +92,7 @@ class View extends EventEmitter implements IView {
     parent: HTMLElement
   ): HTMLElement {
     const elem = document.createElement(elementType);
-    this.components[name as TreeNames] = elem;
+    this.components[name] = elem;
     elem.classList.add(...classes);
     parent.insertAdjacentElement('beforeend', elem);
     childs.forEach((node) => this.createSlider(node, elem));
