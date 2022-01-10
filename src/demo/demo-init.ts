@@ -1,6 +1,5 @@
 import './demo.sass';
-
-import Conf from '../conf/Conf';
+import Conf from './conf/Conf';
 
 const options: Options[] = [
   {

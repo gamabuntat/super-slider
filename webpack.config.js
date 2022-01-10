@@ -8,6 +8,7 @@ const alias = {
   src: path.resolve(__dirname, './src'),
   slider: path.resolve(__dirname, './src/slider'),
   helpers: path.resolve(__dirname, './src/helpers'),
+  assets: path.resolve(__dirname, './src/assets'),
 };
 
 module.exports = (env, argv) => {
@@ -17,7 +18,7 @@ module.exports = (env, argv) => {
     devtool: isProd ? false : 'inline-source-map',
     entry: {
       slider: './src/slider/index.ts',
-      demo: './src/demo/demo.ts',
+      demo: './src/demo/demo-init.ts',
     },
     output: {
       filename: '[name].js',
