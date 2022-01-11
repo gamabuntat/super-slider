@@ -1,12 +1,5 @@
 import s from 'slider/styles/Slider.module.sass';
 
-type TreeTemplate = {
-  name: TreeNames;
-  classes?: string[];
-  elementType?: string;
-  childs?: TreeTemplate[];
-};
-
 const treeTemplate = {
   name: 'slider',
   classes: [s.Slider],
@@ -87,6 +80,13 @@ type GetTreeNames<Tree> = {
 }[keyof Tree];
 
 type TreeNames = GetTreeNames<typeof treeTemplate>;
+
+type TreeTemplate = {
+  name: TreeNames;
+  classes?: string[];
+  elementType?: string;
+  childs?: TreeTemplate[];
+};
 
 export default JSON.parse(JSON.stringify(treeTemplate));
 
