@@ -1,6 +1,6 @@
-import s from 'slider/styles/Slider.module.sass';
 import Swappable, { ISwappable } from 'helpers/Swappable';
 import EventEmitter from 'slider/EventEmitter/EventEmitter';
+import s from 'slider/styles/Slider.module.sass';
 
 import IView, { Components } from './IView';
 import tree, { TreeTemplate } from './treeTemplate';

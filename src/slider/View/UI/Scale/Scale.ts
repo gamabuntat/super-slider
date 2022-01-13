@@ -1,8 +1,8 @@
-import s from 'slider/styles/Slider.module.sass';
 import { last } from 'helpers/handyKit';
 import { clamp } from 'helpers/calc';
 import EventBinder from 'slider/EventBinder/EventBinder';
 import type { AllPositions } from 'slider/View/Config/IConfig';
+import s from 'slider/styles/Slider.module.sass';
 
 import IScale from './IScale';
 
