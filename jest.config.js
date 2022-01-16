@@ -1,7 +1,7 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
-  modulePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/tests/'],
+  modulePathIgnorePatterns: ['<rootDir>/dist/'],
   moduleNameMapper: {
     '.*sass$': 'identity-obj-proxy',
     'src(.+)': '<rootDir>/src$1',
