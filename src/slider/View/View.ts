@@ -1,4 +1,5 @@
 import Swappable, { ISwappable } from 'helpers/Swappable';
+import defaultOptions from 'slider/defaultOptions';
 import EventEmitter from 'slider/EventEmitter/EventEmitter';
 import s from 'slider/styles/Slider.module.sass';
 
@@ -27,18 +28,16 @@ class View extends EventEmitter implements IView {
   private scale!: IScale;
   private track!: ITrack;
 
-  constructor(response: Model, root: HTMLElement) {
+  constructor(root: HTMLElement) {
     super();
-    this.createConfig(this.getInitResponse(response));
+    this.createConfig({ ...defaultOptions, id: '' });
     this.createSlider(tree, root);
     this.createContainer();
     this.createHandles();
     this.createProgressBars();
     this.createScale();
     this.createTrack();
-    this.parseResponse(response);
     this.bindListeners();
-    root.id = response.id;
   }
 
   parseResponse(response: Model): void {
@@ -60,23 +59,6 @@ class View extends EventEmitter implements IView {
     this.scale.update(this.config.get().getAllPositions());
     this.setInMotion();
     this.rebindListeners();
-  }
-
-  private getInitResponse(
-    response: Model
-  ): Model & {
-    isVertical: false;
-    isInterval: false;
-    isLabel: true;
-    isScale: true;
-  } {
-    return {
-      ...response,
-      isVertical: false,
-      isInterval: false,
-      isLabel: true,
-      isScale: true,
-    };
   }
 
   private createConfig(init: Model): void {

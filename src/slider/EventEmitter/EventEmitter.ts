@@ -5,7 +5,7 @@ interface IEventEmitter {
 }
 
 class EventEmitter implements IEventEmitter {
-  protected events: { [id: string]: ResponseHandler[] } = {};
+  protected events: Record<string, ResponseHandler[]> = {};
 
   on(id: string, handler: ResponseHandler): this {
     (this.events[id] || (this.events[id] = [])).push(handler);

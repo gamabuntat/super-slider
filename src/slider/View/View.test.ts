@@ -60,7 +60,7 @@ const response = {
 } as const;
 
 describe('check rendered components', () => {
-  const view = new View(response, root);
+  const view = new View(root);
 
   test('check for slider presence', () => {
     expect(root.querySelector('.Slider')).not.toBeNull();

@@ -21,11 +21,13 @@ import init from './init';
       const { isNew, model } = Service.getInstance().add(this[0].id, o);
 
       if (isNew) {
+        this[0].id = model.id;
         new Presenter(
           Service.getInstance(),
-          new View(model, this[0]),
+          new View(this[0]),
           model.id
         );
+        Service.getInstance().add(this[0].id, o);
       }
     }
 
