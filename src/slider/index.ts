@@ -27,7 +27,7 @@ import init from './init';
           new View(this[0]),
           model.id
         );
-        Service.getInstance().add(this[0].id, o);
+        Service.getInstance().add(model.id, o);
       }
     }
 
