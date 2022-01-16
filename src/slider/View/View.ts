@@ -62,9 +62,16 @@ class View extends EventEmitter implements IView {
     this.rebindListeners();
   }
 
-  private getInitResponse(init: Model): Model {
+  private getInitResponse(
+    response: Model
+  ): Model & {
+    isVertical: false;
+    isInterval: false;
+    isLabel: true;
+    isScale: true;
+  } {
     return {
-      ...init,
+      ...response,
       isVertical: false,
       isInterval: false,
       isLabel: true,

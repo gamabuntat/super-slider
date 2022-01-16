@@ -1,7 +1,6 @@
 @font-face {
   font-family: 'Unifont';
-  src: url('unifont.woff2') format('woff2'),
-    url('unifont.woff') format('woff');
+  src: url('unifont.woff2') format('woff2'), url('unifont.woff') format('woff');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
