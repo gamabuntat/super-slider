@@ -19,38 +19,23 @@ import { HorizontalTrack } from './UI/Track/Track';
 import ITrack from './UI/Track/ITrack';
 
 class View extends EventEmitter implements IView {
-  private config: ISwappable<IConfig>;
+  private config!: ISwappable<IConfig>;
   private components: Components = {} as Components;
-  private container: IContainer;
-  private handles: IHandle[];
-  private progressBars: IProgressBar[];
-  private scale: IScale;
-  private track: ITrack;
+  private container!: IContainer;
+  private handles!: IHandle[];
+  private progressBars!: IProgressBar[];
+  private scale!: IScale;
+  private track!: ITrack;
 
   constructor(response: Model, root: HTMLElement) {
     super();
-    const initResponse = {
-      ...response,
-      isVertical: false,
-      isInterval: false,
-      isLabel: true,
-      isScale: true,
-    };
-    this.config = new Swappable<IConfig>(
-      new HorizontalConfig(initResponse),
-      new VerticalConfig(initResponse)
-    );
+    this.createConfig(this.getInitResponse(response));
     this.createSlider(tree, root);
-    this.container = new HorizontalContainer(this.components.container);
-    this.handles = [this.components.handleStart, this.components.handleEnd].map(
-      (h) => new HorizontalHandle(h)
-    );
-    this.progressBars = [
-      new StartProgressBar(this.components.progressBarStart),
-      new EndProgressBar(this.components.progressBarEnd),
-    ];
-    this.scale = new HorizontalScale(this.components.scale);
-    this.track = new HorizontalTrack(this.components.track);
+    this.createContainer();
+    this.createHandles();
+    this.createProgressBars();
+    this.createScale();
+    this.createTrack();
     this.parseResponse(response);
     this.bindListeners();
     root.id = response.id;
@@ -75,6 +60,48 @@ class View extends EventEmitter implements IView {
     this.scale.update(this.config.get().getAllPositions());
     this.setInMotion();
     this.rebindListeners();
+  }
+
+  private getInitResponse(init: Model): Model {
+    return {
+      ...init,
+      isVertical: false,
+      isInterval: false,
+      isLabel: true,
+      isScale: true,
+    };
+  }
+
+  private createConfig(init: Model): void {
+    this.config = new Swappable<IConfig>(
+      new HorizontalConfig(init),
+      new VerticalConfig(init)
+    );
+  }
+
+  private createContainer(): void {
+    this.container = new HorizontalContainer(this.components.container);
+  }
+
+  private createHandles(): void {
+    this.handles = [this.components.handleStart, this.components.handleEnd].map(
+      (h) => new HorizontalHandle(h)
+    );
+  }
+
+  private createProgressBars(): void {
+    this.progressBars = [
+      new StartProgressBar(this.components.progressBarStart),
+      new EndProgressBar(this.components.progressBarEnd),
+    ];
+  }
+
+  private createScale(): void {
+    this.scale = new HorizontalScale(this.components.scale);
+  }
+
+  private createTrack(): void {
+    this.track = new HorizontalTrack(this.components.track);
   }
 
   private updateViewOrientation(): void {
