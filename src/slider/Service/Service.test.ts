@@ -1,26 +1,40 @@
 import Service from './Service';
 
+const getDefaultModel = () => ({
+  min: 0,
+  max: 10,
+  from: -Infinity,
+  to: Infinity,
+  step: 1,
+  isInterval: false,
+  isVertical: false,
+  isLabel: true,
+  isScale: true,
+  id: 'test',
+});
+
 test('create one instance (singleton)', () => {
   const instance1 = Service.getInstance();
   const instance2 = Service.getInstance();
   expect(instance1).toBe(instance2);
 });
 
-test('no added duplicate', () => {
-  const addResp1 = Service.getInstance().add('test', {});
-  expect(addResp1.isNew).toBe(true);
-  const addResp2 = Service.getInstance().add('test', {});
-  expect(addResp2.isNew).toBe(false);
+test('remove model correctly', () => {
+  Service.getInstance().add('test', {});
+  Service.getInstance().removeModel('test');
+  expect(Service.getInstance().findModelIndex('test')).toBe(-1);
 });
 
-test('remove model correctly', () => {
-  Service.getInstance().removeModel('test');
-  const addResp = Service.getInstance().add('test', {});
-  expect(addResp.isNew).toBe(true);
+test('no added duplicate', () => {
+  Service.getInstance().add('test', {});
+  expect(Service.getInstance().findModelIndex('test')).toBe(0);
+  Service.getInstance().add('test', {});
+  expect(Service.getInstance().findModelIndex('test')).toBe(0);
 });
 
 describe('remove test model', () => {
-  const cb = jest.fn();
+  const service = Service.getInstance();
+  const cb = jest.fn((model: Model) => model);
 
   beforeEach(() => {
     cb.mockClear();
@@ -28,42 +42,28 @@ describe('remove test model', () => {
   });
 
   test('subscribe on model update => call callback', () => {
-    Service.getInstance().subscribe('test', cb);
-    Service.getInstance().add('test', {});
+    service.subscribe('test', cb);
+    service.add('test', {});
     expect(cb.mock.calls.length).toBe(1);
   });
 
   test('update model correctly', () => {
-    const service = Service.getInstance();
     service.subscribe('test', cb);
-    const { model } = service.add('test', {});
-    service.updateModel({ ...model, from: -123, max: 999.999 });
-    expect(cb.mock.calls[1][0].max).toBe(999.999);
-    expect(cb.mock.calls[1][0].from).toBe(-123);
+    service.updateModel({ ...getDefaultModel(), from: -123, max: 999.999 });
+    expect(cb.mock.calls[0][0].max).toBe(999.999);
+    expect(cb.mock.calls[0][0].from).toBe(-123);
   });
 
   test('validate to value correctly', () => {
-    const { model } = Service.getInstance().add('test', {
-      to: 9,
-      isInterval: true,
-    });
-    expect(model.to).toBe(9);
+    service.subscribe('test', cb);
+    service.add('test', { to: 11, isInterval: true });
+    expect(cb.mock.results[0].value.to).toBe(10);
   });
 
   test('validate step value correctly', () => {
-    const service = Service.getInstance();
-    const model1 = service.add('test', { step: 0 }).model;
-    expect(model1.step).not.toBe(0);
-  });
-
-  test('added various models whith various id', () => {
-    const service = Service.getInstance();
-    const model1 = service.add('', {}).model;
-    const model2 = service.add('', {}).model;
-    const id1 = model1.id;
-    const id2 = model2.id;
-    service.removeModel(id1);
-    service.removeModel(id2);
-    expect(id1).not.toBe(id2);
+    const f = jest.fn((model: Model) => model);
+    service.subscribe('test', f);
+    service.add('test', { step: 0 });
+    expect(f.mock.results[0].value.step).not.toBe(0);
   });
 });

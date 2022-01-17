@@ -4,10 +4,11 @@ import {
 } from 'slider/EventEmitter/EventEmitter';
 
 interface IService extends IEventEmitter {
-  subscribe(preID: string, cb: ResponseHandler): string;
+  subscribe(id: string, cb: ResponseHandler): void;
   removeModel(id: string): void;
   updateModel(response: Model): void;
-  add(id: string, o: Options): { model: Model; isNew: boolean };
+  add(id: string, o: Options): void;
+  findModelIndex(id: string): number;
 }
 
 export default IService;

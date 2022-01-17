@@ -20,10 +20,8 @@ class Service extends EventEmitter implements IService {
     return Service.instance;
   }
 
-  subscribe(preID: string, cb: ResponseHandler): string {
-    const id = preID || this.generateID();
+  subscribe(id: string, cb: ResponseHandler): void {
     this.on(`sub${id}`, cb);
-    return id;
   }
 
   removeModel(id: string): void {
@@ -40,9 +38,7 @@ class Service extends EventEmitter implements IService {
     this.emit({ ...response }, `sub${response.id}`);
   }
 
-  add(preID: string, o: Options): { model: Model; isNew: boolean } {
-    const id = preID || this.generateID();
-    const prevLength = this.models.length;
+  add(id: string, o: Options): void {
     this.selectedModel = this.models[this.findModelIndex(id)] || {
       ...defaultOptions,
       id,
@@ -52,10 +48,11 @@ class Service extends EventEmitter implements IService {
     this.addModel(this.selectedModel);
     this.emit({ ...this.selectedModel });
     this.emit({ ...this.selectedModel }, `sub${this.selectedModel.id}`);
-    return {
-      model: { ...this.selectedModel },
-      isNew: prevLength !== this.models.length,
-    };
+  }
+
+  findModelIndex(id: string): number {
+    this.selectedIndex = this.models.findIndex((m) => m.id === id);
+    return this.selectedIndex;
   }
 
   private addModel(model: Model): void {
@@ -64,15 +61,6 @@ class Service extends EventEmitter implements IService {
       Number(this.selectedIndex !== -1),
       model
     );
-  }
-
-  private findModelIndex(id: string): number {
-    this.selectedIndex = this.models.findIndex((m) => m.id === id);
-    return this.selectedIndex;
-  }
-
-  private generateID(): string {
-    return String(Math.floor(Math.random() * Date.now()));
   }
 
   private getValidatedOptions(o: Options): Model {
