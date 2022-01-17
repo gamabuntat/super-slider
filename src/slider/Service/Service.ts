@@ -44,7 +44,7 @@ class Service extends EventEmitter implements IService {
       id,
     };
     this.selectedModel.cancel = false;
-    this.selectedModel = this.getValidatedOptions(o);
+    this.selectedModel = this.getValidModel({ ...this.selectedModel, ...o });
     this.addModel(this.selectedModel);
     this.emit({ ...this.selectedModel });
     this.emit({ ...this.selectedModel }, `sub${this.selectedModel.id}`);
@@ -63,16 +63,15 @@ class Service extends EventEmitter implements IService {
     );
   }
 
-  private getValidatedOptions(o: Options): Model {
-    const copy = { ...this.selectedModel, ...o };
-    if (copy.min >= copy.max || copy.step <= 0) {
+  private getValidModel(model: Model): Model {
+    if (model.min >= model.max || model.step <= 0) {
       return { ...this.selectedModel, cancel: true };
     }
-    copy.step = this.validetaStep(copy);
-    this.setDecimalPlaces(copy);
-    copy.from = this.validateFrom(copy);
-    copy.to = this.validateTo(copy);
-    return copy;
+    model.step = this.validetaStep(model);
+    this.setDecimalPlaces(model);
+    model.from = this.validateFrom(model);
+    model.to = this.validateTo(model);
+    return model;
   }
 
   private setDecimalPlaces({ min, step }: Model): void {
